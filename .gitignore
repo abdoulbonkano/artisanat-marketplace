@@ -42,6 +42,3 @@ next-env.d.ts
 
 # Claude Code local state
 .claude/
-
-# Claude Code local state
-.claude/
