@@ -30,7 +30,10 @@ export default async function VendeurProduitsPage() {
     <div className="flex flex-col gap-6">
       <div className="flex items-center justify-between">
         <h1 className="text-2xl font-semibold tracking-tight">Mes produits</h1>
-        <Button render={<Link href="/vendeur/produits/nouveau" />}>
+        <Button
+          render={<Link href="/vendeur/produits/nouveau" />}
+          nativeButton={false}
+        >
           Nouveau produit
         </Button>
       </div>

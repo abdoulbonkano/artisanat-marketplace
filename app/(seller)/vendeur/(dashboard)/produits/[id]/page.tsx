@@ -2,6 +2,7 @@ import { notFound } from "next/navigation";
 import { deleteProductAction, updateProductAction } from "@/actions/products";
 import { DeleteProductButton } from "@/components/seller/delete-product-button";
 import { ProductForm } from "@/components/seller/product-form";
+import { ProductImages } from "@/components/seller/product-images";
 import { requireSeller } from "@/lib/permissions";
 import { prisma } from "@/lib/prisma";
 
@@ -15,7 +16,10 @@ export default async function EditProduitPage({
   const shop = await prisma.shop.findUniqueOrThrow({ where: { ownerId: user.id } });
 
   const [product, categories] = await Promise.all([
-    prisma.product.findUnique({ where: { id } }),
+    prisma.product.findUnique({
+      where: { id },
+      include: { images: { orderBy: { position: "asc" } } },
+    }),
     prisma.category.findMany({ orderBy: { name: "asc" } }),
   ]);
 
@@ -40,6 +44,7 @@ export default async function EditProduitPage({
         product={product}
         submitLabel="Enregistrer"
       />
+      <ProductImages productId={product.id} images={product.images} />
     </div>
   );
 }

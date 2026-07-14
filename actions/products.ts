@@ -5,8 +5,19 @@ import { redirect } from "next/navigation";
 import { requireSeller } from "@/lib/permissions";
 import { prisma } from "@/lib/prisma";
 import { slugify } from "@/lib/slug";
+import { deleteProductImage, isAllowedImage, saveProductImage } from "@/lib/storage";
 import { productSchema } from "@/lib/validations/product";
 import type { ActionState } from "@/actions/auth";
+
+async function ownedProductOrThrow(productId: string) {
+  const user = await requireSeller();
+  const shop = await prisma.shop.findUniqueOrThrow({ where: { ownerId: user.id } });
+  const product = await prisma.product.findUnique({ where: { id: productId } });
+  if (!product || product.shopId !== shop.id) {
+    throw new Error("Produit introuvable");
+  }
+  return product;
+}
 
 async function uniqueProductSlug(title: string) {
   const base = slugify(title) || "produit";
@@ -96,15 +107,47 @@ export async function updateProductAction(
 }
 
 export async function deleteProductAction(productId: string) {
-  const user = await requireSeller();
-  const shop = await prisma.shop.findUniqueOrThrow({ where: { ownerId: user.id } });
+  await ownedProductOrThrow(productId);
 
-  const product = await prisma.product.findUnique({ where: { id: productId } });
-  if (!product || product.shopId !== shop.id) {
-    throw new Error("Produit introuvable");
-  }
-
+  const images = await prisma.productImage.findMany({ where: { productId } });
   await prisma.product.delete({ where: { id: productId } });
+  await Promise.all(images.map((image) => deleteProductImage(image.url)));
+
   revalidatePath("/vendeur/produits");
   redirect("/vendeur/produits");
+}
+
+export async function addProductImageAction(productId: string, formData: FormData) {
+  await ownedProductOrThrow(productId);
+
+  const file = formData.get("file");
+  if (!(file instanceof File) || file.size === 0) {
+    return;
+  }
+  if (!isAllowedImage(file)) {
+    throw new Error("Image invalide (JPEG/PNG/WebP, 5 Mo maximum)");
+  }
+
+  const url = await saveProductImage(file);
+  const count = await prisma.productImage.count({ where: { productId } });
+
+  await prisma.productImage.create({
+    data: { productId, url, position: count },
+  });
+
+  revalidatePath(`/vendeur/produits/${productId}`);
+}
+
+export async function removeProductImageAction(productId: string, imageId: string) {
+  await ownedProductOrThrow(productId);
+
+  const image = await prisma.productImage.findUnique({ where: { id: imageId } });
+  if (!image || image.productId !== productId) {
+    throw new Error("Image introuvable");
+  }
+
+  await prisma.productImage.delete({ where: { id: imageId } });
+  await deleteProductImage(image.url);
+
+  revalidatePath(`/vendeur/produits/${productId}`);
 }

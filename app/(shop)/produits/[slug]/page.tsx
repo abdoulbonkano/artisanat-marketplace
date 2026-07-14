@@ -1,3 +1,4 @@
+import Image from "next/image";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { Badge } from "@/components/ui/badge";
@@ -12,7 +13,11 @@ export default async function ProduitDetailPage({
 
   const product = await prisma.product.findUnique({
     where: { slug },
-    include: { shop: true, category: true },
+    include: {
+      shop: true,
+      category: true,
+      images: { orderBy: { position: "asc" } },
+    },
   });
 
   if (!product || product.status !== "PUBLISHED") {
@@ -21,6 +26,26 @@ export default async function ProduitDetailPage({
 
   return (
     <div className="flex flex-1 flex-col gap-6 px-6 py-8">
+      {product.images.length > 0 && (
+        <div className="flex flex-wrap gap-3">
+          {product.images.map((image, index) => (
+            <div
+              key={image.id}
+              className="relative size-40 overflow-hidden rounded-md border sm:size-56"
+            >
+              <Image
+                src={image.url}
+                alt={`${product.title} - photo ${index + 1}`}
+                fill
+                className="object-cover"
+                sizes="224px"
+                priority={index === 0}
+              />
+            </div>
+          ))}
+        </div>
+      )}
+
       <div className="flex flex-col gap-2">
         {product.category && (
           <Link href={`/produits?categorie=${product.category.slug}`}>

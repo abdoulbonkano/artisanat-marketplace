@@ -42,3 +42,6 @@ next-env.d.ts
 
 # Claude Code local state
 .claude/
+
+# locally uploaded product images (dev-only storage; use Vercel Blob in production)
+/public/uploads/

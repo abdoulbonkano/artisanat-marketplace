@@ -34,7 +34,11 @@ export async function SiteHeader() {
         ) : (
           <>
             <Link href="/auth/connexion">Connexion</Link>
-            <Button render={<Link href="/auth/inscription" />} size="sm">
+            <Button
+              render={<Link href="/auth/inscription" />}
+              nativeButton={false}
+              size="sm"
+            >
               Inscription
             </Button>
           </>
