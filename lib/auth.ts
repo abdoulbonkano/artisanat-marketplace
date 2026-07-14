@@ -6,7 +6,7 @@ import { prisma } from "@/lib/prisma";
 
 export const { handlers, auth, signIn, signOut } = NextAuth({
   adapter: PrismaAdapter(prisma),
-  session: { strategy: "database" },
+  session: { strategy: "jwt" },
   pages: {
     signIn: "/auth/connexion",
   },
@@ -32,9 +32,18 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
     }),
   ],
   callbacks: {
-    session: ({ session, user }) => {
-      session.user.id = user.id;
-      session.user.role = user.role;
+    // Credentials + JWT strategy can't use database sessions, so the token
+    // only carries the user id at sign-in — role is refetched on every
+    // request instead, to reflect role/shop changes without re-login.
+    jwt: async ({ token }) => {
+      if (!token.sub) return token;
+      const user = await prisma.user.findUnique({ where: { id: token.sub } });
+      if (user) token.role = user.role;
+      return token;
+    },
+    session: ({ session, token }) => {
+      if (token.sub) session.user.id = token.sub;
+      if (token.role) session.user.role = token.role;
       return session;
     },
   },

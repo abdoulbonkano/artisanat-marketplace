@@ -9,7 +9,10 @@ export default auth((req) => {
     if (!req.auth) {
       return NextResponse.redirect(new URL("/auth/connexion", nextUrl));
     }
-    if (role !== "SELLER" && role !== "ADMIN") {
+    // /vendeur/onboarding is how a BUYER becomes a SELLER — it must stay
+    // reachable to any logged-in user, only the dashboard itself is gated.
+    const isOnboarding = nextUrl.pathname.startsWith("/vendeur/onboarding");
+    if (!isOnboarding && role !== "SELLER" && role !== "ADMIN") {
       return NextResponse.redirect(new URL("/", nextUrl));
     }
   }

@@ -19,6 +19,25 @@ async function main() {
   });
 
   console.log(`Compte admin pret : ${email} / ${password}`);
+
+  const categories = [
+    { slug: "bijoux", name: "Bijoux" },
+    { slug: "ceramique", name: "Ceramique & poterie" },
+    { slug: "textile", name: "Textile & couture" },
+    { slug: "bois", name: "Bois & mobilier" },
+    { slug: "papeterie", name: "Papeterie & illustration" },
+    { slug: "cuir", name: "Maroquinerie & cuir" },
+  ];
+
+  for (const category of categories) {
+    await prisma.category.upsert({
+      where: { slug: category.slug },
+      update: {},
+      create: category,
+    });
+  }
+
+  console.log(`${categories.length} categories pretes.`);
 }
 
 main()
