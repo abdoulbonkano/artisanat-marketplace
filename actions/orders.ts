@@ -47,7 +47,8 @@ export async function createCheckoutSessionAction(
   }
 
   const totalCents = cart.items.reduce(
-    (sum: number, item) => sum + item.product.priceCents * item.quantity,
+    (sum: number, item: (typeof cart.items)[number]) =>
+      sum + item.product.priceCents * item.quantity,
     0,
   );
 
