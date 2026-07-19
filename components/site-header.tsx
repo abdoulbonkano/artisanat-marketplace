@@ -2,10 +2,20 @@ import Link from "next/link";
 import { signOutAction } from "@/actions/auth";
 import { auth } from "@/lib/auth";
 import { Button } from "@/components/ui/button";
+import { prisma } from "@/lib/prisma";
 
 export async function SiteHeader() {
   const session = await auth();
   const user = session?.user;
+
+  const cartCount = user
+    ? await prisma.cartItem
+        .aggregate({
+          where: { cart: { userId: user.id } },
+          _sum: { quantity: true },
+        })
+        .then((result) => result._sum.quantity ?? 0)
+    : 0;
 
   return (
     <header className="flex items-center justify-between border-b px-6 py-4">
@@ -24,7 +34,8 @@ export async function SiteHeader() {
             )}
             {user.role === "ADMIN" && <Link href="/admin">Admin</Link>}
             <Link href="/messages">Messages</Link>
-            <Link href="/panier">Panier</Link>
+            <Link href="/commandes">Mes commandes</Link>
+            <Link href="/panier">Panier{cartCount > 0 ? ` (${cartCount})` : ""}</Link>
             <form action={signOutAction}>
               <Button type="submit" variant="ghost" size="sm">
                 Deconnexion

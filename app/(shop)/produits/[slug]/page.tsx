@@ -1,6 +1,7 @@
 import Image from "next/image";
 import Link from "next/link";
 import { notFound } from "next/navigation";
+import { AddToCartForm } from "@/components/shop/add-to-cart-form";
 import { Badge } from "@/components/ui/badge";
 import { prisma } from "@/lib/prisma";
 
@@ -70,6 +71,8 @@ export default async function ProduitDetailPage({
           {product.stock > 0 ? `${product.stock} en stock` : "Rupture de stock"}
         </span>
       </div>
+
+      <AddToCartForm productId={product.id} stock={product.stock} />
     </div>
   );
 }
