@@ -41,8 +41,11 @@ export default async function AdminCommandesPage() {
   const shops = await prisma.shop.findMany({
     where: { id: { in: [...owedByShop.keys()] } },
   });
-  const shopNameById = new Map(
-    shops.map((shop: (typeof shops)[number]) => [shop.id, shop.name]),
+  const shopNameById = new Map<string, string>(
+    shops.map((shop: (typeof shops)[number]): [string, string] => [
+      shop.id,
+      shop.name,
+    ]),
   );
 
   return (
