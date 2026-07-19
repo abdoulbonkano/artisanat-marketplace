@@ -47,7 +47,7 @@ export default async function VendeurCommandesPage() {
             </TableRow>
           </TableHeader>
           <TableBody>
-            {items.map((item) => (
+            {items.map((item: (typeof items)[number]) => (
               <TableRow key={item.id}>
                 <TableCell>
                   {item.order.createdAt.toLocaleDateString("fr-FR")}

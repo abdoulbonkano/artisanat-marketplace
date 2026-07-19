@@ -37,7 +37,7 @@ export default async function AdminProduitsPage() {
           </TableRow>
         </TableHeader>
         <TableBody>
-          {products.map((product) => (
+          {products.map((product: (typeof products)[number]) => (
             <TableRow key={product.id}>
               <TableCell>{product.title}</TableCell>
               <TableCell>{product.shop.name}</TableCell>

@@ -31,7 +31,7 @@ export default async function MessagesPage() {
         </p>
       ) : (
         <div className="flex flex-col gap-2">
-          {conversations.map((conversation) => (
+          {conversations.map((conversation: (typeof conversations)[number]) => (
             <Link
               key={conversation.id}
               href={`/messages/${conversation.id}`}

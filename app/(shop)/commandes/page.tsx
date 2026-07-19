@@ -30,7 +30,7 @@ export default async function CommandesPage() {
         </p>
       ) : (
         <div className="flex flex-col gap-3">
-          {orders.map((order) => (
+          {orders.map((order: (typeof orders)[number]) => (
             <Link
               key={order.id}
               href={`/commandes/${order.id}`}

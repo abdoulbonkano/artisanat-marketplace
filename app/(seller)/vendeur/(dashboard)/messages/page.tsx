@@ -32,7 +32,7 @@ export default async function VendeurMessagesPage() {
         </p>
       ) : (
         <div className="flex flex-col gap-2">
-          {conversations.map((conversation) => (
+          {conversations.map((conversation: (typeof conversations)[number]) => (
             <Link
               key={conversation.id}
               href={`/vendeur/messages/${conversation.id}`}

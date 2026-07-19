@@ -49,7 +49,7 @@ export default async function CommandeDetailPage({
       </div>
 
       <div className="flex flex-col gap-2">
-        {order.items.map((item) => (
+        {order.items.map((item: (typeof order.items)[number]) => (
           <div key={item.id} className="flex justify-between border-b py-2 text-sm">
             <span>
               {item.titleSnapshot} x{item.quantity}

@@ -16,7 +16,8 @@ export default async function CheckoutPage() {
   }
 
   const total = cart.items.reduce(
-    (sum, item) => sum + item.product.priceCents * item.quantity,
+    (sum: number, item: (typeof cart.items)[number]) =>
+      sum + item.product.priceCents * item.quantity,
     0,
   );
 
@@ -31,7 +32,7 @@ export default async function CheckoutPage() {
       <div className="w-full max-w-sm shrink-0 rounded-lg border p-4">
         <h2 className="mb-4 font-medium">Recapitulatif</h2>
         <div className="flex flex-col gap-2 text-sm">
-          {cart.items.map((item) => (
+          {cart.items.map((item: (typeof cart.items)[number]) => (
             <div key={item.id} className="flex justify-between">
               <span>
                 {item.product.title} x{item.quantity}

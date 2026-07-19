@@ -21,7 +21,8 @@ export default async function PanierPage() {
 
   const items = cart?.items ?? [];
   const total = items.reduce(
-    (sum, item) => sum + item.product.priceCents * item.quantity,
+    (sum: number, item: (typeof items)[number]) =>
+      sum + item.product.priceCents * item.quantity,
     0,
   );
 
@@ -38,7 +39,7 @@ export default async function PanierPage() {
         </p>
       ) : (
         <div className="flex flex-col gap-4">
-          {items.map((item) => {
+          {items.map((item: (typeof items)[number]) => {
             const boundUpdate = updateCartItemAction.bind(null, item.id);
             const boundRemove = removeCartItemAction.bind(null, item.id);
             const image = item.product.images[0];

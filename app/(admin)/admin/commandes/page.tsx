@@ -41,7 +41,9 @@ export default async function AdminCommandesPage() {
   const shops = await prisma.shop.findMany({
     where: { id: { in: [...owedByShop.keys()] } },
   });
-  const shopNameById = new Map(shops.map((shop) => [shop.id, shop.name]));
+  const shopNameById = new Map(
+    shops.map((shop: (typeof shops)[number]) => [shop.id, shop.name]),
+  );
 
   return (
     <div className="flex flex-col gap-10">
@@ -58,7 +60,7 @@ export default async function AdminCommandesPage() {
             </TableRow>
           </TableHeader>
           <TableBody>
-            {orders.map((order) => (
+            {orders.map((order: (typeof orders)[number]) => (
               <TableRow key={order.id}>
                 <TableCell>{order.createdAt.toLocaleDateString("fr-FR")}</TableCell>
                 <TableCell>{order.buyer.email}</TableCell>

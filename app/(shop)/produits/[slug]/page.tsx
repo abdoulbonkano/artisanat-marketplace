@@ -31,7 +31,7 @@ export default async function ProduitDetailPage({
     <div className="flex flex-1 flex-col gap-6 px-6 py-8">
       {product.images.length > 0 && (
         <div className="flex flex-wrap gap-3">
-          {product.images.map((image, index) => (
+          {product.images.map((image: (typeof product.images)[number], index: number) => (
             <div
               key={image.id}
               className="relative size-40 overflow-hidden rounded-md border sm:size-56"

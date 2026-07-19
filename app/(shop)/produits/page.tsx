@@ -98,7 +98,7 @@ export default async function ProduitsPage({
         <Link href="/produits">
           <Badge variant={!categorie ? "default" : "secondary"}>Tout</Badge>
         </Link>
-        {categories.map((category) => (
+        {categories.map((category: (typeof categories)[number]) => (
           <Link key={category.id} href={`/produits?categorie=${category.slug}`}>
             <Badge variant={categorie === category.slug ? "default" : "secondary"}>
               {category.name}
@@ -111,7 +111,7 @@ export default async function ProduitsPage({
         <p className="text-sm text-muted-foreground">Aucun produit ne correspond a votre recherche.</p>
       ) : (
         <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
-          {products.map((product) => (
+          {products.map((product: (typeof products)[number]) => (
             <Link key={product.id} href={`/produits/${product.slug}`}>
               <Card className="h-full overflow-hidden transition-colors hover:bg-muted/50">
                 {product.images[0] && (

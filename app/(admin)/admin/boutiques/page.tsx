@@ -38,7 +38,7 @@ export default async function AdminBoutiquesPage() {
           </TableRow>
         </TableHeader>
         <TableBody>
-          {shops.map((shop) => (
+          {shops.map((shop: (typeof shops)[number]) => (
             <TableRow key={shop.id}>
               <TableCell>
                 <Link href={`/boutiques/${shop.slug}`} className="underline">
