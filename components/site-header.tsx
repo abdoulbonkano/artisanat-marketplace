@@ -8,14 +8,13 @@ export async function SiteHeader() {
   const session = await auth();
   const user = session?.user;
 
-  const cartCount = user
-    ? await prisma.cartItem
-        .aggregate({
-          where: { cart: { userId: user.id } },
-          _sum: { quantity: true },
-        })
-        .then((result) => result._sum.quantity ?? 0)
-    : 0;
+  const cartAgg = user
+    ? await prisma.cartItem.aggregate({
+        where: { cart: { userId: user.id } },
+        _sum: { quantity: true },
+      })
+    : null;
+  const cartCount = cartAgg?._sum.quantity ?? 0;
 
   const unreadCount = user
     ? await prisma.message.count({
