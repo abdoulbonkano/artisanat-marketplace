@@ -62,7 +62,7 @@ export async function createCheckoutSessionAction(
       shippingPostalCode: parsed.data.shippingPostalCode,
       shippingCountry: parsed.data.shippingCountry,
       items: {
-        create: cart.items.map((item) => ({
+        create: cart.items.map((item: (typeof cart.items)[number]) => ({
           productId: item.productId,
           shopId: item.product.shopId,
           titleSnapshot: item.product.title,
