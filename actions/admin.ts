@@ -27,6 +27,6 @@ export async function deleteProductAdminAction(productId: string) {
   await requireAdmin();
   const images = await prisma.productImage.findMany({ where: { productId } });
   await prisma.product.delete({ where: { id: productId } });
-  await Promise.all(images.map((image) => deleteProductImage(image.url)));
+  await Promise.all(images.map((image: { url: string }) => deleteProductImage(image.url)));
   revalidatePath("/admin/produits");
 }
