@@ -23,7 +23,7 @@ export default async function ProduitDetailPage({
     },
   });
 
-  if (!product || product.status !== "PUBLISHED") {
+  if (!product || product.status !== "PUBLISHED" || product.shop.status !== "ACTIVE") {
     notFound();
   }
 

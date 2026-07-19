@@ -27,7 +27,7 @@ export async function createCheckoutSessionAction(
 
   const cart = await prisma.cart.findUnique({
     where: { userId: user.id },
-    include: { items: { include: { product: true } } },
+    include: { items: { include: { product: { include: { shop: true } } } } },
   });
 
   if (!cart || cart.items.length === 0) {
@@ -37,8 +37,12 @@ export async function createCheckoutSessionAction(
   // Never trust client cart state at checkout time: re-check stock/price
   // against the database right before creating the order.
   for (const item of cart.items) {
-    if (item.product.status !== "PUBLISHED" || item.product.stock < item.quantity) {
-      return { error: `Stock insuffisant pour "${item.product.title}"` };
+    if (
+      item.product.status !== "PUBLISHED" ||
+      item.product.shop.status !== "ACTIVE" ||
+      item.product.stock < item.quantity
+    ) {
+      return { error: `"${item.product.title}" n'est plus disponible` };
     }
   }
 

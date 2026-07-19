@@ -29,6 +29,7 @@ export default async function ProduitsPage({
     prisma.product.findMany({
       where: {
         status: "PUBLISHED",
+        shop: { status: "ACTIVE" },
         category: categorie ? { slug: categorie } : undefined,
         priceCents: Object.keys(priceFilter).length > 0 ? priceFilter : undefined,
         OR: q
