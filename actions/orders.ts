@@ -85,7 +85,7 @@ export async function createCheckoutSessionAction(
   try {
     session = await stripe.checkout.sessions.create({
       mode: "payment",
-      line_items: cart.items.map((item) => ({
+      line_items: cart.items.map((item: (typeof cart.items)[number]) => ({
         quantity: item.quantity,
         price_data: {
           currency: "eur",

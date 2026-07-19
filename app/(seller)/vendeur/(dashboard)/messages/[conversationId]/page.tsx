@@ -41,7 +41,7 @@ export default async function VendeurMessageThreadPage({
       <MessageThread
         conversationId={conversation.id}
         currentUserId={user.id}
-        initialMessages={conversation.messages.map((message) => ({
+        initialMessages={conversation.messages.map((message: (typeof conversation.messages)[number]) => ({
           id: message.id,
           body: message.body,
           senderId: message.senderId,

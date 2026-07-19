@@ -14,7 +14,9 @@ async function fulfillOrder(orderId: string, paymentIntentId: string | null) {
   // order was already marked paid so stock isn't decremented twice.
   if (!order || order.status === "PAID") return;
 
-  const productItems = order.items.filter((item) => item.productId);
+  const productItems = order.items.filter(
+    (item: (typeof order.items)[number]) => item.productId,
+  );
 
   await prisma.$transaction([
     prisma.order.update({ where: { id: orderId }, data: { status: "PAID" } }),
@@ -25,7 +27,7 @@ async function fulfillOrder(orderId: string, paymentIntentId: string | null) {
         stripePaymentIntentId: paymentIntentId ?? undefined,
       },
     }),
-    ...productItems.map((item) =>
+    ...productItems.map((item: (typeof productItems)[number]) =>
       prisma.product.update({
         where: { id: item.productId as string },
         data: { stock: { decrement: item.quantity } },
@@ -34,7 +36,11 @@ async function fulfillOrder(orderId: string, paymentIntentId: string | null) {
     prisma.cartItem.deleteMany({
       where: {
         cart: { userId: order.buyerId },
-        productId: { in: productItems.map((item) => item.productId as string) },
+        productId: {
+          in: productItems.map(
+            (item: (typeof productItems)[number]) => item.productId as string,
+          ),
+        },
       },
     }),
   ]);
