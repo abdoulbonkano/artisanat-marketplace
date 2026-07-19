@@ -1,8 +1,10 @@
 import Image from "next/image";
 import Link from "next/link";
 import { notFound } from "next/navigation";
+import { startConversationAction } from "@/actions/messages";
 import { AddToCartForm } from "@/components/shop/add-to-cart-form";
 import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
 import { prisma } from "@/lib/prisma";
 
 export default async function ProduitDetailPage({
@@ -72,7 +74,14 @@ export default async function ProduitDetailPage({
         </span>
       </div>
 
-      <AddToCartForm productId={product.id} stock={product.stock} />
+      <div className="flex items-center gap-3">
+        <AddToCartForm productId={product.id} stock={product.stock} />
+        <form action={startConversationAction.bind(null, product.shop.id, product.id)}>
+          <Button type="submit" variant="outline">
+            Contacter le vendeur
+          </Button>
+        </form>
+      </div>
     </div>
   );
 }

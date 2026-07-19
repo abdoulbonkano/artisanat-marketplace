@@ -17,6 +17,18 @@ export async function SiteHeader() {
         .then((result) => result._sum.quantity ?? 0)
     : 0;
 
+  const unreadCount = user
+    ? await prisma.message.count({
+        where: {
+          readAt: null,
+          senderId: { not: user.id },
+          conversation: {
+            OR: [{ buyerId: user.id }, { shop: { ownerId: user.id } }],
+          },
+        },
+      })
+    : 0;
+
   return (
     <header className="flex items-center justify-between border-b px-6 py-4">
       <Link href="/" className="font-semibold tracking-tight">
@@ -33,7 +45,9 @@ export async function SiteHeader() {
               <Link href="/vendeur/onboarding">Devenir vendeur</Link>
             )}
             {user.role === "ADMIN" && <Link href="/admin">Admin</Link>}
-            <Link href="/messages">Messages</Link>
+            <Link href="/messages">
+              Messages{unreadCount > 0 ? ` (${unreadCount})` : ""}
+            </Link>
             <Link href="/commandes">Mes commandes</Link>
             <Link href="/panier">Panier{cartCount > 0 ? ` (${cartCount})` : ""}</Link>
             <form action={signOutAction}>
