@@ -42,7 +42,7 @@ export async function GET(
   });
 
   return NextResponse.json({
-    messages: messages.map((message) => ({
+    messages: messages.map((message: (typeof messages)[number]) => ({
       id: message.id,
       body: message.body,
       senderId: message.senderId,
