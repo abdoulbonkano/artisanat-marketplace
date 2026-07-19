@@ -1,6 +1,5 @@
 import Image from "next/image";
 import Link from "next/link";
-import type { Prisma } from "@prisma/client";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
@@ -19,7 +18,7 @@ export default async function ProduitsPage({
 }) {
   const { categorie, q, prixMin, prixMax } = await searchParams;
 
-  const priceFilter: Prisma.IntFilter = {};
+  const priceFilter: { gte?: number; lte?: number } = {};
   const minCents = prixMin ? Math.round(Number(prixMin) * 100) : undefined;
   const maxCents = prixMax ? Math.round(Number(prixMax) * 100) : undefined;
   if (minCents && !Number.isNaN(minCents)) priceFilter.gte = minCents;
