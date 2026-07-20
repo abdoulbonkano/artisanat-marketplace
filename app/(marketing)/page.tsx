@@ -1,5 +1,12 @@
 import Link from "next/link";
-import { Handshake, Sparkles, Store } from "lucide-react";
+import {
+  Handshake,
+  RotateCcw,
+  ShieldCheck,
+  Sparkles,
+  Store,
+  Truck,
+} from "lucide-react";
 import { Button } from "@/components/ui/button";
 import {
   Card,
@@ -7,6 +14,29 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
+
+const trustPoints = [
+  {
+    icon: ShieldCheck,
+    title: "Paiement securise",
+    description: "Cartes bancaires via Stripe",
+  },
+  {
+    icon: Truck,
+    title: "Livraison suivie",
+    description: "France et Europe",
+  },
+  {
+    icon: RotateCcw,
+    title: "Retours sous 14 jours",
+    description: "Conforme au droit europeen",
+  },
+  {
+    icon: Handshake,
+    title: "Support reactif",
+    description: "Reponse sous 24h",
+  },
+];
 
 const values = [
   {
@@ -65,6 +95,18 @@ export default function Home() {
               Vendre mes creations
             </Button>
           </div>
+        </div>
+      </section>
+
+      <section className="border-b border-border bg-secondary/40">
+        <div className="mx-auto grid max-w-4xl grid-cols-2 gap-6 px-6 py-8 sm:grid-cols-4">
+          {trustPoints.map(({ icon: Icon, title, description }) => (
+            <div key={title} className="flex flex-col items-center gap-1.5 text-center">
+              <Icon className="size-5 text-primary" strokeWidth={1.75} />
+              <p className="text-xs font-medium">{title}</p>
+              <p className="text-xs text-muted-foreground">{description}</p>
+            </div>
+          ))}
         </div>
       </section>
 

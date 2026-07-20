@@ -1,6 +1,7 @@
 import Image from "next/image";
 import Link from "next/link";
 import { notFound } from "next/navigation";
+import { RotateCcw, ShieldCheck, Truck } from "lucide-react";
 import { startConversationAction } from "@/actions/messages";
 import { AddToCartForm } from "@/components/shop/add-to-cart-form";
 import { Badge } from "@/components/ui/badge";
@@ -102,6 +103,21 @@ export default async function ProduitDetailPage({
               Contacter le vendeur
             </Button>
           </form>
+        </div>
+
+        <div className="flex flex-col gap-2 border-t border-border pt-6 text-xs text-muted-foreground">
+          <div className="flex items-center gap-2">
+            <ShieldCheck className="size-4 shrink-0 text-primary" strokeWidth={1.75} />
+            <span>Paiement securise par Stripe</span>
+          </div>
+          <div className="flex items-center gap-2">
+            <Truck className="size-4 shrink-0 text-primary" strokeWidth={1.75} />
+            <span>Livraison suivie, France et Europe</span>
+          </div>
+          <div className="flex items-center gap-2">
+            <RotateCcw className="size-4 shrink-0 text-primary" strokeWidth={1.75} />
+            <span>Retours acceptes sous 14 jours</span>
+          </div>
         </div>
       </div>
     </div>
