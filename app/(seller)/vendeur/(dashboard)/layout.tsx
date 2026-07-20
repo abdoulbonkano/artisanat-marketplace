@@ -23,11 +23,11 @@ export default async function VendeurDashboardLayout({
   return (
     <div className="flex min-h-full flex-1 flex-col">
       <header className="flex items-center justify-between border-b px-6 py-4">
-        <Link href="/" className="font-heading text-lg font-medium tracking-tight">
+        <Link href="/" prefetch={false} className="font-heading text-lg font-medium tracking-tight">
           Marketplace Artisanat
         </Link>
         <div className="flex items-center gap-4 text-sm">
-          <Link href="/" className="hover:underline">
+          <Link href="/" prefetch={false} className="hover:underline">
             Voir la boutique publique
           </Link>
           <form action={signOutAction}>
@@ -44,6 +44,7 @@ export default async function VendeurDashboardLayout({
               <Link
                 key={item.href}
                 href={item.href}
+                prefetch={false}
                 className="rounded-md px-3 py-2 text-sidebar-foreground hover:bg-sidebar-accent hover:text-sidebar-accent-foreground"
               >
                 {item.label}
