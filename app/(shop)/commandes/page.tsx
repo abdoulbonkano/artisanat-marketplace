@@ -1,5 +1,8 @@
 import Link from "next/link";
+import { Package } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
+import { EmptyState } from "@/components/ui/empty-state";
 import { requireUser } from "@/lib/permissions";
 import { prisma } from "@/lib/prisma";
 
@@ -25,9 +28,16 @@ export default async function CommandesPage() {
       <h1 className="text-2xl font-semibold tracking-tight">Mes commandes</h1>
 
       {orders.length === 0 ? (
-        <p className="text-sm text-muted-foreground">
-          Vous n&apos;avez pas encore de commande.
-        </p>
+        <EmptyState
+          icon={Package}
+          title="Vous n'avez pas encore de commande"
+          description="Vos achats apparaitront ici des que vous passerez commande."
+          action={
+            <Button render={<Link href="/produits" />} nativeButton={false} size="sm">
+              Decouvrir les creations
+            </Button>
+          }
+        />
       ) : (
         <div className="flex flex-col gap-3">
           {orders.map((order: (typeof orders)[number]) => (

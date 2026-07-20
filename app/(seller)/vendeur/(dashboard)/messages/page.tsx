@@ -1,5 +1,7 @@
 import Link from "next/link";
+import { MessageCircle } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
+import { EmptyState } from "@/components/ui/empty-state";
 import { requireShop } from "@/lib/permissions";
 import { prisma } from "@/lib/prisma";
 
@@ -22,13 +24,15 @@ export default async function VendeurMessagesPage() {
   });
 
   return (
-    <div className="flex flex-col gap-6">
+    <div className="flex flex-1 flex-col gap-6">
       <h1 className="text-2xl font-semibold tracking-tight">Messages</h1>
 
       {conversations.length === 0 ? (
-        <p className="text-sm text-muted-foreground">
-          Vous n&apos;avez pas encore de conversation.
-        </p>
+        <EmptyState
+          icon={MessageCircle}
+          title="Aucune conversation"
+          description="Les messages de vos acheteurs apparaitront ici."
+        />
       ) : (
         <div className="flex flex-col gap-2">
           {conversations.map((conversation: (typeof conversations)[number]) => (

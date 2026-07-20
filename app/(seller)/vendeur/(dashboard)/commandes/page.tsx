@@ -1,4 +1,6 @@
+import { ClipboardList } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
+import { EmptyState } from "@/components/ui/empty-state";
 import {
   Table,
   TableBody,
@@ -28,11 +30,15 @@ export default async function VendeurCommandesPage() {
   });
 
   return (
-    <div className="flex flex-col gap-6">
+    <div className="flex flex-1 flex-col gap-6">
       <h1 className="text-2xl font-semibold tracking-tight">Commandes</h1>
 
       {items.length === 0 ? (
-        <p className="text-sm text-muted-foreground">Aucune commande pour le moment.</p>
+        <EmptyState
+          icon={ClipboardList}
+          title="Aucune commande pour le moment"
+          description="Vos ventes apparaitront ici des qu'un acheteur passera commande."
+        />
       ) : (
         <Table>
           <TableHeader>

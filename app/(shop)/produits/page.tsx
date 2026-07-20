@@ -1,8 +1,10 @@
 import type { Metadata } from "next";
 import Link from "next/link";
+import { SearchX } from "lucide-react";
 import { ProductCard } from "@/components/shop/product-card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
+import { EmptyState } from "@/components/ui/empty-state";
 import { Input } from "@/components/ui/input";
 import { prisma } from "@/lib/prisma";
 
@@ -113,7 +115,16 @@ export default async function ProduitsPage({
       </div>
 
       {products.length === 0 ? (
-        <p className="text-sm text-muted-foreground">Aucun produit ne correspond a votre recherche.</p>
+        <EmptyState
+          icon={SearchX}
+          title="Aucun produit ne correspond a votre recherche"
+          description="Essayez d'autres mots-cles ou reinitialisez les filtres."
+          action={
+            <Button render={<Link href="/produits" />} nativeButton={false} size="sm" variant="outline">
+              Reinitialiser les filtres
+            </Button>
+          }
+        />
       ) : (
         <div className="grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-3">
           {products.map((product: (typeof products)[number]) => (

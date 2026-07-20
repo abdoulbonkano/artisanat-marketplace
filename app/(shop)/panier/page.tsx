@@ -1,7 +1,9 @@
 import Image from "next/image";
 import Link from "next/link";
+import { ShoppingBag } from "lucide-react";
 import { removeCartItemAction, updateCartItemAction } from "@/actions/cart";
 import { Button } from "@/components/ui/button";
+import { EmptyState } from "@/components/ui/empty-state";
 import { Input } from "@/components/ui/input";
 import { requireUser } from "@/lib/permissions";
 import { prisma } from "@/lib/prisma";
@@ -31,12 +33,15 @@ export default async function PanierPage() {
       <h1 className="text-2xl font-semibold tracking-tight">Mon panier</h1>
 
       {items.length === 0 ? (
-        <p className="text-sm text-muted-foreground">
-          Votre panier est vide.{" "}
-          <Link href="/produits" className="underline">
-            Parcourir les produits
-          </Link>
-        </p>
+        <EmptyState
+          icon={ShoppingBag}
+          title="Votre panier est vide"
+          action={
+            <Button render={<Link href="/produits" />} nativeButton={false} size="sm">
+              Parcourir les produits
+            </Button>
+          }
+        />
       ) : (
         <div className="flex flex-col gap-4">
           {items.map((item: (typeof items)[number]) => {

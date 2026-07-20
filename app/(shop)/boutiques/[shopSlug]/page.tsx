@@ -1,7 +1,9 @@
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import { cache } from "react";
+import { Package } from "lucide-react";
 import { ProductCard } from "@/components/shop/product-card";
+import { EmptyState } from "@/components/ui/empty-state";
 import { prisma } from "@/lib/prisma";
 
 const getShop = cache(async (shopSlug: string) => {
@@ -62,9 +64,10 @@ export default async function BoutiquePage({
       </div>
 
       {shop.products.length === 0 ? (
-        <p className="text-sm text-muted-foreground">
-          Cette boutique n&apos;a pas encore de produit publie.
-        </p>
+        <EmptyState
+          icon={Package}
+          title="Cette boutique n'a pas encore de produit publie"
+        />
       ) : (
         <div className="grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-3">
           {shop.products.map((product: (typeof shop.products)[number]) => (

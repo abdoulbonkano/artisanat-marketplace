@@ -1,6 +1,8 @@
 import Link from "next/link";
+import { Package } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
+import { EmptyState } from "@/components/ui/empty-state";
 import {
   Table,
   TableBody,
@@ -26,7 +28,7 @@ export default async function VendeurProduitsPage() {
   });
 
   return (
-    <div className="flex flex-col gap-6">
+    <div className="flex flex-1 flex-col gap-6">
       <div className="flex items-center justify-between">
         <h1 className="text-2xl font-semibold tracking-tight">Mes produits</h1>
         <Button
@@ -38,9 +40,20 @@ export default async function VendeurProduitsPage() {
       </div>
 
       {products.length === 0 ? (
-        <p className="text-sm text-muted-foreground">
-          Vous n&apos;avez pas encore de produit.
-        </p>
+        <EmptyState
+          icon={Package}
+          title="Vous n'avez pas encore de produit"
+          description="Ajoutez votre premiere creation pour commencer a vendre."
+          action={
+            <Button
+              render={<Link href="/vendeur/produits/nouveau" />}
+              nativeButton={false}
+              size="sm"
+            >
+              Nouveau produit
+            </Button>
+          }
+        />
       ) : (
         <Table>
           <TableHeader>
