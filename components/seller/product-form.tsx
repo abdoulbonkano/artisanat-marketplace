@@ -82,7 +82,11 @@ export function ProductForm({
       </div>
       <div className="flex flex-col gap-2">
         <Label htmlFor="categoryId">Categorie</Label>
-        <Select name="categoryId" defaultValue={product?.categoryId ?? undefined}>
+        <Select
+          name="categoryId"
+          items={Object.fromEntries(categories.map((c) => [c.id, c.name]))}
+          defaultValue={product?.categoryId ?? undefined}
+        >
           <SelectTrigger id="categoryId" className="w-full">
             <SelectValue placeholder="Choisir une categorie" />
           </SelectTrigger>
@@ -97,7 +101,11 @@ export function ProductForm({
       </div>
       <div className="flex flex-col gap-2">
         <Label htmlFor="status">Statut</Label>
-        <Select name="status" defaultValue={product?.status ?? "DRAFT"}>
+        <Select
+          name="status"
+          items={{ DRAFT: "Brouillon", PUBLISHED: "Publie" }}
+          defaultValue={product?.status ?? "DRAFT"}
+        >
           <SelectTrigger id="status" className="w-full">
             <SelectValue />
           </SelectTrigger>
