@@ -1,12 +1,20 @@
 import Link from "next/link";
 import {
+  Amphora,
+  Armchair,
+  Briefcase,
   Handshake,
+  PenTool,
   RotateCcw,
   ShieldCheck,
+  Shirt,
   Sparkles,
   Store,
+  Tag,
   Truck,
+  type LucideIcon,
 } from "lucide-react";
+import { ProductCard } from "@/components/shop/product-card";
 import { Button } from "@/components/ui/button";
 import {
   Card,
@@ -14,6 +22,7 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
+import { prisma } from "@/lib/prisma";
 
 const trustPoints = [
   {
@@ -59,7 +68,46 @@ const values = [
   },
 ];
 
-export default function Home() {
+const steps = [
+  {
+    number: "1",
+    title: "L'artisan cree",
+    description: "Chaque piece est faconnee a la main, en petite serie.",
+  },
+  {
+    number: "2",
+    title: "Vous commandez",
+    description: "Paiement securise, directement au createur de la piece.",
+  },
+  {
+    number: "3",
+    title: "Vous recevez",
+    description: "Livraison suivie, avec le vendeur joignable par message.",
+  },
+];
+
+function categoryIcon(name: string): LucideIcon {
+  const n = name.toLowerCase();
+  if (n.includes("bijou")) return Sparkles;
+  if (n.includes("bois") || n.includes("mobilier")) return Armchair;
+  if (n.includes("ceramique") || n.includes("poterie")) return Amphora;
+  if (n.includes("cuir") || n.includes("maroquinerie")) return Briefcase;
+  if (n.includes("papeterie") || n.includes("illustration")) return PenTool;
+  if (n.includes("textile") || n.includes("couture")) return Shirt;
+  return Tag;
+}
+
+export default async function Home() {
+  const [categories, featuredProducts] = await Promise.all([
+    prisma.category.findMany({ orderBy: { name: "asc" }, take: 8 }),
+    prisma.product.findMany({
+      where: { status: "PUBLISHED", shop: { status: "ACTIVE" } },
+      include: { shop: true, images: { orderBy: { position: "asc" }, take: 1 } },
+      orderBy: { createdAt: "desc" },
+      take: 4,
+    }),
+  ]);
+
   return (
     <div className="flex flex-1 flex-col">
       <section className="border-b border-border">
@@ -110,6 +158,56 @@ export default function Home() {
         </div>
       </section>
 
+      {categories.length > 0 && (
+        <section className="border-b border-border px-6 py-16">
+          <div className="mx-auto flex max-w-5xl flex-col gap-6">
+            <h2 className="text-2xl font-medium tracking-tight">
+              Parcourir par categorie
+            </h2>
+            <div className="grid grid-cols-2 gap-4 sm:grid-cols-4">
+              {categories.map((category: (typeof categories)[number]) => {
+                const Icon = categoryIcon(category.name);
+                return (
+                  <Link
+                    key={category.id}
+                    href={`/produits?categorie=${category.slug}`}
+                    className="group/cat flex flex-col items-center gap-2 rounded-xl border border-border/70 bg-card px-4 py-6 text-center transition-all duration-200 hover:-translate-y-1 hover:shadow-[0_4px_6px_-2px_rgba(36,28,16,0.06),0_16px_28px_-12px_rgba(36,28,16,0.18)]"
+                  >
+                    <div className="flex size-10 items-center justify-center rounded-full bg-primary/10 text-primary transition-transform duration-200 group-hover/cat:scale-110">
+                      <Icon className="size-5" strokeWidth={1.75} />
+                    </div>
+                    <span className="text-sm font-medium">{category.name}</span>
+                  </Link>
+                );
+              })}
+            </div>
+          </div>
+        </section>
+      )}
+
+      {featuredProducts.length > 0 && (
+        <section className="border-b border-border px-6 py-16">
+          <div className="mx-auto flex max-w-5xl flex-col gap-6">
+            <div className="flex flex-wrap items-center justify-between gap-3">
+              <h2 className="text-2xl font-medium tracking-tight">
+                Dernieres creations
+              </h2>
+              <Link
+                href="/produits"
+                className="text-sm text-muted-foreground underline decoration-border underline-offset-4 hover:text-foreground"
+              >
+                Voir tous les produits
+              </Link>
+            </div>
+            <div className="grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-4">
+              {featuredProducts.map((product: (typeof featuredProducts)[number]) => (
+                <ProductCard key={product.id} product={product} />
+              ))}
+            </div>
+          </div>
+        </section>
+      )}
+
       <section className="px-6 py-24">
         <div className="mx-auto grid max-w-4xl gap-5 sm:grid-cols-3">
           {values.map(({ icon: Icon, title, description }) => (
@@ -133,7 +231,26 @@ export default function Home() {
         </div>
       </section>
 
-      <section className="border-t border-border bg-secondary/40">
+      <section className="border-t border-border bg-secondary/40 px-6 py-20">
+        <div className="mx-auto flex max-w-4xl flex-col gap-10">
+          <h2 className="text-center text-2xl font-medium tracking-tight">
+            Comment ca fonctionne
+          </h2>
+          <div className="grid gap-8 sm:grid-cols-3">
+            {steps.map((step) => (
+              <div key={step.number} className="flex flex-col items-center gap-2 text-center">
+                <span className="font-heading flex size-10 items-center justify-center rounded-full bg-primary text-lg font-medium text-primary-foreground">
+                  {step.number}
+                </span>
+                <p className="font-medium">{step.title}</p>
+                <p className="text-sm text-muted-foreground">{step.description}</p>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      <section className="border-t border-border">
         <div className="mx-auto flex max-w-4xl flex-col items-center gap-5 px-6 py-20 text-center">
           <h2 className="text-3xl font-medium tracking-tight">
             Vous creez de vos mains ?
