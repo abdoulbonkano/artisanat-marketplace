@@ -16,7 +16,19 @@ export function SiteFooter() {
           </div>
           <nav className="flex flex-col gap-2 text-xs text-muted-foreground">
             <Link href="/produits" className="w-fit hover:text-foreground">
-              Tous les produits
+              Boutique
+            </Link>
+            <Link href="/artisans" className="w-fit hover:text-foreground">
+              Artisans
+            </Link>
+            <Link href="/notre-histoire" className="w-fit hover:text-foreground">
+              Notre histoire
+            </Link>
+            <Link href="/blog" className="w-fit hover:text-foreground">
+              Blog
+            </Link>
+            <Link href="/contact" className="w-fit hover:text-foreground">
+              Contact
             </Link>
             <Link href="/vendeur/onboarding" className="w-fit hover:text-foreground">
               Devenir vendeur

@@ -5,6 +5,15 @@ import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { prisma } from "@/lib/prisma";
 
+const primaryNav = [
+  { href: "/", label: "Accueil" },
+  { href: "/produits", label: "Boutique" },
+  { href: "/artisans", label: "Artisans" },
+  { href: "/notre-histoire", label: "Notre histoire" },
+  { href: "/blog", label: "Blog" },
+  { href: "/contact", label: "Contact" },
+];
+
 export async function SiteHeader() {
   const session = await auth();
   const user = session?.user;
@@ -30,89 +39,101 @@ export async function SiteHeader() {
     : 0;
 
   return (
-    <header className="flex items-center justify-between border-b bg-background/95 px-6 py-4.5 backdrop-blur-sm">
-      <Link
-        href="/"
-        className="font-heading text-xl font-medium tracking-tight"
-      >
-        Marketplace Artisanat
-      </Link>
-      <nav className="flex items-center gap-5 text-sm">
-        <Link href="/produits" className="text-foreground/80 hover:text-foreground">
-          Produits
+    <header className="border-b bg-background/95 backdrop-blur-sm">
+      <div className="flex flex-wrap items-center justify-between gap-x-6 gap-y-3 px-6 py-4">
+        <Link
+          href="/"
+          className="font-heading text-xl font-medium tracking-tight"
+        >
+          Marketplace Artisanat
         </Link>
-        {user ? (
-          <>
-            {(user.role === "SELLER" || user.role === "ADMIN") && (
-              <Link
-                href="/vendeur"
-                className="text-foreground/80 hover:text-foreground"
-              >
-                Mon espace vendeur
-              </Link>
-            )}
-            {user.role === "BUYER" && (
-              <Link
-                href="/vendeur/onboarding"
-                className="text-foreground/80 hover:text-foreground"
-              >
-                Devenir vendeur
-              </Link>
-            )}
-            {user.role === "ADMIN" && (
-              <Link href="/admin" className="text-foreground/80 hover:text-foreground">
-                Admin
-              </Link>
-            )}
+
+        <nav className="flex flex-wrap items-center gap-x-5 gap-y-2 text-sm">
+          {primaryNav.map((item) => (
             <Link
-              href="/messages"
-              className="flex items-center gap-1.5 text-foreground/80 hover:text-foreground"
-            >
-              Messages
-              {unreadCount > 0 && (
-                <Badge className="h-5 min-w-5 justify-center px-1">
-                  {unreadCount}
-                </Badge>
-              )}
-            </Link>
-            <Link href="/commandes" className="text-foreground/80 hover:text-foreground">
-              Mes commandes
-            </Link>
-            <Link
-              href="/panier"
-              className="flex items-center gap-1.5 text-foreground/80 hover:text-foreground"
-            >
-              Panier
-              {cartCount > 0 && (
-                <Badge variant="secondary" className="h-5 min-w-5 justify-center px-1">
-                  {cartCount}
-                </Badge>
-              )}
-            </Link>
-            <form action={signOutAction}>
-              <Button type="submit" variant="ghost" size="sm">
-                Deconnexion
-              </Button>
-            </form>
-          </>
-        ) : (
-          <>
-            <Link
-              href="/auth/connexion"
+              key={item.href}
+              href={item.href}
               className="text-foreground/80 hover:text-foreground"
             >
-              Connexion
+              {item.label}
             </Link>
-            <Button
-              render={<Link href="/auth/inscription" />}
-              nativeButton={false}
-              size="sm"
-            >
-              Inscription
-            </Button>
-          </>
-        )}
-      </nav>
+          ))}
+        </nav>
+
+        <nav className="flex flex-wrap items-center gap-x-4 gap-y-2 text-sm">
+          {user ? (
+            <>
+              {(user.role === "SELLER" || user.role === "ADMIN") && (
+                <Link
+                  href="/vendeur"
+                  className="text-foreground/80 hover:text-foreground"
+                >
+                  Mon espace vendeur
+                </Link>
+              )}
+              {user.role === "BUYER" && (
+                <Link
+                  href="/vendeur/onboarding"
+                  className="text-foreground/80 hover:text-foreground"
+                >
+                  Devenir vendeur
+                </Link>
+              )}
+              {user.role === "ADMIN" && (
+                <Link href="/admin" className="text-foreground/80 hover:text-foreground">
+                  Admin
+                </Link>
+              )}
+              <Link
+                href="/messages"
+                className="flex items-center gap-1.5 text-foreground/80 hover:text-foreground"
+              >
+                Messages
+                {unreadCount > 0 && (
+                  <Badge className="h-5 min-w-5 justify-center px-1">
+                    {unreadCount}
+                  </Badge>
+                )}
+              </Link>
+              <Link href="/commandes" className="text-foreground/80 hover:text-foreground">
+                Mes commandes
+              </Link>
+              <Link
+                href="/panier"
+                className="flex items-center gap-1.5 text-foreground/80 hover:text-foreground"
+              >
+                Panier
+                {cartCount > 0 && (
+                  <Badge variant="secondary" className="h-5 min-w-5 justify-center px-1">
+                    {cartCount}
+                  </Badge>
+                )}
+              </Link>
+              <form action={signOutAction}>
+                <Button type="submit" variant="ghost" size="sm">
+                  Deconnexion
+                </Button>
+              </form>
+            </>
+          ) : (
+            <>
+              <Link
+                href="/auth/connexion"
+                className="text-foreground/80 hover:text-foreground"
+              >
+                Connexion
+              </Link>
+              <Button
+                render={<Link href="/auth/inscription" />}
+                nativeButton={false}
+                size="sm"
+              >
+                Inscription
+              </Button>
+            </>
+          )}
+        </nav>
+      </div>
     </header>
   );
 }
