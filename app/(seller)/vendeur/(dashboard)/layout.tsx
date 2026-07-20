@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { ShoppingBag } from "lucide-react";
 import { signOutAction } from "@/actions/auth";
 import { Button } from "@/components/ui/button";
 import { SiteFooter } from "@/components/site-footer";
@@ -25,10 +26,17 @@ export default async function VendeurDashboardLayout({
         <Link href="/" className="font-heading text-lg font-medium tracking-tight">
           Marketplace Artisanat
         </Link>
-        <div className="flex items-center gap-4 text-sm">
-          <Link href="/" className="hover:underline">
-            Voir la boutique publique
-          </Link>
+        <div className="flex items-center gap-3 text-sm">
+          <Button
+            variant="outline"
+            size="sm"
+            render={<Link href="/" />}
+            nativeButton={false}
+            className="gap-1.5 border-accent/25 text-accent hover:bg-accent/5"
+          >
+            <ShoppingBag className="size-3.5" />
+            Espace acheteur
+          </Button>
           <form action={signOutAction}>
             <Button type="submit" variant="ghost" size="sm">
               Deconnexion

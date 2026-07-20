@@ -6,6 +6,7 @@ import {
   Search,
   ShoppingBag,
   Sparkles,
+  Store,
 } from "lucide-react";
 import { signOutAction } from "@/actions/auth";
 import { auth } from "@/lib/auth";
@@ -70,13 +71,14 @@ export async function SiteHeader() {
             <>
               {(user.role === "SELLER" || user.role === "ADMIN") && (
                 <Button
-                  variant="ghost"
+                  variant="outline"
                   size="sm"
                   render={<Link href="/vendeur" />}
                   nativeButton={false}
-                  className="hidden md:inline-flex"
+                  className="hidden gap-1.5 border-primary/25 text-primary hover:bg-primary/5 md:inline-flex"
                 >
-                  Mon espace vendeur
+                  <Store className="size-3.5" />
+                  Espace vendeur
                 </Button>
               )}
               {user.role === "BUYER" && (
