@@ -3,6 +3,8 @@ import { signOutAction } from "@/actions/auth";
 import { Button } from "@/components/ui/button";
 import { requireSeller } from "@/lib/permissions";
 
+export const dynamic = "force-dynamic";
+
 const navItems = [
   { href: "/vendeur", label: "Tableau de bord" },
   { href: "/vendeur/produits", label: "Produits" },

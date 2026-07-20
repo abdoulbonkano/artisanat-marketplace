@@ -3,6 +3,8 @@ import { signOutAction } from "@/actions/auth";
 import { Button } from "@/components/ui/button";
 import { requireAdmin } from "@/lib/permissions";
 
+export const dynamic = "force-dynamic";
+
 const navItems = [
   { href: "/admin", label: "Tableau de bord" },
   { href: "/admin/boutiques", label: "Boutiques" },
