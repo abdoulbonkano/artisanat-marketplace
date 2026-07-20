@@ -9,9 +9,7 @@ export async function requireUser() {
 
 export async function requireSeller() {
   const user = await requireUser();
-  if (user.role !== "SELLER" && user.role !== "ADMIN") {
-    redirect(`/?debug_role=${encodeURIComponent(String(user.role))}&debug_id=${encodeURIComponent(user.id)}`);
-  }
+  if (user.role !== "SELLER" && user.role !== "ADMIN") redirect("/");
   return user;
 }
 
