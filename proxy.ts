@@ -5,6 +5,15 @@ export default auth((req) => {
   const { nextUrl } = req;
   const role = req.auth?.user?.role;
 
+  // Server Actions (POST) already enforce auth/role server-side via
+  // requireUser/requireSeller/requireAdmin, which read a fresh role from the
+  // database. This proxy only needs to gate GET navigation before render —
+  // applying it to POSTs risks racing/overriding the action's own redirect
+  // response with a stale edge-decoded role.
+  if (req.method !== "GET") {
+    return;
+  }
+
   if (nextUrl.pathname.startsWith("/vendeur")) {
     if (!req.auth) {
       return NextResponse.redirect(new URL("/auth/connexion", nextUrl));
