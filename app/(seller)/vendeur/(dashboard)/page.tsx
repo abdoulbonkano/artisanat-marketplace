@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { Clock, ShieldAlert } from "lucide-react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { requireSeller } from "@/lib/permissions";
 import { prisma } from "@/lib/prisma";
@@ -23,13 +24,42 @@ export default async function VendeurDashboardPage() {
         <h1 className="text-2xl font-semibold tracking-tight">
           Bonjour, {shop?.name ?? user.name}
         </h1>
-        <p className="text-sm text-muted-foreground">
-          Boutique{" "}
-          <Link href={`/boutiques/${shop?.slug}`} className="underline">
-            /boutiques/{shop?.slug}
-          </Link>
-        </p>
+        {shop?.status === "ACTIVE" ? (
+          <p className="text-sm text-muted-foreground">
+            Boutique{" "}
+            <Link href={`/boutiques/${shop.slug}`} className="underline">
+              /boutiques/{shop.slug}
+            </Link>
+          </p>
+        ) : null}
       </div>
+
+      {shop?.status === "PENDING" && (
+        <div className="flex items-start gap-3 rounded-lg border border-accent/30 bg-accent/8 px-4 py-3 text-sm">
+          <Clock className="mt-0.5 size-4 shrink-0 text-accent" strokeWidth={1.75} />
+          <div>
+            <p className="font-medium">Boutique en attente de validation</p>
+            <p className="text-muted-foreground">
+              Votre demande est en cours d&apos;examen. Votre boutique et vos
+              produits ne seront visibles publiquement qu&apos;apres
+              approbation. Vous pouvez preparer votre catalogue des maintenant.
+            </p>
+          </div>
+        </div>
+      )}
+
+      {shop?.status === "SUSPENDED" && (
+        <div className="flex items-start gap-3 rounded-lg border border-destructive/30 bg-destructive/8 px-4 py-3 text-sm">
+          <ShieldAlert className="mt-0.5 size-4 shrink-0 text-destructive" strokeWidth={1.75} />
+          <div>
+            <p className="font-medium">Boutique suspendue</p>
+            <p className="text-muted-foreground">
+              Votre boutique n&apos;est plus visible publiquement. Contactez-nous
+              si vous pensez qu&apos;il s&apos;agit d&apos;une erreur.
+            </p>
+          </div>
+        </div>
+      )}
       <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
         <Card>
           <CardHeader>

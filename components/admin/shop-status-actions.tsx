@@ -13,17 +13,30 @@ export function ShopStatusActions({
   const boundSuspend = suspendShopAction.bind(null, shopId);
   const boundActivate = activateShopAction.bind(null, shopId);
 
-  return status === "SUSPENDED" ? (
-    <form action={boundActivate}>
-      <Button type="submit" size="sm">
-        Reactiver
-      </Button>
-    </form>
-  ) : (
-    <form action={boundSuspend}>
-      <Button type="submit" variant="destructive" size="sm">
-        Suspendre
-      </Button>
-    </form>
+  if (status === "ACTIVE") {
+    return (
+      <form action={boundSuspend}>
+        <Button type="submit" variant="destructive" size="sm">
+          Suspendre
+        </Button>
+      </form>
+    );
+  }
+
+  return (
+    <div className="flex gap-2">
+      <form action={boundActivate}>
+        <Button type="submit" size="sm">
+          {status === "PENDING" ? "Approuver" : "Reactiver"}
+        </Button>
+      </form>
+      {status === "PENDING" && (
+        <form action={boundSuspend}>
+          <Button type="submit" variant="destructive" size="sm">
+            Refuser
+          </Button>
+        </form>
+      )}
+    </div>
   );
 }

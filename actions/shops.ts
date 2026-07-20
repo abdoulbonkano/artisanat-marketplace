@@ -32,7 +32,9 @@ export async function createShopAction(
 
   const parsed = createShopSchema.safeParse({
     name: formData.get("name"),
-    description: formData.get("description") || undefined,
+    description: formData.get("description"),
+    siret: formData.get("siret"),
+    phone: formData.get("phone"),
   });
 
   if (!parsed.success) {
@@ -46,8 +48,10 @@ export async function createShopAction(
       data: {
         name: parsed.data.name,
         description: parsed.data.description,
+        siret: parsed.data.siret,
+        phone: parsed.data.phone,
         slug,
-        status: "ACTIVE",
+        status: "PENDING",
         ownerId: user.id,
       },
     }),
@@ -67,7 +71,9 @@ export async function updateShopAction(
 
   const parsed = updateShopSchema.safeParse({
     name: formData.get("name"),
-    description: formData.get("description") || undefined,
+    description: formData.get("description"),
+    siret: formData.get("siret"),
+    phone: formData.get("phone"),
   });
 
   if (!parsed.success) {
@@ -79,6 +85,8 @@ export async function updateShopAction(
     data: {
       name: parsed.data.name,
       description: parsed.data.description,
+      siret: parsed.data.siret,
+      phone: parsed.data.phone,
     },
   });
 

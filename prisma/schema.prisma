@@ -64,6 +64,8 @@ model Shop {
   slug          String         @unique
   name          String
   description   String?
+  siret         String?
+  phone         String?
   logoUrl       String?
   bannerUrl     String?
   status        ShopStatus     @default(PENDING)

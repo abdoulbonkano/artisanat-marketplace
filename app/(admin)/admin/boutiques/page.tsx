@@ -32,6 +32,8 @@ export default async function AdminBoutiquesPage() {
           <TableRow>
             <TableHead>Boutique</TableHead>
             <TableHead>Proprietaire</TableHead>
+            <TableHead>SIRET</TableHead>
+            <TableHead>Telephone</TableHead>
             <TableHead>Produits</TableHead>
             <TableHead>Statut</TableHead>
             <TableHead>Action</TableHead>
@@ -41,11 +43,17 @@ export default async function AdminBoutiquesPage() {
           {shops.map((shop: (typeof shops)[number]) => (
             <TableRow key={shop.id}>
               <TableCell>
-                <Link href={`/boutiques/${shop.slug}`} className="underline">
-                  {shop.name}
-                </Link>
+                {shop.status === "ACTIVE" ? (
+                  <Link href={`/boutiques/${shop.slug}`} className="underline">
+                    {shop.name}
+                  </Link>
+                ) : (
+                  shop.name
+                )}
               </TableCell>
               <TableCell>{shop.owner.email}</TableCell>
+              <TableCell>{shop.siret ?? "-"}</TableCell>
+              <TableCell>{shop.phone ?? "-"}</TableCell>
               <TableCell>{shop._count.products}</TableCell>
               <TableCell>
                 <Badge variant="secondary">{statusLabel[shop.status]}</Badge>
