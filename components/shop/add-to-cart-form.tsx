@@ -36,7 +36,7 @@ export function AddToCartForm({
         max={stock}
         className="w-20"
       />
-      <Button type="submit" disabled={pending}>
+      <Button type="submit" size="lg" disabled={pending}>
         {pending ? "Ajout..." : "Ajouter au panier"}
       </Button>
     </form>

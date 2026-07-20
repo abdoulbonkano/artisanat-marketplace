@@ -27,60 +27,82 @@ export default async function ProduitDetailPage({
     notFound();
   }
 
+  const [mainImage, ...otherImages] = product.images;
+
   return (
-    <div className="flex flex-1 flex-col gap-6 px-6 py-8">
-      {product.images.length > 0 && (
-        <div className="flex flex-wrap gap-3">
-          {product.images.map((image: (typeof product.images)[number], index: number) => (
-            <div
-              key={image.id}
-              className="relative size-40 overflow-hidden rounded-md border sm:size-56"
-            >
-              <Image
-                src={image.url}
-                alt={`${product.title} - photo ${index + 1}`}
-                fill
-                className="object-cover"
-                sizes="224px"
-                priority={index === 0}
-              />
-            </div>
-          ))}
+    <div className="mx-auto flex w-full max-w-5xl flex-1 flex-col gap-10 px-6 py-10 lg:flex-row lg:gap-12 lg:py-16">
+      <div className="flex flex-col gap-3 lg:w-1/2 lg:shrink-0">
+        <div className="relative aspect-square w-full overflow-hidden rounded-2xl bg-muted shadow-[0_4px_8px_-4px_rgba(36,28,16,0.08),0_20px_36px_-16px_rgba(36,28,16,0.2)]">
+          {mainImage && (
+            <Image
+              src={mainImage.url}
+              alt={product.title}
+              fill
+              className="object-cover"
+              sizes="(min-width: 1024px) 45vw, 100vw"
+              priority
+            />
+          )}
         </div>
-      )}
-
-      <div className="flex flex-col gap-2">
-        {product.category && (
-          <Link href={`/produits?categorie=${product.category.slug}`}>
-            <Badge variant="secondary">{product.category.name}</Badge>
-          </Link>
+        {otherImages.length > 0 && (
+          <div className="flex flex-wrap gap-3">
+            {otherImages.map((image: (typeof otherImages)[number], index: number) => (
+              <div
+                key={image.id}
+                className="relative size-20 overflow-hidden rounded-lg border border-border"
+              >
+                <Image
+                  src={image.url}
+                  alt={`${product.title} - photo ${index + 2}`}
+                  fill
+                  className="object-cover"
+                  sizes="80px"
+                />
+              </div>
+            ))}
+          </div>
         )}
-        <h1 className="text-3xl font-semibold tracking-tight">{product.title}</h1>
-        <Link href={`/boutiques/${product.shop.slug}`} className="text-sm underline">
-          {product.shop.name}
-        </Link>
       </div>
 
-      <p className="whitespace-pre-wrap text-sm leading-relaxed">
-        {product.description}
-      </p>
+      <div className="flex flex-col gap-6 lg:w-1/2">
+        <div className="flex flex-col gap-3">
+          {product.category && (
+            <Link href={`/produits?categorie=${product.category.slug}`} className="w-fit">
+              <Badge variant="secondary">{product.category.name}</Badge>
+            </Link>
+          )}
+          <h1 className="text-3xl leading-tight font-medium tracking-tight text-balance sm:text-4xl">
+            {product.title}
+          </h1>
+          <Link
+            href={`/boutiques/${product.shop.slug}`}
+            className="w-fit text-sm text-muted-foreground underline decoration-border underline-offset-4 hover:text-foreground"
+          >
+            {product.shop.name}
+          </Link>
+        </div>
 
-      <div className="flex items-center gap-4">
-        <span className="text-2xl font-semibold">
-          {(product.priceCents / 100).toFixed(2)} EUR
-        </span>
-        <span className="text-sm text-muted-foreground">
-          {product.stock > 0 ? `${product.stock} en stock` : "Rupture de stock"}
-        </span>
-      </div>
+        <p className="text-sm leading-relaxed whitespace-pre-wrap text-muted-foreground">
+          {product.description}
+        </p>
 
-      <div className="flex items-center gap-3">
-        <AddToCartForm productId={product.id} stock={product.stock} />
-        <form action={startConversationAction.bind(null, product.shop.id, product.id)}>
-          <Button type="submit" variant="outline">
-            Contacter le vendeur
-          </Button>
-        </form>
+        <div className="flex items-baseline gap-3 border-t border-border pt-6">
+          <span className="text-3xl font-semibold tabular-nums">
+            {(product.priceCents / 100).toFixed(2)} EUR
+          </span>
+          <span className="text-sm text-muted-foreground">
+            {product.stock > 0 ? `${product.stock} en stock` : "Rupture de stock"}
+          </span>
+        </div>
+
+        <div className="flex flex-wrap items-center gap-3">
+          <AddToCartForm productId={product.id} stock={product.stock} />
+          <form action={startConversationAction.bind(null, product.shop.id, product.id)}>
+            <Button type="submit" variant="outline" size="lg">
+              Contacter le vendeur
+            </Button>
+          </form>
+        </div>
       </div>
     </div>
   );
