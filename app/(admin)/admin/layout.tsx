@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { signOutAction } from "@/actions/auth";
 import { Button } from "@/components/ui/button";
+import { SiteFooter } from "@/components/site-footer";
 import { requireAdmin } from "@/lib/permissions";
 
 const navItems = [
@@ -24,11 +25,16 @@ export default async function AdminLayout({
         <Link href="/" className="font-semibold tracking-tight">
           Marketplace Artisanat - Admin
         </Link>
-        <form action={signOutAction}>
-          <Button type="submit" variant="ghost" size="sm">
-            Deconnexion
-          </Button>
-        </form>
+        <div className="flex items-center gap-4 text-sm">
+          <Link href="/" className="hover:underline">
+            Voir le site public
+          </Link>
+          <form action={signOutAction}>
+            <Button type="submit" variant="ghost" size="sm">
+              Deconnexion
+            </Button>
+          </form>
+        </div>
       </header>
       <div className="flex flex-1">
         <aside className="w-56 shrink-0 border-r border-sidebar-border bg-sidebar px-4 py-6">
@@ -46,6 +52,7 @@ export default async function AdminLayout({
         </aside>
         <div className="flex-1 px-6 py-6">{children}</div>
       </div>
+      <SiteFooter />
     </div>
   );
 }

@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { signOutAction } from "@/actions/auth";
 import { Button } from "@/components/ui/button";
+import { SiteFooter } from "@/components/site-footer";
 import { requireSeller } from "@/lib/permissions";
 
 const navItems = [
@@ -51,6 +52,7 @@ export default async function VendeurDashboardLayout({
         </aside>
         <div className="flex-1 px-6 py-6">{children}</div>
       </div>
+      <SiteFooter />
     </div>
   );
 }
