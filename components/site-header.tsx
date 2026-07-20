@@ -1,18 +1,19 @@
 import Link from "next/link";
+import {
+  LogOut,
+  MessageCircle,
+  Package,
+  Search,
+  ShoppingBag,
+  Sparkles,
+} from "lucide-react";
 import { signOutAction } from "@/actions/auth";
 import { auth } from "@/lib/auth";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { MainNav } from "@/components/main-nav";
 import { prisma } from "@/lib/prisma";
-
-const primaryNav = [
-  { href: "/", label: "Accueil" },
-  { href: "/produits", label: "Boutique" },
-  { href: "/artisans", label: "Artisans" },
-  { href: "/notre-histoire", label: "Notre histoire" },
-  { href: "/blog", label: "Blog" },
-  { href: "/contact", label: "Contact" },
-];
 
 export async function SiteHeader() {
   const session = await auth();
@@ -39,90 +40,131 @@ export async function SiteHeader() {
     : 0;
 
   return (
-    <header className="border-b bg-background/95 backdrop-blur-sm">
-      <div className="flex flex-wrap items-center justify-between gap-x-6 gap-y-3 px-6 py-4">
+    <header className="sticky top-0 z-50 border-b border-border/70 bg-background/90 shadow-[0_1px_0_rgba(36,28,16,0.04)] backdrop-blur-md">
+      <div className="flex items-center gap-4 px-6 py-3.5 sm:gap-6">
         <Link
           href="/"
-          className="font-heading text-xl font-medium tracking-tight"
+          className="flex shrink-0 items-center gap-2 font-heading text-xl font-medium tracking-tight"
         >
-          Marketplace Artisanat
+          <span className="flex size-8 items-center justify-center rounded-lg bg-primary text-primary-foreground">
+            <Sparkles className="size-4" strokeWidth={1.75} />
+          </span>
+          <span className="hidden sm:inline">Marketplace Artisanat</span>
         </Link>
 
-        <nav className="flex flex-wrap items-center gap-x-5 gap-y-2 text-sm">
-          {primaryNav.map((item) => (
-            <Link
-              key={item.href}
-              href={item.href}
-              className="text-foreground/80 hover:text-foreground"
-            >
-              {item.label}
-            </Link>
-          ))}
-        </nav>
+        <form
+          action="/produits"
+          method="get"
+          className="relative hidden max-w-md flex-1 sm:block"
+        >
+          <Search className="pointer-events-none absolute top-1/2 left-3 size-4 -translate-y-1/2 text-muted-foreground" />
+          <Input
+            name="q"
+            placeholder="Rechercher un bijou, une ceramique..."
+            className="h-9 rounded-full pl-9"
+          />
+        </form>
 
-        <nav className="flex flex-wrap items-center gap-x-4 gap-y-2 text-sm">
+        <div className="ml-auto flex shrink-0 items-center gap-1.5">
           {user ? (
             <>
               {(user.role === "SELLER" || user.role === "ADMIN") && (
-                <Link
-                  href="/vendeur"
-                  className="text-foreground/80 hover:text-foreground"
+                <Button
+                  variant="ghost"
+                  size="sm"
+                  render={<Link href="/vendeur" />}
+                  nativeButton={false}
+                  className="hidden md:inline-flex"
                 >
                   Mon espace vendeur
-                </Link>
+                </Button>
               )}
               {user.role === "BUYER" && (
-                <Link
-                  href="/vendeur/onboarding"
-                  className="text-foreground/80 hover:text-foreground"
+                <Button
+                  variant="outline"
+                  size="sm"
+                  render={<Link href="/vendeur/onboarding" />}
+                  nativeButton={false}
+                  className="hidden md:inline-flex"
                 >
                   Devenir vendeur
-                </Link>
+                </Button>
               )}
               {user.role === "ADMIN" && (
-                <Link href="/admin" className="text-foreground/80 hover:text-foreground">
+                <Button
+                  variant="ghost"
+                  size="sm"
+                  render={<Link href="/admin" />}
+                  nativeButton={false}
+                  className="hidden md:inline-flex"
+                >
                   Admin
-                </Link>
+                </Button>
               )}
-              <Link
-                href="/messages"
-                className="flex items-center gap-1.5 text-foreground/80 hover:text-foreground"
+
+              <Button
+                variant="ghost"
+                size="icon"
+                render={<Link href="/commandes" aria-label="Mes commandes" />}
+                nativeButton={false}
               >
-                Messages
+                <Package />
+              </Button>
+
+              <Button
+                variant="ghost"
+                size="icon"
+                render={<Link href="/messages" aria-label="Messages" />}
+                nativeButton={false}
+                className="relative"
+              >
+                <MessageCircle />
                 {unreadCount > 0 && (
-                  <Badge className="h-5 min-w-5 justify-center px-1">
+                  <Badge className="absolute -top-1 -right-1 h-4 min-w-4 justify-center px-1 text-[10px]">
                     {unreadCount}
                   </Badge>
                 )}
-              </Link>
-              <Link href="/commandes" className="text-foreground/80 hover:text-foreground">
-                Mes commandes
-              </Link>
-              <Link
-                href="/panier"
-                className="flex items-center gap-1.5 text-foreground/80 hover:text-foreground"
+              </Button>
+
+              <Button
+                variant="ghost"
+                size="icon"
+                render={<Link href="/panier" aria-label="Panier" />}
+                nativeButton={false}
+                className="relative"
               >
-                Panier
+                <ShoppingBag />
                 {cartCount > 0 && (
-                  <Badge variant="secondary" className="h-5 min-w-5 justify-center px-1">
+                  <Badge
+                    variant="secondary"
+                    className="absolute -top-1 -right-1 h-4 min-w-4 justify-center px-1 text-[10px]"
+                  >
                     {cartCount}
                   </Badge>
                 )}
-              </Link>
+              </Button>
+
               <form action={signOutAction}>
-                <Button type="submit" variant="ghost" size="sm">
-                  Deconnexion
+                <Button
+                  type="submit"
+                  variant="ghost"
+                  size="icon"
+                  aria-label="Deconnexion"
+                >
+                  <LogOut />
                 </Button>
               </form>
             </>
           ) : (
             <>
-              <Link
-                href="/auth/connexion"
-                className="text-foreground/80 hover:text-foreground"
+              <Button
+                variant="ghost"
+                size="sm"
+                render={<Link href="/auth/connexion" />}
+                nativeButton={false}
               >
                 Connexion
-              </Link>
+              </Button>
               <Button
                 render={<Link href="/auth/inscription" />}
                 nativeButton={false}
@@ -132,8 +174,10 @@ export async function SiteHeader() {
               </Button>
             </>
           )}
-        </nav>
+        </div>
       </div>
+
+      <MainNav />
     </header>
   );
 }
