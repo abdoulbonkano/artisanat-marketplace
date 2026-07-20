@@ -4,7 +4,6 @@ import { auth } from "@/lib/auth";
 export default auth((req) => {
   const { nextUrl } = req;
   const role = req.auth?.user?.role;
-  console.log("[proxy]", req.method, nextUrl.pathname, "role=", role, "auth=", !!req.auth);
 
   // Server Actions (POST) already enforce auth/role server-side via
   // requireUser/requireSeller/requireAdmin, which read a fresh role from the
@@ -12,7 +11,6 @@ export default auth((req) => {
   // applying it to POSTs risks racing/overriding the action's own redirect
   // response with a stale edge-decoded role.
   if (req.method !== "GET") {
-    console.log("[proxy] skipping non-GET");
     return;
   }
 
@@ -24,7 +22,6 @@ export default auth((req) => {
     // reachable to any logged-in user, only the dashboard itself is gated.
     const isOnboarding = nextUrl.pathname.startsWith("/vendeur/onboarding");
     if (!isOnboarding && role !== "SELLER" && role !== "ADMIN") {
-      console.log("[proxy] redirecting to / due to role check");
       return NextResponse.redirect(new URL("/", nextUrl));
     }
   }
