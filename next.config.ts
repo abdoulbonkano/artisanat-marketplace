@@ -9,6 +9,13 @@ const nextConfig: NextConfig = {
       },
     ],
   },
+  experimental: {
+    serverActions: {
+      // Match lib/storage.ts's own 5MB image validation limit, with some
+      // headroom for multipart/form-data boundary and field overhead.
+      bodySizeLimit: "6mb",
+    },
+  },
 };
 
 export default nextConfig;
