@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { Fraunces, Geist, Geist_Mono } from "next/font/google";
+import { SITE_NAME, SITE_URL } from "@/lib/site";
 import "./globals.css";
 
 const geistSans = Geist({
@@ -19,8 +20,31 @@ const fraunces = Fraunces({
 });
 
 export const metadata: Metadata = {
-  title: "Marketplace Artisanat",
-  description: "Marketplace dediee aux articles issus de l'artisanat",
+  metadataBase: new URL(SITE_URL),
+  title: {
+    default: `${SITE_NAME} - L'artisanat, sans intermediaire`,
+    template: `%s | ${SITE_NAME}`,
+  },
+  description:
+    "Marketplace dediee a l'artisanat fait main : achetez en direct aupres de createurs independants, ou ouvrez votre propre boutique.",
+  openGraph: {
+    type: "website",
+    locale: "fr_FR",
+    siteName: SITE_NAME,
+    title: `${SITE_NAME} - L'artisanat, sans intermediaire`,
+    description:
+      "Achetez en direct aupres de createurs independants, ou ouvrez votre propre boutique d'artisanat.",
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: `${SITE_NAME} - L'artisanat, sans intermediaire`,
+    description:
+      "Achetez en direct aupres de createurs independants, ou ouvrez votre propre boutique d'artisanat.",
+  },
+  robots: {
+    index: true,
+    follow: true,
+  },
 };
 
 export default function RootLayout({

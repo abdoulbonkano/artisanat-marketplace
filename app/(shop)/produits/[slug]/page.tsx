@@ -1,12 +1,50 @@
+import type { Metadata } from "next";
 import Image from "next/image";
 import Link from "next/link";
 import { notFound } from "next/navigation";
+import { cache } from "react";
 import { RotateCcw, ShieldCheck, Truck } from "lucide-react";
 import { startConversationAction } from "@/actions/messages";
 import { AddToCartForm } from "@/components/shop/add-to-cart-form";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { prisma } from "@/lib/prisma";
+
+const getProduct = cache(async (slug: string) => {
+  return prisma.product.findUnique({
+    where: { slug },
+    include: {
+      shop: true,
+      category: true,
+      images: { orderBy: { position: "asc" } },
+    },
+  });
+});
+
+export async function generateMetadata({
+  params,
+}: {
+  params: Promise<{ slug: string }>;
+}): Promise<Metadata> {
+  const { slug } = await params;
+  const product = await getProduct(slug);
+
+  if (!product || product.status !== "PUBLISHED" || product.shop.status !== "ACTIVE") {
+    return {};
+  }
+
+  const description = product.description.slice(0, 160);
+
+  return {
+    title: product.title,
+    description,
+    openGraph: {
+      title: product.title,
+      description,
+      images: product.images[0] ? [{ url: product.images[0].url }] : undefined,
+    },
+  };
+}
 
 export default async function ProduitDetailPage({
   params,
@@ -15,14 +53,7 @@ export default async function ProduitDetailPage({
 }) {
   const { slug } = await params;
 
-  const product = await prisma.product.findUnique({
-    where: { slug },
-    include: {
-      shop: true,
-      category: true,
-      images: { orderBy: { position: "asc" } },
-    },
-  });
+  const product = await getProduct(slug);
 
   if (!product || product.status !== "PUBLISHED" || product.shop.status !== "ACTIVE") {
     notFound();

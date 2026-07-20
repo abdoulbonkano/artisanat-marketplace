@@ -1,9 +1,16 @@
+import type { Metadata } from "next";
 import Link from "next/link";
 import { ProductCard } from "@/components/shop/product-card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { prisma } from "@/lib/prisma";
+
+export const metadata: Metadata = {
+  title: "Tous les produits",
+  description:
+    "Parcourez les creations faites main de nos artisans independants : bijoux, ceramique, textile, maroquinerie et plus.",
+};
 
 export default async function ProduitsPage({
   searchParams,

@@ -1,15 +1,11 @@
+import type { Metadata } from "next";
 import { notFound } from "next/navigation";
+import { cache } from "react";
 import { ProductCard } from "@/components/shop/product-card";
 import { prisma } from "@/lib/prisma";
 
-export default async function BoutiquePage({
-  params,
-}: {
-  params: Promise<{ shopSlug: string }>;
-}) {
-  const { shopSlug } = await params;
-
-  const shop = await prisma.shop.findUnique({
+const getShop = cache(async (shopSlug: string) => {
+  return prisma.shop.findUnique({
     where: { slug: shopSlug },
     include: {
       products: {
@@ -19,6 +15,36 @@ export default async function BoutiquePage({
       },
     },
   });
+});
+
+export async function generateMetadata({
+  params,
+}: {
+  params: Promise<{ shopSlug: string }>;
+}): Promise<Metadata> {
+  const { shopSlug } = await params;
+  const shop = await getShop(shopSlug);
+
+  if (!shop || shop.status !== "ACTIVE") {
+    return {};
+  }
+
+  return {
+    title: shop.name,
+    description:
+      shop.description?.slice(0, 160) ??
+      `Decouvrez les creations de la boutique ${shop.name}.`,
+  };
+}
+
+export default async function BoutiquePage({
+  params,
+}: {
+  params: Promise<{ shopSlug: string }>;
+}) {
+  const { shopSlug } = await params;
+
+  const shop = await getShop(shopSlug);
 
   if (!shop || shop.status !== "ACTIVE") {
     notFound();
