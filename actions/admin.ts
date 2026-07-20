@@ -30,3 +30,22 @@ export async function deleteProductAdminAction(productId: string) {
   await Promise.all(images.map((image: { url: string }) => deleteProductImage(image.url)));
   revalidatePath("/admin/produits");
 }
+
+export async function promoteToAdminAction(userId: string) {
+  await requireAdmin();
+  await prisma.user.update({ where: { id: userId }, data: { role: "ADMIN" } });
+  revalidatePath("/admin/utilisateurs");
+}
+
+export async function demoteAdminAction(userId: string) {
+  const currentAdmin = await requireAdmin();
+  if (currentAdmin.id === userId) {
+    throw new Error("Vous ne pouvez pas retirer vos propres droits administrateur");
+  }
+  const shop = await prisma.shop.findUnique({ where: { ownerId: userId } });
+  await prisma.user.update({
+    where: { id: userId },
+    data: { role: shop ? "SELLER" : "BUYER" },
+  });
+  revalidatePath("/admin/utilisateurs");
+}
