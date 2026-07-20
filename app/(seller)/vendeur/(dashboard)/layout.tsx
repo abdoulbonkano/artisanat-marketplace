@@ -3,8 +3,6 @@ import { signOutAction } from "@/actions/auth";
 import { Button } from "@/components/ui/button";
 import { requireSeller } from "@/lib/permissions";
 
-export const dynamic = "force-dynamic";
-
 const navItems = [
   { href: "/vendeur", label: "Tableau de bord" },
   { href: "/vendeur/produits", label: "Produits" },
@@ -23,11 +21,11 @@ export default async function VendeurDashboardLayout({
   return (
     <div className="flex min-h-full flex-1 flex-col">
       <header className="flex items-center justify-between border-b px-6 py-4">
-        <Link href="/" prefetch={false} className="font-heading text-lg font-medium tracking-tight">
+        <Link href="/" className="font-heading text-lg font-medium tracking-tight">
           Marketplace Artisanat
         </Link>
         <div className="flex items-center gap-4 text-sm">
-          <Link href="/" prefetch={false} className="hover:underline">
+          <Link href="/" className="hover:underline">
             Voir la boutique publique
           </Link>
           <form action={signOutAction}>
@@ -44,7 +42,6 @@ export default async function VendeurDashboardLayout({
               <Link
                 key={item.href}
                 href={item.href}
-                prefetch={false}
                 className="rounded-md px-3 py-2 text-sidebar-foreground hover:bg-sidebar-accent hover:text-sidebar-accent-foreground"
               >
                 {item.label}
