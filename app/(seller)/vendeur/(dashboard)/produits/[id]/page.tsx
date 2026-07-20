@@ -3,7 +3,7 @@ import { deleteProductAction, updateProductAction } from "@/actions/products";
 import { DeleteProductButton } from "@/components/seller/delete-product-button";
 import { ProductForm } from "@/components/seller/product-form";
 import { ProductImages } from "@/components/seller/product-images";
-import { requireSeller } from "@/lib/permissions";
+import { requireShop } from "@/lib/permissions";
 import { prisma } from "@/lib/prisma";
 
 export default async function EditProduitPage({
@@ -12,8 +12,7 @@ export default async function EditProduitPage({
   params: Promise<{ id: string }>;
 }) {
   const { id } = await params;
-  const user = await requireSeller();
-  const shop = await prisma.shop.findUniqueOrThrow({ where: { ownerId: user.id } });
+  const { shop } = await requireShop();
 
   const [product, categories] = await Promise.all([
     prisma.product.findUnique({

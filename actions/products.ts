@@ -2,7 +2,7 @@
 
 import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
-import { requireSeller } from "@/lib/permissions";
+import { requireShop } from "@/lib/permissions";
 import { prisma } from "@/lib/prisma";
 import { slugify } from "@/lib/slug";
 import { deleteProductImage, isAllowedImage, saveProductImage } from "@/lib/storage";
@@ -10,8 +10,7 @@ import { productSchema } from "@/lib/validations/product";
 import type { ActionState } from "@/actions/auth";
 
 async function ownedProductOrThrow(productId: string) {
-  const user = await requireSeller();
-  const shop = await prisma.shop.findUniqueOrThrow({ where: { ownerId: user.id } });
+  const { shop } = await requireShop();
   const product = await prisma.product.findUnique({ where: { id: productId } });
   if (!product || product.shopId !== shop.id) {
     throw new Error("Produit introuvable");
@@ -45,8 +44,7 @@ export async function createProductAction(
   _prevState: ActionState,
   formData: FormData,
 ): Promise<ActionState> {
-  const user = await requireSeller();
-  const shop = await prisma.shop.findUniqueOrThrow({ where: { ownerId: user.id } });
+  const { shop } = await requireShop();
 
   const parsed = parseProductForm(formData);
   if (!parsed.success) {
@@ -76,8 +74,7 @@ export async function updateProductAction(
   _prevState: ActionState,
   formData: FormData,
 ): Promise<ActionState> {
-  const user = await requireSeller();
-  const shop = await prisma.shop.findUniqueOrThrow({ where: { ownerId: user.id } });
+  const { shop } = await requireShop();
 
   const product = await prisma.product.findUnique({ where: { id: productId } });
   if (!product || product.shopId !== shop.id) {

@@ -1,11 +1,10 @@
 import Link from "next/link";
 import { Badge } from "@/components/ui/badge";
-import { requireSeller } from "@/lib/permissions";
+import { requireShop } from "@/lib/permissions";
 import { prisma } from "@/lib/prisma";
 
 export default async function VendeurMessagesPage() {
-  const user = await requireSeller();
-  const shop = await prisma.shop.findUniqueOrThrow({ where: { ownerId: user.id } });
+  const { user, shop } = await requireShop();
 
   const conversations = await prisma.conversation.findMany({
     where: { shopId: shop.id },

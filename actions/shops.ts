@@ -25,7 +25,8 @@ export async function createShopAction(
 ): Promise<ActionState> {
   const user = await requireUser();
 
-  if (user.role === "SELLER" || user.role === "ADMIN") {
+  const existingShop = await prisma.shop.findUnique({ where: { ownerId: user.id } });
+  if (existingShop) {
     redirect("/vendeur");
   }
 
@@ -50,10 +51,9 @@ export async function createShopAction(
         ownerId: user.id,
       },
     }),
-    prisma.user.update({
-      where: { id: user.id },
-      data: { role: "SELLER" },
-    }),
+    ...(user.role === "BUYER"
+      ? [prisma.user.update({ where: { id: user.id }, data: { role: "SELLER" as const } })]
+      : []),
   ]);
 
   redirect("/vendeur");

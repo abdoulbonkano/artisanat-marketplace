@@ -1,10 +1,8 @@
 import { ShopForm } from "@/components/seller/shop-form";
-import { requireSeller } from "@/lib/permissions";
-import { prisma } from "@/lib/prisma";
+import { requireShop } from "@/lib/permissions";
 
 export default async function VendeurBoutiquePage() {
-  const user = await requireSeller();
-  const shop = await prisma.shop.findUniqueOrThrow({ where: { ownerId: user.id } });
+  const { shop } = await requireShop();
 
   return (
     <div className="flex flex-col gap-6">

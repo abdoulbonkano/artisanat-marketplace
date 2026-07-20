@@ -1,7 +1,7 @@
 import { notFound } from "next/navigation";
 import { markConversationReadAction } from "@/actions/messages";
 import { MessageThread } from "@/components/messaging/message-thread";
-import { requireSeller } from "@/lib/permissions";
+import { requireShop } from "@/lib/permissions";
 import { prisma } from "@/lib/prisma";
 
 export default async function VendeurMessageThreadPage({
@@ -10,8 +10,7 @@ export default async function VendeurMessageThreadPage({
   params: Promise<{ conversationId: string }>;
 }) {
   const { conversationId } = await params;
-  const user = await requireSeller();
-  const shop = await prisma.shop.findUniqueOrThrow({ where: { ownerId: user.id } });
+  const { user, shop } = await requireShop();
 
   const conversation = await prisma.conversation.findUnique({
     where: { id: conversationId },

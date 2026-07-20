@@ -9,7 +9,7 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import { requireSeller } from "@/lib/permissions";
+import { requireShop } from "@/lib/permissions";
 import { prisma } from "@/lib/prisma";
 
 const statusLabel: Record<string, string> = {
@@ -19,8 +19,7 @@ const statusLabel: Record<string, string> = {
 };
 
 export default async function VendeurProduitsPage() {
-  const user = await requireSeller();
-  const shop = await prisma.shop.findUniqueOrThrow({ where: { ownerId: user.id } });
+  const { shop } = await requireShop();
   const products = await prisma.product.findMany({
     where: { shopId: shop.id },
     orderBy: { createdAt: "desc" },
