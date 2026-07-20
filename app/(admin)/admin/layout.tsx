@@ -31,13 +31,13 @@ export default async function AdminLayout({
         </form>
       </header>
       <div className="flex flex-1">
-        <aside className="w-56 shrink-0 border-r px-4 py-6">
+        <aside className="w-56 shrink-0 border-r border-sidebar-border bg-sidebar px-4 py-6">
           <nav className="flex flex-col gap-1 text-sm">
             {navItems.map((item) => (
               <Link
                 key={item.href}
                 href={item.href}
-                className="rounded-md px-3 py-2 hover:bg-muted"
+                className="rounded-md px-3 py-2 text-sidebar-foreground hover:bg-sidebar-accent hover:text-sidebar-accent-foreground"
               >
                 {item.label}
               </Link>
