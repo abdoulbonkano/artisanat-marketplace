@@ -171,7 +171,7 @@ export default async function Home() {
               <Button
                 size="lg"
                 variant="outline"
-                className="border-primary-foreground/25 text-primary-foreground hover:bg-primary-foreground/10"
+                className="border-primary-foreground/25 bg-transparent text-primary-foreground hover:bg-primary-foreground/10 hover:text-primary-foreground"
                 render={<Link href="/vendeur/onboarding" />}
                 nativeButton={false}
               >
