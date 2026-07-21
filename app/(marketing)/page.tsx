@@ -87,9 +87,18 @@ const steps = [
   },
 ];
 
+const marqueeItems = [
+  "Fait main",
+  "Vendu en direct",
+  "Artisans partenaires",
+  "Pieces uniques",
+  "Sans intermediaire",
+];
+
 const categoryTints = [
-  "bg-primary/10 text-primary",
-  "bg-accent/12 text-accent",
+  "bg-primary text-primary-foreground",
+  "bg-accent text-accent-foreground",
+  "bg-foreground text-background",
   "bg-secondary text-secondary-foreground",
 ];
 
@@ -128,51 +137,96 @@ export default async function Home() {
   ]);
 
   const spotlightImage = spotlightShop?.products[0]?.images[0];
+  const heroProduct = featuredProducts.find((p: (typeof featuredProducts)[number]) => p.images[0]);
+  const heroImage = heroProduct?.images[0];
 
   return (
     <div className="flex flex-1 flex-col">
-      <section className="border-b border-border bg-secondary/30">
-        <div className="mx-auto flex max-w-4xl flex-col items-center gap-6 px-6 py-20 text-center sm:py-24">
-          <div className="flex flex-col items-center gap-3">
-            <span className="text-xs font-semibold tracking-[0.16em] text-accent uppercase">
+      <section className="bg-grain relative isolate overflow-hidden bg-primary text-primary-foreground">
+        <div className="pointer-events-none absolute -top-24 -right-24 size-96 rounded-full bg-accent/20 blur-3xl" />
+        <div className="mx-auto grid max-w-6xl gap-12 px-6 py-20 sm:py-28 lg:grid-cols-[1.2fr_1fr] lg:items-center lg:py-32">
+          <div className="flex flex-col items-start gap-6">
+            <span className="inline-flex w-fit items-center gap-2 rounded-full bg-primary-foreground/10 px-4 py-1.5 text-xs font-semibold tracking-[0.18em] uppercase">
+              <Sparkles className="size-3.5" strokeWidth={2} />
               Fait main, vendu en direct
             </span>
-            <span className="h-px w-10 bg-accent/40" />
+            <h1 className="max-w-xl text-6xl leading-[0.98] font-medium tracking-tight text-balance sm:text-7xl lg:text-8xl">
+              L&apos;artisanat,{" "}
+              <span className="text-accent italic">sans</span> intermediaire
+            </h1>
+            <p className="max-w-md text-base leading-relaxed text-primary-foreground/75 sm:text-lg">
+              Une marketplace ou chaque objet a une main et une histoire
+              derriere lui. Decouvrez des createurs independants ou ouvrez
+              votre propre boutique.
+            </p>
+            <div className="mt-2 flex flex-wrap items-center gap-3">
+              <Button
+                size="lg"
+                variant="secondary"
+                render={<Link href="/produits" />}
+                nativeButton={false}
+              >
+                Decouvrir les creations
+              </Button>
+              <Button
+                size="lg"
+                variant="outline"
+                className="border-primary-foreground/25 text-primary-foreground hover:bg-primary-foreground/10"
+                render={<Link href="/vendeur/onboarding" />}
+                nativeButton={false}
+              >
+                Vendre mes creations
+              </Button>
+            </div>
           </div>
-          <h1 className="max-w-2xl text-5xl leading-[1.05] font-medium tracking-tight text-balance sm:text-7xl">
-            L&apos;artisanat, sans intermediaire
-          </h1>
-          <p className="max-w-xl text-base leading-relaxed text-muted-foreground sm:text-lg">
-            Une marketplace ou chaque objet a une main et une histoire
-            derriere lui. Decouvrez des createurs independants ou ouvrez
-            votre propre boutique.
-          </p>
-          <div className="mt-3 flex flex-wrap items-center justify-center gap-3">
-            <Button
-              size="lg"
-              render={<Link href="/produits" />}
-              nativeButton={false}
-            >
-              Decouvrir les creations
-            </Button>
-            <Button
-              size="lg"
-              variant="outline"
-              render={<Link href="/vendeur/onboarding" />}
-              nativeButton={false}
-            >
-              Vendre mes creations
-            </Button>
-          </div>
+
+          {heroImage && heroProduct && (
+            <div className="relative mx-auto hidden w-full max-w-xs lg:block">
+              <div className="relative aspect-[4/5] w-full rotate-2 overflow-hidden rounded-[2rem] border-4 border-primary-foreground/15 shadow-2xl transition-transform duration-500 hover:rotate-0">
+                <Image
+                  src={heroImage.url}
+                  alt={heroProduct.title}
+                  fill
+                  className="object-cover"
+                  sizes="320px"
+                />
+              </div>
+              <div className="absolute -bottom-6 -left-8 -rotate-3 rounded-2xl bg-background px-5 py-3 text-foreground shadow-xl">
+                <p className="text-xs text-muted-foreground">
+                  {heroProduct.shop.name}
+                </p>
+                <p className="font-heading text-lg font-medium">
+                  {(heroProduct.priceCents / 100).toFixed(2)} EUR
+                </p>
+              </div>
+            </div>
+          )}
         </div>
       </section>
 
-      <section className="border-b border-border">
-        <div className="mx-auto grid max-w-4xl grid-cols-2 gap-6 px-6 py-8 sm:grid-cols-4">
+      <div className="overflow-hidden border-b border-border bg-accent py-2.5 text-accent-foreground">
+        <div className="flex w-max animate-marquee gap-10 text-sm font-semibold tracking-[0.14em] uppercase">
+          {[...Array(2)].map((_, dupeIndex) => (
+            <div key={dupeIndex} className="flex shrink-0 gap-10">
+              {marqueeItems.map((item) => (
+                <span key={item} className="flex items-center gap-10">
+                  {item}
+                  <span className="text-accent-foreground/40">&bull;</span>
+                </span>
+              ))}
+            </div>
+          ))}
+        </div>
+      </div>
+
+      <section className="border-b border-border bg-secondary/30">
+        <div className="mx-auto grid max-w-4xl grid-cols-2 gap-6 px-6 py-10 sm:grid-cols-4">
           {trustPoints.map(({ icon: Icon, title, description }) => (
-            <div key={title} className="flex flex-col items-center gap-1.5 text-center">
-              <Icon className="size-5 text-primary" strokeWidth={1.75} />
-              <p className="text-xs font-medium">{title}</p>
+            <div key={title} className="flex flex-col items-center gap-2 text-center">
+              <div className="flex size-11 items-center justify-center rounded-full bg-primary text-primary-foreground">
+                <Icon className="size-5" strokeWidth={1.75} />
+              </div>
+              <p className="text-xs font-semibold">{title}</p>
               <p className="text-xs text-muted-foreground">{description}</p>
             </div>
           ))}
@@ -180,9 +234,9 @@ export default async function Home() {
       </section>
 
       {categories.length > 0 && (
-        <section className="border-b border-border px-6 py-14">
+        <section className="border-b border-border px-6 py-16">
           <div className="mx-auto flex max-w-5xl flex-col gap-6">
-            <h2 className="text-2xl font-medium tracking-tight">
+            <h2 className="text-3xl font-medium tracking-tight">
               Parcourir par categorie
             </h2>
             <div className="grid grid-cols-2 gap-4 sm:grid-cols-4">
@@ -193,12 +247,12 @@ export default async function Home() {
                   <Link
                     key={category.id}
                     href={`/produits?categorie=${category.slug}`}
-                    className={`group/cat flex flex-col items-center gap-2 rounded-2xl px-4 py-7 text-center transition-all duration-200 hover:-translate-y-1 ${tint.split(" ")[0]}`}
+                    className={`group/cat flex flex-col items-center gap-3 rounded-3xl px-4 py-8 text-center transition-all duration-200 hover:-translate-y-1.5 hover:shadow-lg ${tint}`}
                   >
-                    <div className={`flex size-11 items-center justify-center rounded-full bg-background/70 transition-transform duration-200 group-hover/cat:scale-110 ${tint.split(" ")[1]}`}>
-                      <Icon className="size-5" strokeWidth={1.75} />
+                    <div className="flex size-12 items-center justify-center rounded-full bg-background/20 transition-transform duration-200 group-hover/cat:scale-110 group-hover/cat:rotate-6">
+                      <Icon className="size-5.5" strokeWidth={1.75} />
                     </div>
-                    <span className="text-sm font-medium">{category.name}</span>
+                    <span className="text-sm font-semibold">{category.name}</span>
                   </Link>
                 );
               })}
@@ -208,20 +262,20 @@ export default async function Home() {
       )}
 
       {featuredProducts.length > 0 && (
-        <section className="border-b border-border px-6 py-14">
+        <section className="border-b border-border px-6 py-16">
           <div className="mx-auto flex max-w-5xl flex-col gap-6">
-            <div className="flex flex-wrap items-center justify-between gap-3">
-              <h2 className="text-2xl font-medium tracking-tight">
+            <div className="flex flex-wrap items-end justify-between gap-3">
+              <h2 className="text-3xl font-medium tracking-tight">
                 Dernieres creations
               </h2>
               <Link
                 href="/produits"
-                className="text-sm text-muted-foreground underline decoration-border underline-offset-4 hover:text-foreground"
+                className="text-sm font-medium text-accent underline decoration-accent/40 underline-offset-4 hover:text-foreground"
               >
-                Voir tous les produits
+                Voir tous les produits &rarr;
               </Link>
             </div>
-            <div className="grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-4">
+            <div className="grid grid-cols-1 gap-x-5 gap-y-8 sm:grid-cols-2 lg:grid-cols-4">
               {featuredProducts.map((product: (typeof featuredProducts)[number]) => (
                 <ProductCard key={product.id} product={product} />
               ))}
@@ -231,8 +285,8 @@ export default async function Home() {
       )}
 
       {spotlightShop && spotlightImage && (
-        <section className="border-b border-border px-6 py-14">
-          <div className="mx-auto max-w-5xl overflow-hidden rounded-2xl bg-secondary/40">
+        <section className="border-b border-border px-6 py-16">
+          <div className="bg-grain relative mx-auto max-w-5xl overflow-hidden rounded-[2rem] bg-foreground text-background">
             <div className="flex flex-col sm:flex-row">
               <div className="relative aspect-[4/3] w-full sm:aspect-auto sm:w-1/2">
                 <Image
@@ -244,19 +298,21 @@ export default async function Home() {
                 />
               </div>
               <div className="flex flex-col justify-center gap-3 px-8 py-10 sm:w-1/2">
-                <span className="text-xs font-semibold tracking-[0.16em] text-accent uppercase">
+                <span className="inline-flex w-fit -rotate-2 items-center gap-1.5 rounded-full bg-accent px-3 py-1 text-xs font-semibold tracking-[0.14em] text-accent-foreground uppercase">
+                  <Sparkles className="size-3" strokeWidth={2} />
                   Createur a la une
                 </span>
-                <h2 className="text-2xl font-medium tracking-tight">
+                <h2 className="text-3xl font-medium tracking-tight">
                   {spotlightShop.name}
                 </h2>
                 {spotlightShop.description && (
-                  <p className="text-sm leading-relaxed text-muted-foreground">
+                  <p className="text-sm leading-relaxed text-background/70">
                     {spotlightShop.description}
                   </p>
                 )}
                 <Button
                   className="mt-2 w-fit"
+                  variant="secondary"
                   render={<Link href={`/boutiques/${spotlightShop.slug}`} />}
                   nativeButton={false}
                 >
@@ -273,10 +329,10 @@ export default async function Home() {
           {values.map(({ icon: Icon, title, description }) => (
             <Card
               key={title}
-              className="border-border/70 transition-all duration-200 hover:-translate-y-1 hover:shadow-[0_4px_6px_-2px_rgba(36,28,16,0.06),0_16px_28px_-12px_rgba(36,28,16,0.18)]"
+              className="rounded-3xl border-border/70 transition-all duration-200 hover:-translate-y-1.5 hover:shadow-[0_4px_6px_-2px_rgba(36,28,16,0.06),0_16px_28px_-12px_rgba(36,28,16,0.18)]"
             >
               <CardHeader>
-                <div className="mb-1 flex size-10 items-center justify-center rounded-full bg-primary/10 text-primary">
+                <div className="mb-1 flex size-11 items-center justify-center rounded-full bg-primary/10 text-primary">
                   <Icon className="size-5" strokeWidth={1.75} />
                 </div>
                 <CardTitle className="text-lg">{title}</CardTitle>
@@ -291,31 +347,38 @@ export default async function Home() {
         </div>
       </section>
 
-      <section className="border-t border-border bg-accent/8 px-6 py-16">
-        <div className="mx-auto flex max-w-4xl flex-col gap-10">
-          <h2 className="text-center text-2xl font-medium tracking-tight">
+      <section className="border-t border-border bg-accent/8 px-6 py-20">
+        <div className="mx-auto flex max-w-4xl flex-col gap-12">
+          <h2 className="text-center text-3xl font-medium tracking-tight">
             Comment ca fonctionne
           </h2>
-          <div className="grid gap-8 sm:grid-cols-3">
+          <div className="grid gap-10 sm:grid-cols-3">
             {steps.map((step) => (
-              <div key={step.number} className="flex flex-col items-center gap-2 text-center">
-                <span className="font-heading flex size-11 items-center justify-center rounded-full bg-primary text-lg font-medium text-primary-foreground">
+              <div key={step.number} className="relative flex flex-col items-center gap-2 text-center">
+                <span
+                  aria-hidden
+                  className="font-heading pointer-events-none absolute -top-8 text-8xl font-semibold text-primary/8"
+                >
                   {step.number}
                 </span>
-                <p className="font-medium">{step.title}</p>
-                <p className="text-sm text-muted-foreground">{step.description}</p>
+                <span className="font-heading relative flex size-12 items-center justify-center rounded-full bg-primary text-lg font-medium text-primary-foreground">
+                  {step.number}
+                </span>
+                <p className="relative font-medium">{step.title}</p>
+                <p className="relative text-sm text-muted-foreground">{step.description}</p>
               </div>
             ))}
           </div>
         </div>
       </section>
 
-      <section className="bg-primary text-primary-foreground">
+      <section className="bg-grain relative isolate overflow-hidden bg-primary text-primary-foreground">
+        <div className="pointer-events-none absolute -bottom-32 -left-16 size-96 rounded-full bg-accent/20 blur-3xl" />
         <div className="mx-auto flex max-w-4xl flex-col items-center gap-5 px-6 py-20 text-center">
-          <h2 className="text-3xl font-medium tracking-tight">
-            Vous creez de vos mains ?
+          <h2 className="text-4xl font-medium tracking-tight">
+            Vous <span className="text-accent italic">creez</span> de vos mains ?
           </h2>
-          <p className="max-w-md text-sm leading-relaxed text-primary-foreground/80">
+          <p className="max-w-md text-sm leading-relaxed text-primary-foreground/75">
             Ouvrez votre boutique en quelques minutes et commencez a vendre
             aupres d&apos;acheteurs qui cherchent du fait main.
           </p>
