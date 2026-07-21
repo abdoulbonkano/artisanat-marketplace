@@ -4,7 +4,7 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { cn } from "@/lib/utils";
 
-const items = [
+export const mainNavItems = [
   { href: "/", label: "Accueil" },
   { href: "/produits", label: "Boutique" },
   { href: "/artisans", label: "Artisans" },
@@ -18,7 +18,7 @@ export function MainNav() {
 
   return (
     <nav className="flex h-11 flex-wrap items-center justify-center gap-x-7 border-t border-border/70 px-6 text-sm">
-      {items.map((item) => {
+      {mainNavItems.map((item) => {
         const active =
           item.href === "/" ? pathname === "/" : pathname.startsWith(item.href);
         return (

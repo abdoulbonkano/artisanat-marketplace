@@ -15,6 +15,7 @@ import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { MainNav } from "@/components/main-nav";
+import { MobileNav } from "@/components/mobile-nav";
 import { EmailVerificationBanner } from "@/components/auth/email-verification-banner";
 import { prisma } from "@/lib/prisma";
 
@@ -49,7 +50,13 @@ export async function SiteHeader() {
   return (
     <header className="sticky top-0 z-50 border-b border-border/70 bg-background/90 shadow-[0_1px_0_rgba(36,28,16,0.04)] backdrop-blur-md">
       {dbUser && !dbUser.emailVerified && <EmailVerificationBanner />}
-      <div className="flex items-center gap-4 px-6 py-3.5 sm:gap-6">
+      <div className="flex items-center gap-4 px-4 py-3.5 sm:gap-6 sm:px-6">
+        <MobileNav
+          isAuthenticated={Boolean(user)}
+          role={user?.role}
+          unreadCount={unreadCount}
+        />
+
         <Link
           href="/"
           className="flex shrink-0 items-center gap-2 font-heading text-xl font-medium tracking-tight"
@@ -116,6 +123,7 @@ export async function SiteHeader() {
                 size="icon"
                 render={<Link href="/commandes" aria-label="Mes commandes" />}
                 nativeButton={false}
+                className="hidden md:inline-flex"
               >
                 <Package />
               </Button>
@@ -125,7 +133,7 @@ export async function SiteHeader() {
                 size="icon"
                 render={<Link href="/messages" aria-label="Messages" />}
                 nativeButton={false}
-                className="relative"
+                className="relative size-11 md:size-8"
               >
                 <MessageCircle />
                 {unreadCount > 0 && (
@@ -140,7 +148,7 @@ export async function SiteHeader() {
                 size="icon"
                 render={<Link href="/panier" aria-label="Panier" />}
                 nativeButton={false}
-                className="relative"
+                className="relative size-11 md:size-8"
               >
                 <ShoppingBag />
                 {cartCount > 0 && (
@@ -158,11 +166,12 @@ export async function SiteHeader() {
                 size="icon"
                 render={<Link href="/compte" aria-label="Mon compte" />}
                 nativeButton={false}
+                className="hidden md:inline-flex"
               >
                 <Settings />
               </Button>
 
-              <form action={signOutAction}>
+              <form action={signOutAction} className="hidden md:block">
                 <Button
                   type="submit"
                   variant="ghost"
@@ -180,6 +189,7 @@ export async function SiteHeader() {
                 size="sm"
                 render={<Link href="/auth/connexion" />}
                 nativeButton={false}
+                className="hidden sm:inline-flex"
               >
                 Connexion
               </Button>
@@ -187,6 +197,7 @@ export async function SiteHeader() {
                 render={<Link href="/auth/inscription" />}
                 nativeButton={false}
                 size="sm"
+                className="hidden sm:inline-flex"
               >
                 Inscription
               </Button>
@@ -195,7 +206,9 @@ export async function SiteHeader() {
         </div>
       </div>
 
-      <MainNav />
+      <div className="hidden md:block">
+        <MainNav />
+      </div>
     </header>
   );
 }
