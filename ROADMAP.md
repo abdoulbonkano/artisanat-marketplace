@@ -30,7 +30,7 @@ Coche `[x]` au fur et a mesure. Ajoute des notes sous un item si besoin.
 
 ### Confiance / preuve sociale
 - [x] Systeme d'avis et notes (modele `Review` : note 1-5, commentaire, lie a une commande livree pour eviter les faux avis)
-  - Note (2026-07-21) : eligibilite basee sur le statut de commande PAID/FULFILLED (pas de workflow de livraison suivie pour l'instant, voir P1 "Livraison / SAV" - a resserrer sur FULFILLED seul une fois ce workflow construit).
+  - Note (2026-07-21) : eligibilite basee sur le statut de commande PAID/FULFILLED. Le workflow de suivi de livraison (P1 "Livraison / SAV") est maintenant construit, mais l'avis reste ouvert des le paiement plutot que d'attendre l'expedition - choix delibere pour ne pas trop restreindre.
 - [x] Affichage note moyenne + nombre d'avis sur fiche produit et carte produit
 - [x] Moderation des avis cote admin (`/admin/avis`, masquer/republier)
 
@@ -45,10 +45,10 @@ Coche `[x]` au fur et a mesure. Ajoute des notes sous un item si besoin.
 ## P1 — Important
 
 ### Livraison / SAV
-- [ ] Champ numero de suivi + transporteur sur une commande (rempli par le vendeur)
-- [ ] Historique/timeline de statut de commande visible par l'acheteur
-- [ ] Workflow de demande de retour/remboursement (l'acheteur initie depuis "Mes commandes", le vendeur ou toi traite)
-- [ ] Facture/recu telechargeable (PDF) par commande
+- [x] Champ numero de suivi + transporteur sur une commande (rempli par le vendeur, modele `Shipment` par boutique - une commande multi-boutiques passe en "Expediee" une fois que tous les vendeurs concernes ont expedie leur part)
+- [x] Historique/timeline de statut de commande visible par l'acheteur (etapes Commande passee / Paiement confirme / Expediee sur la page de commande)
+- [x] Workflow de demande de retour/remboursement (l'acheteur initie depuis la commande, le vendeur approuve/refuse ; l'approbation declenche un remboursement Stripe reel sur le montant de l'article)
+- [x] Facture/recu telechargeable (PDF) par commande (`@react-pdf/renderer`, route `/commandes/[id]/facture`)
 
 ### Recherche / decouverte
 - [ ] Tri des produits (prix croissant/decroissant, plus recent, plus populaire)

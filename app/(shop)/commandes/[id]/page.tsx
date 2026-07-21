@@ -1,9 +1,21 @@
+import Link from "next/link";
 import { notFound } from "next/navigation";
+import { Download } from "lucide-react";
+import { OrderTimeline } from "@/components/orders/order-timeline";
+import { ReturnRequestForm } from "@/components/orders/return-request-form";
 import { ReviewForm } from "@/components/reviews/review-form";
 import { StarRating } from "@/components/reviews/star-rating";
 import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
 import { requireUser } from "@/lib/permissions";
 import { prisma } from "@/lib/prisma";
+
+const returnStatusLabel: Record<string, string> = {
+  REQUESTED: "Demande de retour en attente",
+  APPROVED: "Retour approuve",
+  REJECTED: "Retour refuse",
+  REFUNDED: "Rembourse",
+};
 
 const statusLabel: Record<string, string> = {
   PENDING_PAYMENT: "En attente de paiement",
@@ -23,7 +35,7 @@ export default async function CommandeDetailPage({
 
   const order = await prisma.order.findUnique({
     where: { id },
-    include: { items: { include: { review: true } } },
+    include: { items: { include: { review: true, returnRequest: true } } },
   });
 
   if (!order || order.buyerId !== user.id) {
@@ -31,6 +43,12 @@ export default async function CommandeDetailPage({
   }
 
   const canReview = order.status === "PAID" || order.status === "FULFILLED";
+  const canRequestReturn = order.status === "PAID" || order.status === "FULFILLED";
+
+  const shipments = await prisma.shipment.findMany({
+    where: { orderId: order.id },
+    include: { shop: true },
+  });
 
   return (
     <div className="flex flex-1 flex-col gap-6 px-6 py-8">
@@ -38,7 +56,27 @@ export default async function CommandeDetailPage({
         <h1 className="text-2xl font-semibold tracking-tight">
           Commande du {order.createdAt.toLocaleDateString("fr-FR")}
         </h1>
-        <Badge variant="secondary">{statusLabel[order.status]}</Badge>
+        <div className="flex items-center gap-2">
+          <Badge variant="secondary">{statusLabel[order.status]}</Badge>
+          <Button
+            variant="outline"
+            size="sm"
+            render={<Link href={`/commandes/${order.id}/facture`} />}
+            nativeButton={false}
+          >
+            <Download className="size-3.5" />
+            Facture
+          </Button>
+        </div>
+      </div>
+
+      <div className="rounded-lg border p-4">
+        <OrderTimeline
+          createdAt={order.createdAt}
+          isPaid={order.status !== "PENDING_PAYMENT"}
+          isShipped={order.status === "FULFILLED"}
+          isCancelledOrRefunded={order.status === "CANCELLED" || order.status === "REFUNDED"}
+        />
       </div>
 
       <div className="rounded-lg border p-4">
@@ -50,6 +88,18 @@ export default async function CommandeDetailPage({
           <br />
           {order.shippingPostalCode} {order.shippingCity}, {order.shippingCountry}
         </p>
+        {shipments.length > 0 && (
+          <div className="mt-3 flex flex-col gap-1 border-t border-border pt-3 text-sm">
+            {shipments.map((shipment: (typeof shipments)[number]) => (
+              <p key={shipment.id}>
+                <span className="font-medium">{shipment.shop.name}</span> :{" "}
+                {shipment.shippedAt
+                  ? `expediee via ${shipment.carrier} - suivi ${shipment.trackingNumber}`
+                  : "en attente d'expedition"}
+              </p>
+            ))}
+          </div>
+        )}
       </div>
 
       <div className="flex flex-col gap-2">
@@ -86,6 +136,27 @@ export default async function CommandeDetailPage({
                 </div>
               ) : (
                 <ReviewForm key={item.id} orderItemId={item.id} productTitle={item.titleSnapshot} />
+              ),
+            )}
+        </div>
+      )}
+
+      {canRequestReturn && (
+        <div className="flex flex-col gap-3">
+          <h2 className="font-medium">Retours</h2>
+          {order.items
+            .filter((item: (typeof order.items)[number]) => item.productId)
+            .map((item: (typeof order.items)[number]) =>
+              item.returnRequest ? (
+                <div key={item.id} className="rounded-lg border border-border p-4">
+                  <div className="flex items-center justify-between">
+                    <p className="text-sm font-medium">{item.titleSnapshot}</p>
+                    <Badge variant="secondary">{returnStatusLabel[item.returnRequest.status]}</Badge>
+                  </div>
+                  <p className="mt-1 text-sm text-muted-foreground">{item.returnRequest.reason}</p>
+                </div>
+              ) : (
+                <ReturnRequestForm key={item.id} orderItemId={item.id} productTitle={item.titleSnapshot} />
               ),
             )}
         </div>
