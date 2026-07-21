@@ -39,6 +39,13 @@ enum PaymentStatus {
   REFUNDED
 }
 
+enum ContactSubject {
+  COMMANDE
+  BOUTIQUE
+  PARTENARIAT
+  AUTRE
+}
+
 model User {
   id             String    @id @default(cuid())
   email          String    @unique
@@ -249,4 +256,14 @@ model VerificationToken {
   expires    DateTime
 
   @@unique([identifier, token])
+}
+
+model ContactMessage {
+  id        String         @id @default(cuid())
+  name      String
+  email     String
+  subject   ContactSubject @default(AUTRE)
+  message   String
+  readAt    DateTime?
+  createdAt DateTime       @default(now())
 }

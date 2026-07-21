@@ -49,3 +49,12 @@ export async function demoteAdminAction(userId: string) {
   });
   revalidatePath("/admin/utilisateurs");
 }
+
+export async function markContactMessageReadAction(messageId: string) {
+  await requireAdmin();
+  await prisma.contactMessage.update({
+    where: { id: messageId },
+    data: { readAt: new Date() },
+  });
+  revalidatePath("/admin/contact");
+}

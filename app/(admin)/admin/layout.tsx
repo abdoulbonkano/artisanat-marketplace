@@ -1,8 +1,10 @@
 import Link from "next/link";
 import { signOutAction } from "@/actions/auth";
+import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { SiteFooter } from "@/components/site-footer";
 import { requireAdmin } from "@/lib/permissions";
+import { prisma } from "@/lib/prisma";
 
 const navItems = [
   { href: "/admin", label: "Tableau de bord" },
@@ -10,6 +12,7 @@ const navItems = [
   { href: "/admin/produits", label: "Produits" },
   { href: "/admin/commandes", label: "Commandes" },
   { href: "/admin/utilisateurs", label: "Utilisateurs" },
+  { href: "/admin/contact", label: "Contact" },
 ];
 
 export default async function AdminLayout({
@@ -18,6 +21,10 @@ export default async function AdminLayout({
   children: React.ReactNode;
 }) {
   await requireAdmin();
+
+  const unreadContactCount = await prisma.contactMessage.count({
+    where: { readAt: null },
+  });
 
   return (
     <div className="flex min-h-full flex-1 flex-col">
@@ -43,9 +50,14 @@ export default async function AdminLayout({
               <Link
                 key={item.href}
                 href={item.href}
-                className="rounded-md px-3 py-2 text-sidebar-foreground hover:bg-sidebar-accent hover:text-sidebar-accent-foreground"
+                className="flex items-center justify-between rounded-md px-3 py-2 text-sidebar-foreground hover:bg-sidebar-accent hover:text-sidebar-accent-foreground"
               >
                 {item.label}
+                {item.href === "/admin/contact" && unreadContactCount > 0 && (
+                  <Badge className="h-5 min-w-5 justify-center px-1">
+                    {unreadContactCount}
+                  </Badge>
+                )}
               </Link>
             ))}
           </nav>
