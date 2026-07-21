@@ -57,9 +57,23 @@ export default async function ProduitsPage({
   ]);
 
   return (
-    <div className="flex flex-1 flex-col gap-6 px-6 py-8">
-      <h1 className="text-2xl font-semibold tracking-tight">Tous les produits</h1>
+    <div className="flex flex-1 flex-col">
+      <section className="border-b border-border bg-secondary/30 px-6 py-14 text-center">
+        <div className="mx-auto flex max-w-2xl flex-col items-center gap-3">
+          <span className="text-xs font-semibold tracking-[0.16em] text-accent uppercase">
+            Boutique
+          </span>
+          <h1 className="text-4xl font-medium tracking-tight text-balance sm:text-5xl">
+            Toutes les creations
+          </h1>
+          <p className="text-base leading-relaxed text-muted-foreground">
+            Bijoux, ceramique, textile, maroquinerie... faconnes a la main par
+            des artisans independants.
+          </p>
+        </div>
+      </section>
 
+      <div className="flex flex-1 flex-col gap-6 px-6 py-8">
       <form method="get" className="flex flex-wrap items-end gap-3">
         {categorie && <input type="hidden" name="categorie" value={categorie} />}
         <div className="flex flex-col gap-1">
@@ -132,6 +146,7 @@ export default async function ProduitsPage({
           ))}
         </div>
       )}
+      </div>
     </div>
   );
 }

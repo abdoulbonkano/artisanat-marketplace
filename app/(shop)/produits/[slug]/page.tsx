@@ -64,7 +64,7 @@ export default async function ProduitDetailPage({
   return (
     <div className="mx-auto flex w-full max-w-5xl flex-1 flex-col gap-10 px-6 py-10 lg:flex-row lg:gap-12 lg:py-16">
       <div className="flex flex-col gap-3 lg:w-1/2 lg:shrink-0">
-        <div className="relative aspect-square w-full overflow-hidden rounded-2xl bg-muted shadow-[0_4px_8px_-4px_rgba(36,28,16,0.08),0_20px_36px_-16px_rgba(36,28,16,0.2)]">
+        <div className="relative aspect-square w-full overflow-hidden rounded-3xl bg-muted shadow-[0_4px_8px_-4px_rgba(36,28,16,0.08),0_20px_36px_-16px_rgba(36,28,16,0.2)]">
           {mainImage && (
             <Image
               src={mainImage.url}
@@ -118,13 +118,13 @@ export default async function ProduitDetailPage({
           {product.description}
         </p>
 
-        <div className="flex items-baseline gap-3 border-t border-border pt-6">
-          <span className="text-3xl font-semibold tabular-nums">
+        <div className="flex flex-wrap items-center gap-3 border-t border-border pt-6">
+          <span className="font-heading text-4xl font-medium tracking-tight tabular-nums text-accent">
             {(product.priceCents / 100).toFixed(2)} EUR
           </span>
-          <span className="text-sm text-muted-foreground">
+          <Badge variant={product.stock > 0 ? "secondary" : "destructive"}>
             {product.stock > 0 ? `${product.stock} en stock` : "Rupture de stock"}
-          </span>
+          </Badge>
         </div>
 
         <div className="flex flex-wrap items-center gap-3">
@@ -136,17 +136,23 @@ export default async function ProduitDetailPage({
           </form>
         </div>
 
-        <div className="flex flex-col gap-2 border-t border-border pt-6 text-xs text-muted-foreground">
+        <div className="flex flex-col gap-3 border-t border-border pt-6 text-xs text-muted-foreground sm:flex-row sm:gap-5">
           <div className="flex items-center gap-2">
-            <ShieldCheck className="size-4 shrink-0 text-primary" strokeWidth={1.75} />
+            <span className="flex size-7 items-center justify-center rounded-full bg-primary/10 text-primary">
+              <ShieldCheck className="size-3.5 shrink-0" strokeWidth={1.75} />
+            </span>
             <span>Paiement securise par Stripe</span>
           </div>
           <div className="flex items-center gap-2">
-            <Truck className="size-4 shrink-0 text-primary" strokeWidth={1.75} />
+            <span className="flex size-7 items-center justify-center rounded-full bg-primary/10 text-primary">
+              <Truck className="size-3.5 shrink-0" strokeWidth={1.75} />
+            </span>
             <span>Livraison suivie, France et Europe</span>
           </div>
           <div className="flex items-center gap-2">
-            <RotateCcw className="size-4 shrink-0 text-primary" strokeWidth={1.75} />
+            <span className="flex size-7 items-center justify-center rounded-full bg-primary/10 text-primary">
+              <RotateCcw className="size-3.5 shrink-0" strokeWidth={1.75} />
+            </span>
             <span>Retours acceptes sous 14 jours</span>
           </div>
         </div>
