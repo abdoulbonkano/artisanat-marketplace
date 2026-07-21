@@ -13,18 +13,20 @@ Coche `[x]` au fur et a mesure. Ajoute des notes sous un item si besoin.
 ## P0 — Critique
 
 ### Emails transactionnels
-- [ ] Choisir et configurer un service d'envoi (Resend recommande - gratuit jusqu'a un certain volume, bonne integration Next.js)
-- [ ] Email de confirmation de commande (acheteur)
-- [ ] Email de nouvelle vente (vendeur)
-- [ ] Email de nouveau message (acheteur et vendeur)
-- [ ] Email de confirmation/refus de candidature vendeur (admin approuve/refuse)
-- [ ] Email de notification de nouveau message de contact (toi, admin)
-- [ ] Email de bienvenue a l'inscription
+- [x] Choisir et configurer un service d'envoi (Resend recommande - gratuit jusqu'a un certain volume, bonne integration Next.js)
+- [x] Email de confirmation de commande (acheteur)
+- [x] Email de nouvelle vente (vendeur)
+- [x] Email de nouveau message (acheteur et vendeur)
+- [x] Email de confirmation/refus de candidature vendeur (admin approuve/refuse)
+- [x] Email de notification de nouveau message de contact (toi, admin)
+- [x] Email de bienvenue a l'inscription
+  - Note (2026-07-21) : le domaine `resend.dev` par defaut bloque l'envoi a quiconque hors du compte Resend lui-meme (403 "Testing domain restriction"). Fix en cours : verifier le domaine `bonkano-solutions.fr` sur Resend puis mettre a jour `FROM_ADDRESS` dans `lib/email.ts`.
 
 ### Compte utilisateur
-- [ ] Mot de passe oublie / reinitialisation (page + email + token)
-- [ ] Verification d'email a l'inscription
-- [ ] Suppression de compte (droit RGPD) - au minimum une demande traitee manuellement, ideal : self-service
+- [x] Mot de passe oublie / reinitialisation (page + email + token)
+- [x] Verification d'email a l'inscription
+- [x] Suppression de compte (droit RGPD) - au minimum une demande traitee manuellement, ideal : self-service
+  - Note (2026-07-21) : self-service pour les comptes BUYER (anonymisation : nom/email remplaces, mot de passe efface, sessions/tokens supprimes ; commandes conservees anonymement pour obligations comptables). Les comptes ADMIN et les vendeurs avec une boutique active sont rediriges vers le formulaire de contact (fermeture de boutique a traiter manuellement d'abord).
 
 ### Confiance / preuve sociale
 - [ ] Systeme d'avis et notes (modele `Review` : note 1-5, commentaire, lie a une commande livree pour eviter les faux avis)

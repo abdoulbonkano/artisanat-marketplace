@@ -4,6 +4,7 @@ import {
   MessageCircle,
   Package,
   Search,
+  Settings,
   ShoppingBag,
   Sparkles,
   Store,
@@ -150,6 +151,15 @@ export async function SiteHeader() {
                     {cartCount}
                   </Badge>
                 )}
+              </Button>
+
+              <Button
+                variant="ghost"
+                size="icon"
+                render={<Link href="/compte" aria-label="Mon compte" />}
+                nativeButton={false}
+              >
+                <Settings />
               </Button>
 
               <form action={signOutAction}>
