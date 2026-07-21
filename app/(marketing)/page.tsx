@@ -102,6 +102,13 @@ const categoryTints = [
   "bg-secondary text-secondary-foreground",
 ];
 
+const trustTints = [
+  "bg-primary text-primary-foreground",
+  "bg-accent text-accent-foreground",
+  "bg-foreground text-background",
+  "bg-primary text-primary-foreground",
+];
+
 function categoryIcon(name: string): LucideIcon {
   const n = name.toLowerCase();
   if (n.includes("bijou")) return Sparkles;
@@ -219,17 +226,27 @@ export default async function Home() {
         </div>
       </div>
 
-      <section className="border-b border-border bg-secondary/30">
-        <div className="mx-auto grid max-w-4xl grid-cols-2 gap-6 px-6 py-10 sm:grid-cols-4">
-          {trustPoints.map(({ icon: Icon, title, description }) => (
-            <div key={title} className="flex flex-col items-center gap-2 text-center">
-              <div className="flex size-11 items-center justify-center rounded-full bg-primary text-primary-foreground">
-                <Icon className="size-5" strokeWidth={1.75} />
+      <section className="border-b border-border bg-secondary/30 px-6 py-12">
+        <div className="mx-auto grid max-w-5xl grid-cols-2 gap-3 sm:grid-cols-4">
+          {trustPoints.map(({ icon: Icon, title, description }, index) => {
+            const tint = trustTints[index % trustTints.length];
+            return (
+              <div
+                key={title}
+                className="group flex flex-col items-center gap-3 rounded-2xl px-4 py-6 text-center transition-all duration-200 hover:-translate-y-1.5 hover:bg-background hover:shadow-[0_4px_6px_-2px_rgba(36,28,16,0.06),0_16px_28px_-12px_rgba(36,28,16,0.18)]"
+              >
+                <div
+                  className={`flex size-12 items-center justify-center rounded-full transition-transform duration-300 group-hover:scale-110 group-hover:rotate-6 ${tint}`}
+                >
+                  <Icon className="size-5" strokeWidth={1.75} />
+                </div>
+                <div>
+                  <p className="text-sm font-semibold">{title}</p>
+                  <p className="text-xs text-muted-foreground">{description}</p>
+                </div>
               </div>
-              <p className="text-xs font-semibold">{title}</p>
-              <p className="text-xs text-muted-foreground">{description}</p>
-            </div>
-          ))}
+            );
+          })}
         </div>
       </section>
 
