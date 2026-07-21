@@ -43,3 +43,27 @@ export async function deleteProductImage(url: string): Promise<void> {
   const filename = path.basename(url);
   await fs.rm(path.join(UPLOADS_DIR, filename), { force: true });
 }
+
+export async function saveShopImage(file: File, kind: "logo" | "banner"): Promise<string> {
+  if (useBlob) {
+    const filename = `shops/${kind}/${randomUUID()}.${extensionFor(file)}`;
+    const blob = await put(filename, file, { access: "public" });
+    return blob.url;
+  }
+
+  const dir = path.join(process.cwd(), "public", "uploads", "shops", kind);
+  await fs.mkdir(dir, { recursive: true });
+  const filename = `${randomUUID()}.${extensionFor(file)}`;
+  const buffer = Buffer.from(await file.arrayBuffer());
+  await fs.writeFile(path.join(dir, filename), buffer);
+  return `/uploads/shops/${kind}/${filename}`;
+}
+
+export async function deleteShopImage(url: string): Promise<void> {
+  if (useBlob) {
+    await del(url);
+    return;
+  }
+
+  await fs.rm(path.join(process.cwd(), "public", url), { force: true });
+}

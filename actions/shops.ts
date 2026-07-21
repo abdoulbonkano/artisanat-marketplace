@@ -2,9 +2,10 @@
 
 import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
-import { requireSeller, requireUser } from "@/lib/permissions";
+import { requireShop, requireSeller, requireUser } from "@/lib/permissions";
 import { prisma } from "@/lib/prisma";
 import { slugify } from "@/lib/slug";
+import { deleteShopImage, isAllowedImage, saveShopImage } from "@/lib/storage";
 import { createShopSchema, updateShopSchema } from "@/lib/validations/shop";
 import type { ActionState } from "@/actions/auth";
 
@@ -92,4 +93,72 @@ export async function updateShopAction(
 
   revalidatePath("/vendeur/boutique");
   return { error: undefined };
+}
+
+async function updateShopImage(
+  kind: "logo" | "banner",
+  formData: FormData,
+): Promise<ActionState> {
+  const { shop } = await requireShop();
+
+  const file = formData.get("file");
+  if (!(file instanceof File) || file.size === 0) {
+    return { error: "Choisissez une image" };
+  }
+  if (!isAllowedImage(file)) {
+    return { error: "Image invalide (JPEG, PNG ou WebP, 5 Mo max)" };
+  }
+
+  const existing = kind === "logo" ? shop.logoUrl : shop.bannerUrl;
+  if (existing) {
+    await deleteShopImage(existing);
+  }
+
+  const url = await saveShopImage(file, kind);
+  await prisma.shop.update({
+    where: { id: shop.id },
+    data: kind === "logo" ? { logoUrl: url } : { bannerUrl: url },
+  });
+
+  revalidatePath("/vendeur/boutique");
+  revalidatePath(`/boutiques/${shop.slug}`);
+  return { error: undefined };
+}
+
+export async function updateShopLogoAction(
+  _prevState: ActionState,
+  formData: FormData,
+): Promise<ActionState> {
+  return updateShopImage("logo", formData);
+}
+
+export async function updateShopBannerAction(
+  _prevState: ActionState,
+  formData: FormData,
+): Promise<ActionState> {
+  return updateShopImage("banner", formData);
+}
+
+async function removeShopImage(kind: "logo" | "banner") {
+  const { shop } = await requireShop();
+  const existing = kind === "logo" ? shop.logoUrl : shop.bannerUrl;
+
+  if (existing) {
+    await deleteShopImage(existing);
+    await prisma.shop.update({
+      where: { id: shop.id },
+      data: kind === "logo" ? { logoUrl: null } : { bannerUrl: null },
+    });
+  }
+
+  revalidatePath("/vendeur/boutique");
+  revalidatePath(`/boutiques/${shop.slug}`);
+}
+
+export async function removeShopLogoAction() {
+  return removeShopImage("logo");
+}
+
+export async function removeShopBannerAction() {
+  return removeShopImage("banner");
 }
