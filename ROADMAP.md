@@ -35,9 +35,10 @@ Coche `[x]` au fur et a mesure. Ajoute des notes sous un item si besoin.
 - [x] Moderation des avis cote admin (`/admin/avis`, masquer/republier)
 
 ### Mobile
+- [x] Menu mobile (hamburger) - drawer avec nav, recherche et actions de compte
+- [x] Zones cliquables : icones panier/messages remontees a 44px (cible tactile) sur mobile
 - [ ] Audit complet du site sur mobile reel (pas seulement desktop) : header, hero, formulaires, dashboard vendeur, checkout
-- [ ] Menu mobile (hamburger) - le header actuel wrap mais n'a pas de vrai menu mobile dedie
-- [ ] Verifier les zones cliquables (boutons, liens) sont assez grandes au tactile
+  - Note (2026-07-21) : verifie via emulation Playwright (viewport iPhone 13) uniquement, pas de test sur un vrai appareil physique - a refaire idealement sur un telephone reel avant de cocher definitivement.
 
 ---
 
