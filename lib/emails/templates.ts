@@ -145,6 +145,28 @@ export function newMessageEmail({
   };
 }
 
+export function passwordResetEmail({ name, url }: { name: string; url: string }) {
+  return {
+    subject: "Reinitialisation de votre mot de passe",
+    html: layout(
+      "Reinitialisez votre mot de passe",
+      `
+        <h1 style="font-size:22px;margin:0 0 12px;">Bonjour ${name}</h1>
+        <p style="font-size:15px;line-height:1.6;">
+          Vous avez demande la reinitialisation de votre mot de passe. Cliquez
+          sur le bouton ci-dessous pour en choisir un nouveau. Ce lien est
+          valable 1 heure.
+        </p>
+        ${button("Choisir un nouveau mot de passe", url)}
+        <p style="font-size:13px;line-height:1.6;color:${COLOR_MUTED};margin-top:16px;">
+          Si vous n'etes pas a l'origine de cette demande, vous pouvez ignorer
+          cet email.
+        </p>
+      `,
+    ),
+  };
+}
+
 export function shopApprovedEmail({ shopName, shopUrl }: { shopName: string; shopUrl: string }) {
   return {
     subject: "Votre boutique est approuvee !",

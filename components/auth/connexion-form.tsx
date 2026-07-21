@@ -24,7 +24,15 @@ export function ConnexionForm() {
               <Input id="email" name="email" type="email" required autoComplete="email" />
             </div>
             <div className="flex flex-col gap-2">
-              <Label htmlFor="password">Mot de passe</Label>
+              <div className="flex items-center justify-between">
+                <Label htmlFor="password">Mot de passe</Label>
+                <Link
+                  href="/auth/mot-de-passe-oublie"
+                  className="text-xs text-muted-foreground underline"
+                >
+                  Oublie ?
+                </Link>
+              </div>
               <Input
                 id="password"
                 name="password"
