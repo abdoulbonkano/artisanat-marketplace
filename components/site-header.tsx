@@ -14,11 +14,16 @@ import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { MainNav } from "@/components/main-nav";
+import { EmailVerificationBanner } from "@/components/auth/email-verification-banner";
 import { prisma } from "@/lib/prisma";
 
 export async function SiteHeader() {
   const session = await auth();
   const user = session?.user;
+
+  const dbUser = user
+    ? await prisma.user.findUnique({ where: { id: user.id }, select: { emailVerified: true } })
+    : null;
 
   const cartAgg = user
     ? await prisma.cartItem.aggregate({
@@ -42,6 +47,7 @@ export async function SiteHeader() {
 
   return (
     <header className="sticky top-0 z-50 border-b border-border/70 bg-background/90 shadow-[0_1px_0_rgba(36,28,16,0.04)] backdrop-blur-md">
+      {dbUser && !dbUser.emailVerified && <EmailVerificationBanner />}
       <div className="flex items-center gap-4 px-6 py-3.5 sm:gap-6">
         <Link
           href="/"

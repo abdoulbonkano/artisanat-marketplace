@@ -5,7 +5,8 @@ import { createHash, randomBytes } from "crypto";
 import { AuthError } from "next-auth";
 import { signIn } from "@/lib/auth";
 import { sendEmail } from "@/lib/email";
-import { passwordResetEmail, welcomeEmail } from "@/lib/emails/templates";
+import { passwordResetEmail, verifyEmailEmail, welcomeEmail } from "@/lib/emails/templates";
+import { requireUser } from "@/lib/permissions";
 import { prisma } from "@/lib/prisma";
 import { SITE_URL } from "@/lib/site";
 import {
@@ -18,9 +19,29 @@ import {
 export type ActionState = { error?: string } | undefined;
 
 const RESET_TOKEN_TTL_MS = 60 * 60 * 1000;
+const VERIFY_TOKEN_TTL_MS = 24 * 60 * 60 * 1000;
 
 function hashToken(token: string): string {
   return createHash("sha256").update(token).digest("hex");
+}
+
+async function sendVerificationEmail(user: { email: string; name: string }) {
+  const token = randomBytes(32).toString("hex");
+  await prisma.verificationToken.create({
+    data: {
+      identifier: user.email,
+      token: hashToken(token),
+      expires: new Date(Date.now() + VERIFY_TOKEN_TTL_MS),
+    },
+  });
+
+  await sendEmail({
+    to: user.email,
+    ...verifyEmailEmail({
+      name: user.name,
+      url: `${SITE_URL}/auth/verifier-email?token=${token}`,
+    }),
+  });
 }
 
 export async function signUpAction(
@@ -50,6 +71,7 @@ export async function signUpAction(
   });
 
   await sendEmail({ to: email, ...welcomeEmail({ name }) });
+  await sendVerificationEmail({ email, name });
 
   await signIn("credentials", { email, password, redirectTo: "/" });
 }
@@ -162,6 +184,54 @@ export async function resetPasswordAction(
       data: { usedAt: new Date() },
     }),
   ]);
+
+  return { success: true };
+}
+
+export type ResendVerificationState = { error?: string; success?: boolean } | undefined;
+
+export async function resendVerificationEmailAction(
+  _prevState: ResendVerificationState,
+): Promise<ResendVerificationState> {
+  const sessionUser = await requireUser();
+  const user = await prisma.user.findUnique({ where: { id: sessionUser.id } });
+  if (!user || user.emailVerified) {
+    return { success: true };
+  }
+
+  await prisma.verificationToken.deleteMany({ where: { identifier: user.email } });
+  await sendVerificationEmail(user);
+
+  return { success: true };
+}
+
+export type ConfirmVerificationState = { error?: string; success?: boolean } | undefined;
+
+export async function confirmEmailVerificationAction(
+  _prevState: ConfirmVerificationState,
+  formData: FormData,
+): Promise<ConfirmVerificationState> {
+  const token = String(formData.get("token") ?? "");
+  if (!token) {
+    return { error: "Lien de verification invalide" };
+  }
+
+  const verificationToken = await prisma.verificationToken.findUnique({
+    where: { token: hashToken(token) },
+  });
+
+  if (!verificationToken || verificationToken.expires < new Date()) {
+    return { error: "Ce lien de verification est invalide ou a expire" };
+  }
+
+  await prisma.user.update({
+    where: { email: verificationToken.identifier },
+    data: { emailVerified: new Date() },
+  });
+
+  await prisma.verificationToken.deleteMany({
+    where: { identifier: verificationToken.identifier },
+  });
 
   return { success: true };
 }

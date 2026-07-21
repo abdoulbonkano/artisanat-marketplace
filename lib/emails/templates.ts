@@ -145,6 +145,23 @@ export function newMessageEmail({
   };
 }
 
+export function verifyEmailEmail({ name, url }: { name: string; url: string }) {
+  return {
+    subject: "Confirmez votre adresse email",
+    html: layout(
+      "Confirmez votre adresse email",
+      `
+        <h1 style="font-size:22px;margin:0 0 12px;">Bonjour ${name}</h1>
+        <p style="font-size:15px;line-height:1.6;">
+          Merci de confirmer votre adresse email pour activer pleinement
+          votre compte. Ce lien est valable 24 heures.
+        </p>
+        ${button("Confirmer mon email", url)}
+      `,
+    ),
+  };
+}
+
 export function passwordResetEmail({ name, url }: { name: string; url: string }) {
   return {
     subject: "Reinitialisation de votre mot de passe",
