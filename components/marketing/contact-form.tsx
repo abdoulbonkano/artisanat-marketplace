@@ -15,6 +15,13 @@ import {
 } from "@/components/ui/select";
 import { Textarea } from "@/components/ui/textarea";
 
+const subjectLabels: Record<string, string> = {
+  COMMANDE: "Une commande",
+  BOUTIQUE: "Une boutique / un vendeur",
+  PARTENARIAT: "Proposer un partenariat artisan",
+  AUTRE: "Autre",
+};
+
 export function ContactForm() {
   const [state, formAction, isPending] = useActionState(submitContactAction, undefined);
 
@@ -55,7 +62,9 @@ export function ContactForm() {
         <Label htmlFor="subject">Sujet</Label>
         <Select name="subject" defaultValue="AUTRE">
           <SelectTrigger id="subject" className="w-full">
-            <SelectValue />
+            <SelectValue>
+              {(value: string) => subjectLabels[value] ?? value}
+            </SelectValue>
           </SelectTrigger>
           <SelectContent>
             <SelectItem value="COMMANDE">Une commande</SelectItem>
