@@ -1,5 +1,6 @@
 import Link from "next/link";
 import {
+  Heart,
   LogOut,
   MessageCircle,
   Package,
@@ -117,6 +118,16 @@ export async function SiteHeader() {
                   Admin
                 </Button>
               )}
+
+              <Button
+                variant="ghost"
+                size="icon"
+                render={<Link href="/favoris" aria-label="Mes favoris" />}
+                nativeButton={false}
+                className="hidden md:inline-flex"
+              >
+                <Heart />
+              </Button>
 
               <Button
                 variant="ghost"

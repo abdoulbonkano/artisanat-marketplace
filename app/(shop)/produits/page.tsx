@@ -6,12 +6,20 @@ import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { EmptyState } from "@/components/ui/empty-state";
 import { Input } from "@/components/ui/input";
+import { auth } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
 
 export const metadata: Metadata = {
   title: "Tous les produits",
   description:
     "Parcourez les creations faites main de nos artisans independants : bijoux, ceramique, textile, maroquinerie et plus.",
+};
+
+const sortLabel: Record<string, string> = {
+  recent: "Plus recent",
+  "prix-asc": "Prix croissant",
+  "prix-desc": "Prix decroissant",
+  populaire: "Plus populaire",
 };
 
 export default async function ProduitsPage({
@@ -22,15 +30,31 @@ export default async function ProduitsPage({
     q?: string;
     prixMin?: string;
     prixMax?: string;
+    tri?: string;
   }>;
 }) {
-  const { categorie, q, prixMin, prixMax } = await searchParams;
+  const { categorie, q, prixMin, prixMax, tri } = await searchParams;
+  const sort = tri && sortLabel[tri] ? tri : "recent";
 
   const priceFilter: { gte?: number; lte?: number } = {};
   const minCents = prixMin ? Math.round(Number(prixMin) * 100) : undefined;
   const maxCents = prixMax ? Math.round(Number(prixMax) * 100) : undefined;
   if (minCents && !Number.isNaN(minCents)) priceFilter.gte = minCents;
   if (maxCents && !Number.isNaN(maxCents)) priceFilter.lte = maxCents;
+
+  // Typo-tolerant search: pg_trgm ranks candidate ids by similarity, then the
+  // main Prisma query still enforces status/category/price filters normally.
+  let searchIds: string[] | undefined;
+  if (q) {
+    const matches = await prisma.$queryRaw<{ id: string }[]>`
+      SELECT id FROM "Product"
+      WHERE title ILIKE ${"%" + q + "%"} OR description ILIKE ${"%" + q + "%"}
+         OR similarity(title, ${q}) > 0.2 OR similarity(description, ${q}) > 0.15
+      ORDER BY GREATEST(similarity(title, ${q}), similarity(description, ${q})) DESC
+      LIMIT 200
+    `;
+    searchIds = matches.map((m) => m.id);
+  }
 
   const [products, categories] = await Promise.all([
     prisma.product.findMany({
@@ -39,35 +63,74 @@ export default async function ProduitsPage({
         shop: { status: "ACTIVE" },
         category: categorie ? { slug: categorie } : undefined,
         priceCents: Object.keys(priceFilter).length > 0 ? priceFilter : undefined,
-        OR: q
-          ? [
-              { title: { contains: q, mode: "insensitive" } },
-              { description: { contains: q, mode: "insensitive" } },
-            ]
-          : undefined,
+        id: searchIds ? { in: searchIds } : undefined,
       },
       include: {
         shop: true,
         category: true,
         images: { orderBy: { position: "asc" }, take: 1 },
       },
-      orderBy: { createdAt: "desc" },
+      orderBy:
+        sort === "prix-asc"
+          ? { priceCents: "asc" }
+          : sort === "prix-desc"
+            ? { priceCents: "desc" }
+            : { createdAt: "desc" },
     }),
     prisma.category.findMany({ orderBy: { name: "asc" } }),
   ]);
 
-  const ratings = await prisma.review.groupBy({
-    by: ["productId"],
-    where: { productId: { in: products.map((p: (typeof products)[number]) => p.id) }, hiddenAt: null },
-    _avg: { rating: true },
-    _count: { rating: true },
-  });
+  if (searchIds && sort === "recent") {
+    const rank = new Map(searchIds.map((id, index) => [id, index]));
+    products.sort(
+      (a: (typeof products)[number], b: (typeof products)[number]) =>
+        (rank.get(a.id) ?? 0) - (rank.get(b.id) ?? 0),
+    );
+  }
+
+  const [ratings, popularity, session] = await Promise.all([
+    prisma.review.groupBy({
+      by: ["productId"],
+      where: { productId: { in: products.map((p: (typeof products)[number]) => p.id) }, hiddenAt: null },
+      _avg: { rating: true },
+      _count: { rating: true },
+    }),
+    prisma.orderItem.groupBy({
+      by: ["productId"],
+      where: {
+        productId: { in: products.map((p: (typeof products)[number]) => p.id) },
+        order: { status: { in: ["PAID", "FULFILLED"] } },
+      },
+      _sum: { quantity: true },
+    }),
+    auth(),
+  ]);
   const ratingByProduct = new Map(
     ratings.map((r: (typeof ratings)[number]) => [
       r.productId,
       { average: r._avg.rating ?? 0, count: r._count.rating },
     ]),
   );
+  const popularityByProduct = new Map(
+    popularity.map((p: (typeof popularity)[number]) => [p.productId, p._sum.quantity ?? 0]),
+  );
+
+  if (sort === "populaire") {
+    products.sort(
+      (a: (typeof products)[number], b: (typeof products)[number]) =>
+        (popularityByProduct.get(b.id) ?? 0) - (popularityByProduct.get(a.id) ?? 0),
+    );
+  }
+
+  const wishlisted = session?.user
+    ? await prisma.wishlist.findMany({
+        where: {
+          userId: session.user.id,
+          productId: { in: products.map((p: (typeof products)[number]) => p.id) },
+        },
+      })
+    : [];
+  const wishlistedIds = new Set(wishlisted.map((w: (typeof wishlisted)[number]) => w.productId));
 
   return (
     <div className="flex flex-1 flex-col">
@@ -123,6 +186,23 @@ export default async function ProduitsPage({
             className="w-28"
           />
         </div>
+        <div className="flex flex-col gap-1">
+          <label htmlFor="tri" className="text-xs text-muted-foreground">
+            Trier par
+          </label>
+          <select
+            id="tri"
+            name="tri"
+            defaultValue={sort}
+            className="h-9 rounded-md border border-input bg-transparent px-3 text-sm shadow-xs outline-none focus-visible:ring-2 focus-visible:ring-ring/50"
+          >
+            {Object.entries(sortLabel).map(([value, label]) => (
+              <option key={value} value={value}>
+                {label}
+              </option>
+            ))}
+          </select>
+        </div>
         <Button type="submit" variant="outline">
           Filtrer
         </Button>
@@ -159,6 +239,7 @@ export default async function ProduitsPage({
               key={product.id}
               product={product}
               rating={ratingByProduct.get(product.id)}
+              wishlisted={session?.user ? wishlistedIds.has(product.id) : undefined}
             />
           ))}
         </div>

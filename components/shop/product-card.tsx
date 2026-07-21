@@ -1,13 +1,16 @@
 import { ArrowUpRight, Star } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
+import { WishlistButton } from "@/components/products/wishlist-button";
 
 export function ProductCard({
   product,
   showShop = true,
   rating,
+  wishlisted,
 }: {
   product: {
+    id: string;
     slug: string;
     title: string;
     priceCents: number;
@@ -16,6 +19,7 @@ export function ProductCard({
   };
   showShop?: boolean;
   rating?: { average: number; count: number };
+  wishlisted?: boolean;
 }) {
   return (
     <Link href={`/produits/${product.slug}`} className="group/card block">
@@ -41,6 +45,13 @@ export function ProductCard({
         <span className="absolute top-3 left-3 rounded-full bg-background px-3 py-1 text-sm font-semibold tracking-tight shadow-sm">
           {(product.priceCents / 100).toFixed(2)} &euro;
         </span>
+        {wishlisted !== undefined && (
+          <WishlistButton
+            productId={product.id}
+            initialWishlisted={wishlisted}
+            className="absolute top-3 right-3"
+          />
+        )}
       </div>
       <div className="flex flex-col gap-0.5 px-1 pt-3">
         <p className="font-heading text-base leading-snug font-medium transition-colors group-hover/card:text-accent">

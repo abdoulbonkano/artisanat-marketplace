@@ -2,6 +2,7 @@
 
 import Link from "next/link";
 import {
+  Heart,
   LogOut,
   Menu,
   MessageCircle,
@@ -62,6 +63,13 @@ export function MobileNav({
 
         {isAuthenticated ? (
           <nav className="flex flex-col gap-1 py-2">
+            <SheetClose
+              render={<Link href="/favoris" />}
+              className="flex items-center gap-2.5 rounded-lg px-3 py-2.5 text-sm font-medium hover:bg-muted"
+            >
+              <Heart className="size-4" />
+              Mes favoris
+            </SheetClose>
             <SheetClose
               render={<Link href="/commandes" />}
               className="flex items-center gap-2.5 rounded-lg px-3 py-2.5 text-sm font-medium hover:bg-muted"

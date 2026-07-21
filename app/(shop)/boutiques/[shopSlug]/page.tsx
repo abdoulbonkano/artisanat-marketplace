@@ -5,6 +5,7 @@ import { cache } from "react";
 import { Package, Store } from "lucide-react";
 import { ProductCard } from "@/components/shop/product-card";
 import { EmptyState } from "@/components/ui/empty-state";
+import { auth } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
 
 const getShop = cache(async (shopSlug: string) => {
@@ -73,6 +74,17 @@ export default async function BoutiquePage({
     ]),
   );
 
+  const session = await auth();
+  const wishlisted = session?.user
+    ? await prisma.wishlist.findMany({
+        where: {
+          userId: session.user.id,
+          productId: { in: shop.products.map((p: (typeof shop.products)[number]) => p.id) },
+        },
+      })
+    : [];
+  const wishlistedIds = new Set(wishlisted.map((w: (typeof wishlisted)[number]) => w.productId));
+
   return (
     <div className="flex flex-1 flex-col">
       <div className="relative aspect-[3/1] w-full overflow-hidden bg-secondary/40 sm:aspect-[4/1]">
@@ -127,6 +139,7 @@ export default async function BoutiquePage({
                   product={product}
                   showShop={false}
                   rating={ratingByProduct.get(product.id)}
+                  wishlisted={session?.user ? wishlistedIds.has(product.id) : undefined}
                 />
               ))}
             </div>

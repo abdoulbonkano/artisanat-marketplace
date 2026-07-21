@@ -5,10 +5,13 @@ import { notFound } from "next/navigation";
 import { cache } from "react";
 import { RotateCcw, ShieldCheck, Truck } from "lucide-react";
 import { startConversationAction } from "@/actions/messages";
+import { WishlistButton } from "@/components/products/wishlist-button";
 import { StarRating } from "@/components/reviews/star-rating";
 import { AddToCartForm } from "@/components/shop/add-to-cart-form";
+import { ProductCard } from "@/components/shop/product-card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
+import { auth } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
 
 const getProduct = cache(async (slug: string) => {
@@ -77,6 +80,27 @@ export default async function ProduitDetailPage({
   ]);
   const averageRating = reviewAgg._avg.rating ?? 0;
   const reviewCount = reviewAgg._count.rating;
+
+  const session = await auth();
+  const wishlistEntry = session?.user
+    ? await prisma.wishlist.findUnique({
+        where: { userId_productId: { userId: session.user.id, productId: product.id } },
+      })
+    : null;
+
+  const similarProducts = product.categoryId
+    ? await prisma.product.findMany({
+        where: {
+          categoryId: product.categoryId,
+          id: { not: product.id },
+          status: "PUBLISHED",
+          shop: { status: "ACTIVE" },
+        },
+        include: { shop: true, images: { orderBy: { position: "asc" }, take: 1 } },
+        orderBy: { createdAt: "desc" },
+        take: 4,
+      })
+    : [];
 
   return (
     <div className="mx-auto flex w-full max-w-5xl flex-1 flex-col px-6 py-10 lg:py-16">
@@ -160,6 +184,13 @@ export default async function ProduitDetailPage({
               Contacter le vendeur
             </Button>
           </form>
+          {session?.user && (
+            <WishlistButton
+              productId={product.id}
+              initialWishlisted={Boolean(wishlistEntry)}
+              className="static size-11 border border-border"
+            />
+          )}
         </div>
 
         <div className="flex flex-col gap-3 border-t border-border pt-6 text-xs text-muted-foreground sm:flex-row sm:gap-5">
@@ -203,6 +234,19 @@ export default async function ProduitDetailPage({
                   </p>
                 )}
               </div>
+            ))}
+          </div>
+        </div>
+      )}
+
+      {similarProducts.length > 0 && (
+        <div className="mt-12 flex flex-col gap-4 border-t border-border pt-8">
+          <h2 className="font-heading text-xl font-medium tracking-tight">
+            Vous aimerez aussi
+          </h2>
+          <div className="grid grid-cols-2 gap-4 lg:grid-cols-4">
+            {similarProducts.map((similar: (typeof similarProducts)[number]) => (
+              <ProductCard key={similar.id} product={similar} />
             ))}
           </div>
         </div>

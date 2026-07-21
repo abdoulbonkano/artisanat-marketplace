@@ -51,10 +51,10 @@ Coche `[x]` au fur et a mesure. Ajoute des notes sous un item si besoin.
 - [x] Facture/recu telechargeable (PDF) par commande (`@react-pdf/renderer`, route `/commandes/[id]/facture`)
 
 ### Recherche / decouverte
-- [ ] Tri des produits (prix croissant/decroissant, plus recent, plus populaire)
-- [ ] Produits similaires / "vous aimerez aussi" sur la fiche produit
-- [ ] Liste de souhaits / favoris (necessite compte)
-- [ ] Recherche plus tolerante aux fautes de frappe (pg_trgm ou equivalent)
+- [x] Tri des produits (prix croissant/decroissant, plus recent, plus populaire - populaire = quantite vendue sur commandes payees)
+- [x] Produits similaires / "vous aimerez aussi" sur la fiche produit (meme categorie, 4 produits)
+- [x] Liste de souhaits / favoris (necessite compte) - coeur sur les cartes produit + page `/favoris`
+- [x] Recherche plus tolerante aux fautes de frappe (extension `pg_trgm`, similarite sur titre/description)
 
 ### Vendeur (dashboard)
 - [ ] Statistiques de vente basiques (revenus sur 30j, produits les plus vendus)
