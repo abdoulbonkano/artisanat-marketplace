@@ -2,8 +2,11 @@
 
 import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
+import { sendEmail } from "@/lib/email";
+import { newMessageEmail } from "@/lib/emails/templates";
 import { requireUser } from "@/lib/permissions";
 import { prisma } from "@/lib/prisma";
+import { SITE_URL } from "@/lib/site";
 
 export async function startConversationAction(shopId: string, productId?: string) {
   const user = await requireUser();
@@ -44,7 +47,7 @@ export async function sendMessageAction(conversationId: string, formData: FormDa
 
   const conversation = await prisma.conversation.findUnique({
     where: { id: conversationId },
-    include: { shop: true },
+    include: { shop: { include: { owner: true } }, buyer: true },
   });
   if (!conversation) {
     throw new Error("Conversation introuvable");
@@ -63,6 +66,21 @@ export async function sendMessageAction(conversationId: string, formData: FormDa
   await prisma.conversation.update({
     where: { id: conversationId },
     data: { updatedAt: new Date() },
+  });
+
+  const recipient = isBuyer ? conversation.shop.owner : conversation.buyer;
+  const recipientUrl = isBuyer
+    ? `${SITE_URL}/vendeur/messages/${conversationId}`
+    : `${SITE_URL}/messages/${conversationId}`;
+
+  await sendEmail({
+    to: recipient.email,
+    ...newMessageEmail({
+      recipientName: recipient.name,
+      senderName: user.name ?? "Un utilisateur",
+      body,
+      url: recipientUrl,
+    }),
   });
 
   revalidatePath(`/messages/${conversationId}`);

@@ -1,9 +1,18 @@
 "use server";
 
+import { sendEmail } from "@/lib/email";
+import { contactNotificationEmail } from "@/lib/emails/templates";
 import { prisma } from "@/lib/prisma";
 import { contactSchema } from "@/lib/validations/contact";
 
 export type ContactActionState = { error?: string; success?: boolean } | undefined;
+
+const subjectLabel: Record<string, string> = {
+  COMMANDE: "Commande",
+  BOUTIQUE: "Boutique / vendeur",
+  PARTENARIAT: "Partenariat artisan",
+  AUTRE: "Autre",
+};
 
 export async function submitContactAction(
   _prevState: ContactActionState,
@@ -21,6 +30,21 @@ export async function submitContactAction(
   }
 
   await prisma.contactMessage.create({ data: parsed.data });
+
+  const admins = await prisma.user.findMany({ where: { role: "ADMIN" } });
+  await Promise.all(
+    admins.map((admin: (typeof admins)[number]) =>
+      sendEmail({
+        to: admin.email,
+        ...contactNotificationEmail({
+          name: parsed.data.name,
+          email: parsed.data.email,
+          subject: subjectLabel[parsed.data.subject] ?? parsed.data.subject,
+          message: parsed.data.message,
+        }),
+      }),
+    ),
+  );
 
   return { success: true };
 }

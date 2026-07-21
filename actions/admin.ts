@@ -1,19 +1,53 @@
 "use server";
 
 import { revalidatePath } from "next/cache";
+import { sendEmail } from "@/lib/email";
+import { shopApprovedEmail, shopRejectedEmail } from "@/lib/emails/templates";
 import { requireAdmin } from "@/lib/permissions";
 import { prisma } from "@/lib/prisma";
+import { SITE_URL } from "@/lib/site";
 import { deleteProductImage } from "@/lib/storage";
 
 export async function suspendShopAction(shopId: string) {
   await requireAdmin();
-  await prisma.shop.update({ where: { id: shopId }, data: { status: "SUSPENDED" } });
+  const previous = await prisma.shop.findUnique({ where: { id: shopId } });
+
+  const shop = await prisma.shop.update({
+    where: { id: shopId },
+    data: { status: "SUSPENDED" },
+    include: { owner: true },
+  });
+
+  if (previous?.status === "PENDING") {
+    await sendEmail({
+      to: shop.owner.email,
+      ...shopRejectedEmail({ shopName: shop.name }),
+    });
+  }
+
   revalidatePath("/admin/boutiques");
 }
 
 export async function activateShopAction(shopId: string) {
   await requireAdmin();
-  await prisma.shop.update({ where: { id: shopId }, data: { status: "ACTIVE" } });
+  const previous = await prisma.shop.findUnique({ where: { id: shopId } });
+
+  const shop = await prisma.shop.update({
+    where: { id: shopId },
+    data: { status: "ACTIVE" },
+    include: { owner: true },
+  });
+
+  if (previous?.status === "PENDING") {
+    await sendEmail({
+      to: shop.owner.email,
+      ...shopApprovedEmail({
+        shopName: shop.name,
+        shopUrl: `${SITE_URL}/boutiques/${shop.slug}`,
+      }),
+    });
+  }
+
   revalidatePath("/admin/boutiques");
 }
 

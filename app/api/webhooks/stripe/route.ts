@@ -1,13 +1,15 @@
 import { headers } from "next/headers";
 import { NextResponse } from "next/server";
 import type Stripe from "stripe";
+import { sendEmail } from "@/lib/email";
+import { newSaleEmail, orderConfirmationEmail } from "@/lib/emails/templates";
 import { prisma } from "@/lib/prisma";
 import { stripe } from "@/lib/stripe";
 
 async function fulfillOrder(orderId: string, paymentIntentId: string | null) {
   const order = await prisma.order.findUnique({
     where: { id: orderId },
-    include: { items: true },
+    include: { items: true, buyer: true },
   });
 
   // Stripe can redeliver the same event more than once: bail out if this
@@ -44,6 +46,42 @@ async function fulfillOrder(orderId: string, paymentIntentId: string | null) {
       },
     }),
   ]);
+
+  await sendEmail({
+    to: order.buyer.email,
+    ...orderConfirmationEmail({
+      orderId: order.id,
+      items: order.items,
+      totalCents: order.totalCents,
+    }),
+  });
+
+  const itemsByShop = new Map<string, (typeof order.items)[number][]>();
+  for (const item of order.items) {
+    const current = itemsByShop.get(item.shopId) ?? [];
+    current.push(item);
+    itemsByShop.set(item.shopId, current);
+  }
+
+  const shops = await prisma.shop.findMany({
+    where: { id: { in: [...itemsByShop.keys()] } },
+    include: { owner: true },
+  });
+
+  await Promise.all(
+    shops.map((shop: (typeof shops)[number]) => {
+      const items = itemsByShop.get(shop.id) ?? [];
+      const amountCents = items.reduce(
+        (sum: number, item: (typeof items)[number]) =>
+          sum + item.priceCentsSnapshot * item.quantity,
+        0,
+      );
+      return sendEmail({
+        to: shop.owner.email,
+        ...newSaleEmail({ shopName: shop.name, items, amountCents }),
+      });
+    }),
+  );
 }
 
 export async function POST(req: Request) {

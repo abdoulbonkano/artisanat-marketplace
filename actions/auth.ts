@@ -3,6 +3,8 @@
 import bcrypt from "bcryptjs";
 import { AuthError } from "next-auth";
 import { signIn } from "@/lib/auth";
+import { sendEmail } from "@/lib/email";
+import { welcomeEmail } from "@/lib/emails/templates";
 import { prisma } from "@/lib/prisma";
 import { signInSchema, signUpSchema } from "@/lib/validations/auth";
 
@@ -33,6 +35,8 @@ export async function signUpAction(
   await prisma.user.create({
     data: { name, email, hashedPassword },
   });
+
+  await sendEmail({ to: email, ...welcomeEmail({ name }) });
 
   await signIn("credentials", { email, password, redirectTo: "/" });
 }
