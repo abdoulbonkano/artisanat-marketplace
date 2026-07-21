@@ -65,6 +65,7 @@ model User {
   accounts             Account[]
   sessions             Session[]
   passwordResetTokens  PasswordResetToken[]
+  reviews              Review[]
 }
 
 model Shop {
@@ -111,6 +112,7 @@ model Product {
   cartItems     CartItem[]
   orderItems    OrderItem[]
   conversations Conversation[]
+  reviews       Review[]
   createdAt     DateTime       @default(now())
   updatedAt     DateTime       @updatedAt
 
@@ -176,6 +178,7 @@ model OrderItem {
   titleSnapshot      String
   priceCentsSnapshot Int
   quantity           Int
+  review             Review?
 
   @@index([shopId])
   @@index([orderId])
@@ -257,6 +260,23 @@ model VerificationToken {
   expires    DateTime
 
   @@unique([identifier, token])
+}
+
+model Review {
+  id          String    @id @default(cuid())
+  productId   String
+  product     Product   @relation(fields: [productId], references: [id], onDelete: Cascade)
+  authorId    String
+  author      User      @relation(fields: [authorId], references: [id])
+  orderItemId String    @unique
+  orderItem   OrderItem @relation(fields: [orderItemId], references: [id], onDelete: Cascade)
+  rating      Int
+  comment     String?
+  hiddenAt    DateTime?
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+
+  @@index([productId])
 }
 
 model PasswordResetToken {

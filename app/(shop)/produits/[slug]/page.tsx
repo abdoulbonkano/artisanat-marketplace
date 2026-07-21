@@ -5,6 +5,7 @@ import { notFound } from "next/navigation";
 import { cache } from "react";
 import { RotateCcw, ShieldCheck, Truck } from "lucide-react";
 import { startConversationAction } from "@/actions/messages";
+import { StarRating } from "@/components/reviews/star-rating";
 import { AddToCartForm } from "@/components/shop/add-to-cart-form";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -61,8 +62,25 @@ export default async function ProduitDetailPage({
 
   const [mainImage, ...otherImages] = product.images;
 
+  const [reviewAgg, reviews] = await Promise.all([
+    prisma.review.aggregate({
+      where: { productId: product.id, hiddenAt: null },
+      _avg: { rating: true },
+      _count: { rating: true },
+    }),
+    prisma.review.findMany({
+      where: { productId: product.id, hiddenAt: null },
+      include: { author: true },
+      orderBy: { createdAt: "desc" },
+      take: 20,
+    }),
+  ]);
+  const averageRating = reviewAgg._avg.rating ?? 0;
+  const reviewCount = reviewAgg._count.rating;
+
   return (
-    <div className="mx-auto flex w-full max-w-5xl flex-1 flex-col gap-10 px-6 py-10 lg:flex-row lg:gap-12 lg:py-16">
+    <div className="mx-auto flex w-full max-w-5xl flex-1 flex-col px-6 py-10 lg:py-16">
+    <div className="flex flex-col gap-10 lg:flex-row lg:gap-12">
       <div className="flex flex-col gap-3 lg:w-1/2 lg:shrink-0">
         <div className="relative aspect-square w-full overflow-hidden rounded-3xl bg-muted shadow-[0_4px_8px_-4px_rgba(36,28,16,0.08),0_20px_36px_-16px_rgba(36,28,16,0.2)]">
           {mainImage && (
@@ -112,6 +130,14 @@ export default async function ProduitDetailPage({
           >
             {product.shop.name}
           </Link>
+          {reviewCount > 0 && (
+            <div className="flex items-center gap-2">
+              <StarRating rating={averageRating} />
+              <span className="text-sm text-muted-foreground">
+                {averageRating.toFixed(1)} ({reviewCount} avis)
+              </span>
+            </div>
+          )}
         </div>
 
         <p className="text-sm leading-relaxed whitespace-pre-wrap text-muted-foreground">
@@ -157,6 +183,30 @@ export default async function ProduitDetailPage({
           </div>
         </div>
       </div>
+    </div>
+
+      {reviews.length > 0 && (
+        <div className="mt-12 flex flex-col gap-4 border-t border-border pt-8">
+          <h2 className="font-heading text-xl font-medium tracking-tight">
+            Avis clients ({reviewCount})
+          </h2>
+          <div className="flex flex-col gap-4">
+            {reviews.map((review: (typeof reviews)[number]) => (
+              <div key={review.id} className="rounded-2xl border border-border p-4">
+                <div className="flex items-center justify-between">
+                  <span className="text-sm font-medium">{review.author.name}</span>
+                  <StarRating rating={review.rating} />
+                </div>
+                {review.comment && (
+                  <p className="mt-2 text-sm leading-relaxed text-muted-foreground">
+                    {review.comment}
+                  </p>
+                )}
+              </div>
+            ))}
+          </div>
+        </div>
+      )}
     </div>
   );
 }

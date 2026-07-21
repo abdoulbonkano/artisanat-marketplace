@@ -57,6 +57,22 @@ export default async function BoutiquePage({
     notFound();
   }
 
+  const ratings = await prisma.review.groupBy({
+    by: ["productId"],
+    where: {
+      productId: { in: shop.products.map((p: (typeof shop.products)[number]) => p.id) },
+      hiddenAt: null,
+    },
+    _avg: { rating: true },
+    _count: { rating: true },
+  });
+  const ratingByProduct = new Map(
+    ratings.map((r: (typeof ratings)[number]) => [
+      r.productId,
+      { average: r._avg.rating ?? 0, count: r._count.rating },
+    ]),
+  );
+
   return (
     <div className="flex flex-1 flex-col">
       <div className="relative aspect-[3/1] w-full overflow-hidden bg-secondary/40 sm:aspect-[4/1]">
@@ -106,7 +122,12 @@ export default async function BoutiquePage({
           ) : (
             <div className="grid grid-cols-1 gap-x-5 gap-y-8 sm:grid-cols-2 lg:grid-cols-3">
               {shop.products.map((product: (typeof shop.products)[number]) => (
-                <ProductCard key={product.id} product={product} showShop={false} />
+                <ProductCard
+                  key={product.id}
+                  product={product}
+                  showShop={false}
+                  rating={ratingByProduct.get(product.id)}
+                />
               ))}
             </div>
           )}

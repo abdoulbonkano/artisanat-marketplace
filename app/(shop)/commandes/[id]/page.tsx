@@ -1,4 +1,6 @@
 import { notFound } from "next/navigation";
+import { ReviewForm } from "@/components/reviews/review-form";
+import { StarRating } from "@/components/reviews/star-rating";
 import { Badge } from "@/components/ui/badge";
 import { requireUser } from "@/lib/permissions";
 import { prisma } from "@/lib/prisma";
@@ -21,12 +23,14 @@ export default async function CommandeDetailPage({
 
   const order = await prisma.order.findUnique({
     where: { id },
-    include: { items: true },
+    include: { items: { include: { review: true } } },
   });
 
   if (!order || order.buyerId !== user.id) {
     notFound();
   }
+
+  const canReview = order.status === "PAID" || order.status === "FULFILLED";
 
   return (
     <div className="flex flex-1 flex-col gap-6 px-6 py-8">
@@ -65,6 +69,27 @@ export default async function CommandeDetailPage({
         <span>Total</span>
         <span>{(order.totalCents / 100).toFixed(2)} EUR</span>
       </div>
+
+      {canReview && (
+        <div className="flex flex-col gap-3">
+          <h2 className="font-medium">Vos avis</h2>
+          {order.items
+            .filter((item: (typeof order.items)[number]) => item.productId)
+            .map((item: (typeof order.items)[number]) =>
+              item.review ? (
+                <div key={item.id} className="rounded-lg border border-border p-4">
+                  <p className="text-sm font-medium">{item.titleSnapshot}</p>
+                  <StarRating rating={item.review.rating} className="mt-1" />
+                  {item.review.comment && (
+                    <p className="mt-2 text-sm text-muted-foreground">{item.review.comment}</p>
+                  )}
+                </div>
+              ) : (
+                <ReviewForm key={item.id} orderItemId={item.id} productTitle={item.titleSnapshot} />
+              ),
+            )}
+        </div>
+      )}
     </div>
   );
 }

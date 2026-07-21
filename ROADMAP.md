@@ -29,9 +29,10 @@ Coche `[x]` au fur et a mesure. Ajoute des notes sous un item si besoin.
   - Note (2026-07-21) : self-service pour les comptes BUYER (anonymisation : nom/email remplaces, mot de passe efface, sessions/tokens supprimes ; commandes conservees anonymement pour obligations comptables). Les comptes ADMIN et les vendeurs avec une boutique active sont rediriges vers le formulaire de contact (fermeture de boutique a traiter manuellement d'abord).
 
 ### Confiance / preuve sociale
-- [ ] Systeme d'avis et notes (modele `Review` : note 1-5, commentaire, lie a une commande livree pour eviter les faux avis)
-- [ ] Affichage note moyenne + nombre d'avis sur fiche produit et carte produit
-- [ ] Moderation des avis cote admin
+- [x] Systeme d'avis et notes (modele `Review` : note 1-5, commentaire, lie a une commande livree pour eviter les faux avis)
+  - Note (2026-07-21) : eligibilite basee sur le statut de commande PAID/FULFILLED (pas de workflow de livraison suivie pour l'instant, voir P1 "Livraison / SAV" - a resserrer sur FULFILLED seul une fois ce workflow construit).
+- [x] Affichage note moyenne + nombre d'avis sur fiche produit et carte produit
+- [x] Moderation des avis cote admin (`/admin/avis`, masquer/republier)
 
 ### Mobile
 - [ ] Audit complet du site sur mobile reel (pas seulement desktop) : header, hero, formulaires, dashboard vendeur, checkout

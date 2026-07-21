@@ -1,10 +1,11 @@
-import { ArrowUpRight } from "lucide-react";
+import { ArrowUpRight, Star } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
 
 export function ProductCard({
   product,
   showShop = true,
+  rating,
 }: {
   product: {
     slug: string;
@@ -14,6 +15,7 @@ export function ProductCard({
     shop?: { name: string };
   };
   showShop?: boolean;
+  rating?: { average: number; count: number };
 }) {
   return (
     <Link href={`/produits/${product.slug}`} className="group/card block">
@@ -46,6 +48,14 @@ export function ProductCard({
         </p>
         {showShop && product.shop && (
           <p className="text-sm text-muted-foreground">{product.shop.name}</p>
+        )}
+        {rating && rating.count > 0 && (
+          <div className="mt-0.5 flex items-center gap-1 text-xs text-muted-foreground">
+            <Star className="size-3.5 fill-accent text-accent" strokeWidth={1.5} />
+            <span>
+              {rating.average.toFixed(1)} ({rating.count})
+            </span>
+          </div>
         )}
       </div>
     </Link>

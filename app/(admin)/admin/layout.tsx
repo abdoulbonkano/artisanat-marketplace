@@ -12,6 +12,7 @@ const navItems = [
   { href: "/admin/produits", label: "Produits" },
   { href: "/admin/commandes", label: "Commandes" },
   { href: "/admin/utilisateurs", label: "Utilisateurs" },
+  { href: "/admin/avis", label: "Avis" },
   { href: "/admin/contact", label: "Contact" },
 ];
 

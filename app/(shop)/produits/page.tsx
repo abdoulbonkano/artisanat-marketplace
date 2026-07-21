@@ -56,6 +56,19 @@ export default async function ProduitsPage({
     prisma.category.findMany({ orderBy: { name: "asc" } }),
   ]);
 
+  const ratings = await prisma.review.groupBy({
+    by: ["productId"],
+    where: { productId: { in: products.map((p: (typeof products)[number]) => p.id) }, hiddenAt: null },
+    _avg: { rating: true },
+    _count: { rating: true },
+  });
+  const ratingByProduct = new Map(
+    ratings.map((r: (typeof ratings)[number]) => [
+      r.productId,
+      { average: r._avg.rating ?? 0, count: r._count.rating },
+    ]),
+  );
+
   return (
     <div className="flex flex-1 flex-col">
       <section className="border-b border-border bg-secondary/30 px-6 py-14 text-center">
@@ -142,7 +155,11 @@ export default async function ProduitsPage({
       ) : (
         <div className="grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-3">
           {products.map((product: (typeof products)[number]) => (
-            <ProductCard key={product.id} product={product} />
+            <ProductCard
+              key={product.id}
+              product={product}
+              rating={ratingByProduct.get(product.id)}
+            />
           ))}
         </div>
       )}
