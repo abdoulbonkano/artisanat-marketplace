@@ -62,11 +62,11 @@ Coche `[x]` au fur et a mesure. Ajoute des notes sous un item si besoin.
 - [x] Notification visuelle (badge) sur nouvelle commande, pas seulement nouveau message (badge "Commandes" = commandes payees en attente d'expedition)
 
 ### Design / UX
-- [ ] Galerie photo avec zoom/lightbox sur la fiche produit (actuellement vignettes minuscules)
-- [ ] Etats de chargement (skeleton) pour eviter le flash de contenu vide
-- [ ] Page 404 personnalisee (actuellement page generique Next.js)
-- [ ] Dark mode fonctionnel (les variables CSS existent deja dans globals.css, il manque juste le toggle)
-- [ ] Animations de transition entre pages
+- [x] Galerie photo avec zoom/lightbox sur la fiche produit (miniatures cliquables + lightbox plein ecran)
+- [x] Etats de chargement (skeleton) pour eviter le flash de contenu vide (produits, fiche produit, boutique, commandes, dashboard vendeur)
+- [x] Page 404 personnalisee
+- [x] Dark mode fonctionnel (toggle dans le header + menu mobile, persiste en localStorage, script anti-flash au chargement)
+- [x] Animations de transition entre pages (fade+slide via `app/template.tsx`)
 
 ### Legal / conformite
 - [ ] Bandeau de consentement cookies (a valider avec un professionnel du droit - les mentions legales actuelles disent "cookies necessaires uniquement", a confirmer que ca suffit legalement)

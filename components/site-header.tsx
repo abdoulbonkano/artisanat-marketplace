@@ -17,6 +17,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { MainNav } from "@/components/main-nav";
 import { MobileNav } from "@/components/mobile-nav";
+import { ThemeToggle } from "@/components/theme-toggle";
 import { EmailVerificationBanner } from "@/components/auth/email-verification-banner";
 import { prisma } from "@/lib/prisma";
 
@@ -82,6 +83,7 @@ export async function SiteHeader() {
         </form>
 
         <div className="ml-auto flex shrink-0 items-center gap-1.5">
+          <ThemeToggle className="hidden md:inline-flex" />
           {user ? (
             <>
               {(user.role === "SELLER" || user.role === "ADMIN") && (

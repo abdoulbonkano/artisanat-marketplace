@@ -17,6 +17,7 @@ import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Sheet, SheetClose, SheetContent, SheetTrigger } from "@/components/ui/sheet";
+import { ThemeToggle } from "@/components/theme-toggle";
 
 export function MobileNav({
   isAuthenticated,
@@ -42,10 +43,13 @@ export function MobileNav({
         <Menu />
       </SheetTrigger>
       <SheetContent side="left">
-        <form action="/produits" method="get" className="relative mt-10 mb-2">
-          <Search className="pointer-events-none absolute top-1/2 left-3 size-4 -translate-y-1/2 text-muted-foreground" />
-          <Input name="q" placeholder="Rechercher..." className="h-10 rounded-full pl-9" />
-        </form>
+        <div className="mt-10 flex items-center gap-2">
+          <form action="/produits" method="get" className="relative flex-1">
+            <Search className="pointer-events-none absolute top-1/2 left-3 size-4 -translate-y-1/2 text-muted-foreground" />
+            <Input name="q" placeholder="Rechercher..." className="h-10 rounded-full pl-9" />
+          </form>
+          <ThemeToggle />
+        </div>
 
         <nav className="flex flex-col gap-1 py-2">
           {mainNavItems.map((item) => (

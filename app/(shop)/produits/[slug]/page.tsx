@@ -1,10 +1,10 @@
 import type { Metadata } from "next";
-import Image from "next/image";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { cache } from "react";
 import { RotateCcw, ShieldCheck, Truck } from "lucide-react";
 import { startConversationAction } from "@/actions/messages";
+import { ProductGallery } from "@/components/products/product-gallery";
 import { WishlistButton } from "@/components/products/wishlist-button";
 import { StarRating } from "@/components/reviews/star-rating";
 import { AddToCartForm } from "@/components/shop/add-to-cart-form";
@@ -63,8 +63,6 @@ export default async function ProduitDetailPage({
     notFound();
   }
 
-  const [mainImage, ...otherImages] = product.images;
-
   const [reviewAgg, reviews] = await Promise.all([
     prisma.review.aggregate({
       where: { productId: product.id, hiddenAt: null },
@@ -106,36 +104,7 @@ export default async function ProduitDetailPage({
     <div className="mx-auto flex w-full max-w-5xl flex-1 flex-col px-6 py-10 lg:py-16">
     <div className="flex flex-col gap-10 lg:flex-row lg:gap-12">
       <div className="flex flex-col gap-3 lg:w-1/2 lg:shrink-0">
-        <div className="relative aspect-square w-full overflow-hidden rounded-3xl bg-muted shadow-[0_4px_8px_-4px_rgba(36,28,16,0.08),0_20px_36px_-16px_rgba(36,28,16,0.2)]">
-          {mainImage && (
-            <Image
-              src={mainImage.url}
-              alt={product.title}
-              fill
-              className="object-cover"
-              sizes="(min-width: 1024px) 45vw, 100vw"
-              priority
-            />
-          )}
-        </div>
-        {otherImages.length > 0 && (
-          <div className="flex flex-wrap gap-3">
-            {otherImages.map((image: (typeof otherImages)[number], index: number) => (
-              <div
-                key={image.id}
-                className="relative size-20 overflow-hidden rounded-lg border border-border"
-              >
-                <Image
-                  src={image.url}
-                  alt={`${product.title} - photo ${index + 2}`}
-                  fill
-                  className="object-cover"
-                  sizes="80px"
-                />
-              </div>
-            ))}
-          </div>
-        )}
+        <ProductGallery images={product.images} title={product.title} />
       </div>
 
       <div className="flex flex-col gap-6 lg:w-1/2">
