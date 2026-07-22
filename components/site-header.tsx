@@ -61,12 +61,13 @@ export async function SiteHeader() {
 
         <Link
           href="/"
+          aria-label="Marketplace Artisanat"
           className="flex shrink-0 items-center gap-2 font-heading text-xl font-medium tracking-tight"
         >
           <span className="flex size-8 items-center justify-center rounded-lg bg-primary text-primary-foreground">
             <Sparkles className="size-4" strokeWidth={1.75} />
           </span>
-          <span className="hidden sm:inline">Marketplace Artisanat</span>
+          <span className="hidden sm:inline" aria-hidden="true">Marketplace Artisanat</span>
         </Link>
 
         <form

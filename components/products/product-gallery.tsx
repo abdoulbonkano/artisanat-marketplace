@@ -70,6 +70,7 @@ export function ProductGallery({
         <Dialog.Portal>
           <Dialog.Backdrop className="fixed inset-0 z-50 bg-black/85 data-open:animate-in data-open:fade-in-0 data-closed:animate-out data-closed:fade-out-0" />
           <Dialog.Popup className="fixed inset-0 z-50 flex items-center justify-center p-6 outline-none">
+            <Dialog.Title className="sr-only">Photo agrandie de {title}</Dialog.Title>
             <Dialog.Close
               aria-label="Fermer"
               className="absolute top-4 right-4 flex size-10 items-center justify-center rounded-full bg-white/10 text-white hover:bg-white/20"
@@ -92,12 +93,17 @@ export function ProductGallery({
                     key={image.id}
                     type="button"
                     onClick={() => setSelected(index)}
-                    className={cn(
-                      "size-2 rounded-full transition-colors",
-                      index === selected ? "bg-white" : "bg-white/40",
-                    )}
+                    className="flex size-6 items-center justify-center"
                     aria-label={`Photo ${index + 1}`}
-                  />
+                    aria-current={index === selected}
+                  >
+                    <span
+                      className={cn(
+                        "size-2 rounded-full transition-colors",
+                        index === selected ? "bg-white" : "bg-white/40",
+                      )}
+                    />
+                  </button>
                 ))}
               </div>
             )}

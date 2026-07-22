@@ -105,9 +105,12 @@ Coche `[x]` au fur et a mesure. Ajoute des notes sous un item si besoin.
 - [x] Verifier la taille/le format des images produits - deja gere automatiquement par `next/image` (AVIF/WebP negocies selon le navigateur, tailles responsives via l'attribut `sizes` deja utilise partout)
 
 ### Accessibilite
-- [ ] Audit contraste couleurs (WCAG AA minimum)
-- [ ] Navigation clavier complete (tab, focus visible partout)
-- [ ] Attributs ARIA sur les composants interactifs (menus, modales, formulaires)
+- [x] Audit contraste couleurs (WCAG AA minimum)
+  - Note (2026-07-22) : audit via agent dedie (calcul oklch -> luminance relative). Un seul echec confirme corrige : le focus des options de `Select` (`focus:bg-accent focus:text-accent-foreground`, 3.45:1) - remplace par `bg-accent/15 text-foreground`. Le reste des paires (light + dark) passe AA. Quelques paires necessitent une verification manuelle avec un vrai outil de contraste (bordures a opacite variable) - non bloquant.
+- [x] Navigation clavier complete (tab, focus visible partout)
+  - Note (2026-07-22) : les etoiles de notation (`review-form.tsx`) n'avaient pas l'anneau de focus standard - corrige. Les dialogues (Sheet, lightbox) reposent sur Base UI qui gere deja le piege de focus/Echap correctement.
+- [x] Attributs ARIA sur les composants interactifs (menus, modales, formulaires)
+  - Note (2026-07-22) : logo du header sans nom accessible sur mobile (span cache) - corrige avec aria-label. Etoiles de notation sans etat expose (aria-pressed) ni resume pour lecteur d'ecran (aria-label sur le composant d'affichage) - corrige. Messages de succes/erreur du formulaire d'avis sans aria-live/role=alert - corrige. Lightbox sans titre accessible (Dialog.Title) - corrige. Points de pagination de la lightbox avec une cible tactile de 8px (sous le minimum WCAG 2.2 de 24px) - agrandis a 24px tout en gardant le point visuel a 8px.
 
 ---
 
