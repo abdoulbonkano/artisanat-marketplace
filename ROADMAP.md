@@ -130,6 +130,8 @@ Coche `[x]` au fur et a mesure. Ajoute des notes sous un item si besoin.
 
 ## Notes de suivi
 
+- Bug corrige (2026-07-22) : la page `/admin` plantait en production ("A server error occurred") depuis l'ajout des graphiques du tableau de bord admin. Cause : `LineChart` recevait un prop `valueFormatter` (fonction) depuis le composant serveur `app/(admin)/admin/page.tsx` - React Server Components ne peut pas serialiser une fonction a travers la frontiere serveur/client. Corrige en remplacant par un prop `unit: "eur" | "count"`, formate cote client.
+
 - Les emails transactionnels et les avis sont probablement les deux items qui debloquent le plus de valeur d'un coup — a discuter en premier pour l'ordre de developpement.
 - Le webhook auto-deploy GitHub -> Vercel a deja saute une fois sans raison connue (voir session du 2026-07-21) — a surveiller, potentiellement a reconfigurer.
 - Le bug d'image cassee sur le produit "Vase en gres emaille" (boutique Fil et Terre) releve le 2026-07-20 reste non corrige.
