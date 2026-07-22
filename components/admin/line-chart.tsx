@@ -2,14 +2,19 @@
 
 import { useState } from "react";
 
+function formatValue(value: number, unit: "eur" | "count") {
+  if (unit === "eur") return `${value.toFixed(2)} EUR`;
+  return `${value} inscription${value > 1 ? "s" : ""}`;
+}
+
 export function LineChart({
   data,
   colorClass,
-  valueFormatter = (v: number) => String(v),
+  unit = "count",
 }: {
   data: { label: string; value: number }[];
   colorClass: "chart-1" | "chart-2";
-  valueFormatter?: (value: number) => string;
+  unit?: "eur" | "count";
 }) {
   const [hoverIndex, setHoverIndex] = useState<number | null>(null);
 
@@ -132,7 +137,7 @@ export function LineChart({
           className="pointer-events-none absolute top-0 -translate-x-1/2 rounded-md border border-border bg-popover px-2 py-1 text-xs shadow-md"
           style={{ left: `${(hovered.x / width) * 100}%` }}
         >
-          <p className="font-medium text-popover-foreground">{valueFormatter(hovered.value)}</p>
+          <p className="font-medium text-popover-foreground">{formatValue(hovered.value, unit)}</p>
           <p className="text-muted-foreground">{hovered.label}</p>
         </div>
       )}

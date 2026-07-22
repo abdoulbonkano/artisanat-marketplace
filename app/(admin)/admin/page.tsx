@@ -99,11 +99,7 @@ export default async function AdminDashboardPage() {
             <CardTitle>Chiffre d&apos;affaires (30 derniers jours)</CardTitle>
           </CardHeader>
           <CardContent>
-            <LineChart
-              data={revenueSeries}
-              colorClass="chart-1"
-              valueFormatter={(v) => `${v.toFixed(2)} EUR`}
-            />
+            <LineChart data={revenueSeries} colorClass="chart-1" unit="eur" />
           </CardContent>
         </Card>
         <Card>
@@ -111,11 +107,7 @@ export default async function AdminDashboardPage() {
             <CardTitle>Inscriptions (30 derniers jours)</CardTitle>
           </CardHeader>
           <CardContent>
-            <LineChart
-              data={signupsSeries}
-              colorClass="chart-2"
-              valueFormatter={(v) => `${v} inscription${v > 1 ? "s" : ""}`}
-            />
+            <LineChart data={signupsSeries} colorClass="chart-2" unit="count" />
           </CardContent>
         </Card>
       </div>
