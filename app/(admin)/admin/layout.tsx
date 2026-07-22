@@ -15,6 +15,7 @@ const navItems = [
   { href: "/admin/avis", label: "Avis" },
   { href: "/admin/promos", label: "Codes promo" },
   { href: "/admin/contact", label: "Contact" },
+  { href: "/admin/audit", label: "Journal d'activite" },
 ];
 
 export default async function AdminLayout({

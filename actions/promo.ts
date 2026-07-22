@@ -2,6 +2,7 @@
 
 import { Prisma } from "@prisma/client";
 import { revalidatePath } from "next/cache";
+import { logAdminAction } from "@/lib/audit";
 import { requireAdmin } from "@/lib/permissions";
 import { prisma } from "@/lib/prisma";
 import { createPromoCodeSchema } from "@/lib/validations/promo";
@@ -12,7 +13,7 @@ export async function createPromoCodeAction(
   _prevState: CreatePromoCodeState,
   formData: FormData,
 ): Promise<CreatePromoCodeState> {
-  await requireAdmin();
+  const admin = await requireAdmin();
 
   const parsed = createPromoCodeSchema.safeParse({
     code: formData.get("code"),
@@ -51,16 +52,23 @@ export async function createPromoCodeAction(
     throw error;
   }
 
+  await logAdminAction(admin.id, "promo.create", undefined, parsed.data.code);
   revalidatePath("/admin/promos");
 }
 
 export async function togglePromoCodeAction(promoCodeId: string) {
-  await requireAdmin();
+  const admin = await requireAdmin();
   const promo = await prisma.promoCode.findUnique({ where: { id: promoCodeId } });
   if (!promo) return;
   await prisma.promoCode.update({
     where: { id: promoCodeId },
     data: { active: !promo.active },
   });
+  await logAdminAction(
+    admin.id,
+    promo.active ? "promo.deactivate" : "promo.activate",
+    promoCodeId,
+    promo.code,
+  );
   revalidatePath("/admin/promos");
 }

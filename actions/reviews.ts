@@ -2,6 +2,7 @@
 
 import { Prisma } from "@prisma/client";
 import { revalidatePath } from "next/cache";
+import { logAdminAction } from "@/lib/audit";
 import { requireAdmin, requireUser } from "@/lib/permissions";
 import { prisma } from "@/lib/prisma";
 import { createReviewSchema } from "@/lib/validations/review";
@@ -63,13 +64,15 @@ export async function createReviewAction(
 }
 
 export async function hideReviewAction(reviewId: string) {
-  await requireAdmin();
+  const admin = await requireAdmin();
   await prisma.review.update({ where: { id: reviewId }, data: { hiddenAt: new Date() } });
+  await logAdminAction(admin.id, "review.hide", reviewId);
   revalidatePath("/admin/avis");
 }
 
 export async function unhideReviewAction(reviewId: string) {
-  await requireAdmin();
+  const admin = await requireAdmin();
   await prisma.review.update({ where: { id: reviewId }, data: { hiddenAt: null } });
+  await logAdminAction(admin.id, "review.unhide", reviewId);
   revalidatePath("/admin/avis");
 }

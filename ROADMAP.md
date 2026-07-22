@@ -89,9 +89,9 @@ Coche `[x]` au fur et a mesure. Ajoute des notes sous un item si besoin.
 - [x] Codes promo / reductions - modele `PromoCode` (pourcentage ou montant fixe), applique au checkout via un coupon Stripe cree a la volee, gestion admin sur `/admin/promos`
 
 ### Admin
-- [ ] Graphiques sur le tableau de bord admin (evolution des ventes, inscriptions)
-- [ ] Gestion des remboursements Stripe directement depuis l'admin
-- [ ] Log d'activite / audit trail des actions admin (qui a approuve/suspendu quoi et quand)
+- [x] Graphiques sur le tableau de bord admin (evolution des ventes, inscriptions sur 30 jours - graphiques SVG maison avec survol, palette basee sur les tokens chart-1/chart-2 existants)
+- [x] Gestion des remboursements Stripe directement depuis l'admin (`/admin/commandes`, remboursement integral)
+- [x] Log d'activite / audit trail des actions admin (`/admin/audit`) - couvre boutiques (approuver/suspendre), produits (depublier/supprimer), utilisateurs (promouvoir/retrograder), avis (masquer/republier), codes promo (creer/activer/desactiver), remboursements
 
 ### Contenu
 - [ ] Vrai contenu blog (actuellement page "bientot disponible")

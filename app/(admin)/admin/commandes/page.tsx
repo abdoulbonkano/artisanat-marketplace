@@ -1,4 +1,6 @@
+import { refundOrderAction } from "@/actions/admin";
 import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
 import {
   Table,
   TableBody,
@@ -60,6 +62,7 @@ export default async function AdminCommandesPage() {
               <TableHead>Articles</TableHead>
               <TableHead>Total</TableHead>
               <TableHead>Statut</TableHead>
+              <TableHead></TableHead>
             </TableRow>
           </TableHeader>
           <TableBody>
@@ -71,6 +74,15 @@ export default async function AdminCommandesPage() {
                 <TableCell>{(order.totalCents / 100).toFixed(2)} EUR</TableCell>
                 <TableCell>
                   <Badge variant="secondary">{statusLabel[order.status]}</Badge>
+                </TableCell>
+                <TableCell>
+                  {(order.status === "PAID" || order.status === "FULFILLED") && (
+                    <form action={refundOrderAction.bind(null, order.id)}>
+                      <Button type="submit" variant="destructive" size="sm">
+                        Rembourser
+                      </Button>
+                    </form>
+                  )}
                 </TableCell>
               </TableRow>
             ))}
