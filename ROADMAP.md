@@ -57,9 +57,9 @@ Coche `[x]` au fur et a mesure. Ajoute des notes sous un item si besoin.
 - [x] Recherche plus tolerante aux fautes de frappe (extension `pg_trgm`, similarite sur titre/description)
 
 ### Vendeur (dashboard)
-- [ ] Statistiques de vente basiques (revenus sur 30j, produits les plus vendus)
-- [ ] Export des commandes en CSV pour la compta du vendeur
-- [ ] Notification visuelle (badge) sur nouvelle commande, pas seulement nouveau message
+- [x] Statistiques de vente basiques (revenus sur 30j, produits les plus vendus)
+- [x] Export des commandes en CSV pour la compta du vendeur (`/vendeur/commandes/export`)
+- [x] Notification visuelle (badge) sur nouvelle commande, pas seulement nouveau message (badge "Commandes" = commandes payees en attente d'expedition)
 
 ### Design / UX
 - [ ] Galerie photo avec zoom/lightbox sur la fiche produit (actuellement vignettes minuscules)

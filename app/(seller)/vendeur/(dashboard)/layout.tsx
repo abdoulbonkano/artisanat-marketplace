@@ -1,9 +1,11 @@
 import Link from "next/link";
 import { ShoppingBag } from "lucide-react";
 import { signOutAction } from "@/actions/auth";
+import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { SiteFooter } from "@/components/site-footer";
 import { requireSeller } from "@/lib/permissions";
+import { prisma } from "@/lib/prisma";
 
 const navItems = [
   { href: "/vendeur", label: "Tableau de bord" },
@@ -18,7 +20,18 @@ export default async function VendeurDashboardLayout({
 }: {
   children: React.ReactNode;
 }) {
-  await requireSeller();
+  const user = await requireSeller();
+
+  const shop = await prisma.shop.findUnique({ where: { ownerId: user.id } });
+  const newOrdersCount = shop
+    ? await prisma.order.count({
+        where: {
+          status: "PAID",
+          items: { some: { shopId: shop.id } },
+          shipments: { none: { shopId: shop.id } },
+        },
+      })
+    : 0;
 
   return (
     <div className="flex min-h-full flex-1 flex-col">
@@ -51,9 +64,12 @@ export default async function VendeurDashboardLayout({
               <Link
                 key={item.href}
                 href={item.href}
-                className="rounded-md px-3 py-2 text-sidebar-foreground hover:bg-sidebar-accent hover:text-sidebar-accent-foreground"
+                className="flex items-center justify-between rounded-md px-3 py-2 text-sidebar-foreground hover:bg-sidebar-accent hover:text-sidebar-accent-foreground"
               >
                 {item.label}
+                {item.href === "/vendeur/commandes" && newOrdersCount > 0 && (
+                  <Badge className="h-5 min-w-5 justify-center px-1">{newOrdersCount}</Badge>
+                )}
               </Link>
             ))}
           </nav>

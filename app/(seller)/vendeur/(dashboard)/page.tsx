@@ -12,11 +12,34 @@ export default async function VendeurDashboardPage() {
     include: { _count: { select: { products: true } } },
   });
 
-  const [ordersCount] = await Promise.all([
+  const thirtyDaysAgo = new Date(Date.now() - 30 * 24 * 60 * 60 * 1000);
+
+  const [ordersCount, recentItems, topProducts] = await Promise.all([
+    shop ? prisma.orderItem.count({ where: { shopId: shop.id } }) : Promise.resolve(0),
     shop
-      ? prisma.orderItem.count({ where: { shopId: shop.id } })
-      : Promise.resolve(0),
+      ? prisma.orderItem.findMany({
+          where: {
+            shopId: shop.id,
+            order: { status: { in: ["PAID", "FULFILLED"] }, createdAt: { gte: thirtyDaysAgo } },
+          },
+          select: { priceCentsSnapshot: true, quantity: true },
+        })
+      : Promise.resolve([]),
+    shop
+      ? prisma.orderItem.groupBy({
+          by: ["productId", "titleSnapshot"],
+          where: { shopId: shop.id, order: { status: { in: ["PAID", "FULFILLED"] } } },
+          _sum: { quantity: true },
+          orderBy: { _sum: { quantity: "desc" } },
+          take: 5,
+        })
+      : Promise.resolve([]),
   ]);
+
+  const revenue30dCents = recentItems.reduce(
+    (sum: number, item: (typeof recentItems)[number]) => sum + item.priceCentsSnapshot * item.quantity,
+    0,
+  );
 
   return (
     <div className="flex flex-col gap-6">
@@ -60,7 +83,15 @@ export default async function VendeurDashboardPage() {
           </div>
         </div>
       )}
-      <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
+      <div className="grid grid-cols-1 gap-4 sm:grid-cols-3">
+        <Card>
+          <CardHeader>
+            <CardTitle>Revenus (30 jours)</CardTitle>
+          </CardHeader>
+          <CardContent className="text-3xl font-semibold">
+            {(revenue30dCents / 100).toFixed(2)} EUR
+          </CardContent>
+        </Card>
         <Card>
           <CardHeader>
             <CardTitle>Produits</CardTitle>
@@ -78,6 +109,26 @@ export default async function VendeurDashboardPage() {
           </CardContent>
         </Card>
       </div>
+
+      {topProducts.length > 0 && (
+        <Card>
+          <CardHeader>
+            <CardTitle>Produits les plus vendus</CardTitle>
+          </CardHeader>
+          <CardContent>
+            <div className="flex flex-col gap-2">
+              {topProducts.map((product: (typeof topProducts)[number]) => (
+                <div key={product.productId} className="flex justify-between text-sm">
+                  <span>{product.titleSnapshot}</span>
+                  <span className="text-muted-foreground">
+                    {product._sum.quantity} vendu{(product._sum.quantity ?? 0) > 1 ? "s" : ""}
+                  </span>
+                </div>
+              ))}
+            </div>
+          </CardContent>
+        </Card>
+      )}
     </div>
   );
 }

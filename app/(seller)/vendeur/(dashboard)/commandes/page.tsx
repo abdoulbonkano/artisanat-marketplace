@@ -1,4 +1,5 @@
-import { ClipboardList } from "lucide-react";
+import Link from "next/link";
+import { ClipboardList, Download } from "lucide-react";
 import { approveReturnAction, rejectReturnAction } from "@/actions/fulfillment";
 import { MarkShippedForm } from "@/components/seller/mark-shipped-form";
 import { Badge } from "@/components/ui/badge";
@@ -46,7 +47,18 @@ export default async function VendeurCommandesPage() {
 
   return (
     <div className="flex flex-1 flex-col gap-6">
-      <h1 className="text-2xl font-semibold tracking-tight">Commandes</h1>
+      <div className="flex items-center justify-between">
+        <h1 className="text-2xl font-semibold tracking-tight">Commandes</h1>
+        <Button
+          variant="outline"
+          size="sm"
+          render={<Link href="/vendeur/commandes/export" />}
+          nativeButton={false}
+        >
+          <Download className="size-3.5" />
+          Exporter en CSV
+        </Button>
+      </div>
 
       {items.length === 0 ? (
         <EmptyState
