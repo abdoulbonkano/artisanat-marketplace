@@ -38,6 +38,9 @@ export function SiteFooter() {
             <Link href="/mentions-legales" className="w-fit hover:text-foreground">
               Mentions legales
             </Link>
+            <Link href="/confidentialite" className="w-fit hover:text-foreground">
+              Confidentialite
+            </Link>
             <Link href="/cgu" className="w-fit hover:text-foreground">
               CGU
             </Link>

@@ -212,6 +212,14 @@ model Shipment {
   @@index([shopId])
 }
 
+model RateLimitHit {
+  id        String   @id @default(cuid())
+  key       String
+  createdAt DateTime @default(now())
+
+  @@index([key, createdAt])
+}
+
 model Wishlist {
   id        String   @id @default(cuid())
   userId    String

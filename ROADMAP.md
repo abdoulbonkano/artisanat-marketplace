@@ -69,12 +69,14 @@ Coche `[x]` au fur et a mesure. Ajoute des notes sous un item si besoin.
 - [x] Animations de transition entre pages (fade+slide via `app/template.tsx`)
 
 ### Legal / conformite
-- [ ] Bandeau de consentement cookies (a valider avec un professionnel du droit - les mentions legales actuelles disent "cookies necessaires uniquement", a confirmer que ca suffit legalement)
-- [ ] Page Politique de confidentialite dediee (actuellement fondue dans les mentions legales)
+- [x] Bandeau de consentement cookies
+  - Note (2026-07-22) : le site n'utilise que des cookies strictement necessaires (session/panier), donc bandeau informatif (pas d'opt-in/opt-out, rien a "consentir") - a transformer en vrai bandeau de consentement si des cookies analytics/pub sont ajoutes un jour (voir P3 Analytics). A valider quand meme avec un professionnel du droit.
+- [x] Page Politique de confidentialite dediee (`/confidentialite`) - mentions legales renvoient desormais vers elle au lieu de dupliquer le contenu
 
 ### Securite
-- [ ] Rate limiting sur connexion, inscription, formulaire de contact (protection anti-bot/anti-brute-force)
+- [x] Rate limiting sur connexion, inscription, mot de passe oublie et formulaire de contact (limiteur simple base sur Postgres par IP, pas de service externe necessaire)
 - [ ] Captcha ou equivalent sur inscription si le spam devient un probleme
+  - Delibrement non fait : necessite un compte chez un fournisseur (hCaptcha/Turnstile/reCAPTCHA) et des cles API que je ne peux pas provisionner moi-meme. Le rate limiting couvre deja une bonne partie du risque pour l'instant.
 
 ---
 

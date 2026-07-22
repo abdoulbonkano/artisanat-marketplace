@@ -8,6 +8,7 @@ import { sendEmail } from "@/lib/email";
 import { passwordResetEmail, verifyEmailEmail, welcomeEmail } from "@/lib/emails/templates";
 import { requireUser } from "@/lib/permissions";
 import { prisma } from "@/lib/prisma";
+import { checkRateLimit, getClientIp } from "@/lib/rate-limit";
 import { SITE_URL } from "@/lib/site";
 import {
   requestPasswordResetSchema,
@@ -48,6 +49,15 @@ export async function signUpAction(
   _prevState: ActionState,
   formData: FormData,
 ): Promise<ActionState> {
+  const ip = await getClientIp();
+  const { allowed } = await checkRateLimit(`signup:${ip}`, {
+    limit: 5,
+    windowMs: 60 * 60 * 1000,
+  });
+  if (!allowed) {
+    return { error: "Trop de tentatives. Reessayez dans quelques instants." };
+  }
+
   const parsed = signUpSchema.safeParse({
     name: formData.get("name"),
     email: formData.get("email"),
@@ -80,6 +90,15 @@ export async function signInAction(
   _prevState: ActionState,
   formData: FormData,
 ): Promise<ActionState> {
+  const ip = await getClientIp();
+  const { allowed } = await checkRateLimit(`signin:${ip}`, {
+    limit: 10,
+    windowMs: 15 * 60 * 1000,
+  });
+  if (!allowed) {
+    return { error: "Trop de tentatives. Reessayez dans quelques minutes." };
+  }
+
   const parsed = signInSchema.safeParse({
     email: formData.get("email"),
     password: formData.get("password"),
@@ -116,6 +135,15 @@ export async function requestPasswordResetAction(
   _prevState: RequestResetState,
   formData: FormData,
 ): Promise<RequestResetState> {
+  const ip = await getClientIp();
+  const { allowed } = await checkRateLimit(`reset:${ip}`, {
+    limit: 5,
+    windowMs: 60 * 60 * 1000,
+  });
+  if (!allowed) {
+    return { error: "Trop de tentatives. Reessayez dans quelques instants." };
+  }
+
   const parsed = requestPasswordResetSchema.safeParse({
     email: formData.get("email"),
   });

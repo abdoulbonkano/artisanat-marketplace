@@ -3,6 +3,7 @@
 import { sendEmail } from "@/lib/email";
 import { contactNotificationEmail } from "@/lib/emails/templates";
 import { prisma } from "@/lib/prisma";
+import { checkRateLimit, getClientIp } from "@/lib/rate-limit";
 import { contactSchema } from "@/lib/validations/contact";
 
 export type ContactActionState = { error?: string; success?: boolean } | undefined;
@@ -18,6 +19,15 @@ export async function submitContactAction(
   _prevState: ContactActionState,
   formData: FormData,
 ): Promise<ContactActionState> {
+  const ip = await getClientIp();
+  const { allowed } = await checkRateLimit(`contact:${ip}`, {
+    limit: 5,
+    windowMs: 60 * 60 * 1000,
+  });
+  if (!allowed) {
+    return { error: "Trop de messages envoyes. Reessayez plus tard." };
+  }
+
   const parsed = contactSchema.safeParse({
     name: formData.get("name"),
     email: formData.get("email"),

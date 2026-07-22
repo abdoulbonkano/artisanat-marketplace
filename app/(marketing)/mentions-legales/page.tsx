@@ -49,24 +49,14 @@ export default function MentionsLegalesPage() {
       </section>
 
       <section className="flex flex-col gap-2">
-        <h2 className="text-lg font-medium">Donnees personnelles</h2>
+        <h2 className="text-lg font-medium">Donnees personnelles et cookies</h2>
         <p className="text-sm leading-relaxed text-muted-foreground">
-          Les informations recueillies via le site (creation de compte, commandes,
-          messagerie) font l&apos;objet d&apos;un traitement destine a assurer le
-          fonctionnement de la marketplace. Conformement au Reglement General sur la
-          Protection des Donnees (RGPD) et a la loi Informatique et Libertes, vous
-          disposez d&apos;un droit d&apos;acces, de rectification, d&apos;effacement
-          et de portabilite de vos donnees, exercable en ecrivant a
-          bonkano.solutions@gmail.com.
-        </p>
-      </section>
-
-      <section className="flex flex-col gap-2">
-        <h2 className="text-lg font-medium">Cookies</h2>
-        <p className="text-sm leading-relaxed text-muted-foreground">
-          Le site utilise uniquement des cookies strictement necessaires a
-          l&apos;authentification et au fonctionnement du panier, sans finalite
-          publicitaire.
+          Le detail des donnees collectees, de leur usage et de vos droits
+          (RGPD) est disponible sur notre{" "}
+          <a href="/confidentialite" className="underline">
+            page de politique de confidentialite
+          </a>
+          .
         </p>
       </section>
 
