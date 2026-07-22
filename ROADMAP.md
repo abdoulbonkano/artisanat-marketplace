@@ -99,9 +99,10 @@ Coche `[x]` au fur et a mesure. Ajoute des notes sous un item si besoin.
 - [ ] Elargir le catalogue / recruter plus d'artisans partenaires
 
 ### SEO / performance avance
-- [ ] Donnees structurees JSON-LD (schema.org Product, Organization) pour les rich snippets Google et Google Shopping
+- [x] Donnees structurees JSON-LD (schema.org `Organization` sur tout le site, `Product` + `AggregateRating` sur la fiche produit)
 - [ ] Audit Lighthouse (performance, accessibilite, SEO) et corriger les points faibles
-- [ ] Verifier la taille/le format des images produits (compression, formats modernes)
+  - Non fait cette session : necessite un vrai run Chrome DevTools/PageSpeed Insights avec arbitrage humain sur les compromis - a faire toi-meme sur https://pagespeed.web.dev avec l'URL de prod, ou via l'onglet Lighthouse de Chrome DevTools.
+- [x] Verifier la taille/le format des images produits - deja gere automatiquement par `next/image` (AVIF/WebP negocies selon le navigateur, tailles responsives via l'attribut `sizes` deja utilise partout)
 
 ### Accessibilite
 - [ ] Audit contraste couleurs (WCAG AA minimum)

@@ -4,6 +4,7 @@ import { notFound } from "next/navigation";
 import { cache } from "react";
 import { RotateCcw, ShieldCheck, Truck } from "lucide-react";
 import { startConversationAction } from "@/actions/messages";
+import { JsonLd } from "@/components/json-ld";
 import { ProductGallery } from "@/components/products/product-gallery";
 import { WishlistButton } from "@/components/products/wishlist-button";
 import { StarRating } from "@/components/reviews/star-rating";
@@ -13,6 +14,7 @@ import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { auth } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
+import { SITE_URL } from "@/lib/site";
 
 const getProduct = cache(async (slug: string) => {
   return prisma.product.findUnique({
@@ -102,6 +104,35 @@ export default async function ProduitDetailPage({
 
   return (
     <div className="mx-auto flex w-full max-w-5xl flex-1 flex-col px-6 py-10 lg:py-16">
+    <JsonLd
+      data={{
+        "@context": "https://schema.org",
+        "@type": "Product",
+        name: product.title,
+        description: product.description,
+        image: product.images.map((image: (typeof product.images)[number]) => image.url),
+        sku: product.id,
+        offers: {
+          "@type": "Offer",
+          url: `${SITE_URL}/produits/${product.slug}`,
+          priceCurrency: "EUR",
+          price: (product.priceCents / 100).toFixed(2),
+          availability:
+            product.stock > 0
+              ? "https://schema.org/InStock"
+              : "https://schema.org/OutOfStock",
+        },
+        ...(reviewCount > 0
+          ? {
+              aggregateRating: {
+                "@type": "AggregateRating",
+                ratingValue: averageRating.toFixed(1),
+                reviewCount,
+              },
+            }
+          : {}),
+      }}
+    />
     <div className="flex flex-col gap-10 lg:flex-row lg:gap-12">
       <div className="flex flex-col gap-3 lg:w-1/2 lg:shrink-0">
         <ProductGallery images={product.images} title={product.title} />
