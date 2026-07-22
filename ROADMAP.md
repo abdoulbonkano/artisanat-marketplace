@@ -84,8 +84,9 @@ Coche `[x]` au fur et a mesure. Ajoute des notes sous un item si besoin.
 
 ### Paiement
 - [ ] Stripe Connect (reversement automatique aux vendeurs) - gros chantier, a faire quand le nombre de vendeurs justifie de ne plus reverser manuellement
-- [ ] Activer Apple Pay / Google Pay sur Stripe Checkout (rapide a activer, cote configuration Stripe)
-- [ ] Codes promo / reductions
+- [ ] Activer Apple Pay / Google Pay sur Stripe Checkout
+  - Note (2026-07-22) : Stripe Checkout gere Apple Pay/Google Pay automatiquement des lors qu'un domaine est verifie - c'est un reglage a faire toi-meme dans le Dashboard Stripe (Settings > Payment methods, + verification de domaine pour Apple Pay), pas du code. Rien a developper cote appli.
+- [x] Codes promo / reductions - modele `PromoCode` (pourcentage ou montant fixe), applique au checkout via un coupon Stripe cree a la volee, gestion admin sur `/admin/promos`
 
 ### Admin
 - [ ] Graphiques sur le tableau de bord admin (evolution des ventes, inscriptions)

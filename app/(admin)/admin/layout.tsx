@@ -13,6 +13,7 @@ const navItems = [
   { href: "/admin/commandes", label: "Commandes" },
   { href: "/admin/utilisateurs", label: "Utilisateurs" },
   { href: "/admin/avis", label: "Avis" },
+  { href: "/admin/promos", label: "Codes promo" },
   { href: "/admin/contact", label: "Contact" },
 ];
 

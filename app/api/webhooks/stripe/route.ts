@@ -35,6 +35,14 @@ async function fulfillOrder(orderId: string, paymentIntentId: string | null) {
         data: { stock: { decrement: item.quantity } },
       }),
     ),
+    ...(order.promoCodeId
+      ? [
+          prisma.promoCode.update({
+            where: { id: order.promoCodeId },
+            data: { usedCount: { increment: 1 } },
+          }),
+        ]
+      : []),
     prisma.cartItem.deleteMany({
       where: {
         cart: { userId: order.buyerId },

@@ -52,10 +52,38 @@ export async function createCheckoutSessionAction(
     0,
   );
 
+  const rawPromoCode = String(formData.get("promoCode") ?? "").trim().toUpperCase();
+  let promoCode = null;
+  let discountCents = 0;
+
+  if (rawPromoCode) {
+    promoCode = await prisma.promoCode.findUnique({ where: { code: rawPromoCode } });
+    const now = new Date();
+    const valid =
+      promoCode &&
+      promoCode.active &&
+      (!promoCode.expiresAt || promoCode.expiresAt > now) &&
+      (!promoCode.maxUses || promoCode.usedCount < promoCode.maxUses);
+
+    if (!valid) {
+      return { error: "Code promo invalide ou expire" };
+    }
+
+    discountCents =
+      promoCode!.type === "PERCENTAGE"
+        ? Math.round((totalCents * promoCode!.value) / 100)
+        : promoCode!.value;
+    discountCents = Math.min(discountCents, totalCents);
+  }
+
+  const finalTotalCents = totalCents - discountCents;
+
   const order = await prisma.order.create({
     data: {
       buyerId: user.id,
-      totalCents,
+      totalCents: finalTotalCents,
+      discountCents,
+      promoCodeId: promoCode?.id,
       shippingName: parsed.data.shippingName,
       shippingAddress: parsed.data.shippingAddress,
       shippingCity: parsed.data.shippingCity,
@@ -72,7 +100,7 @@ export async function createCheckoutSessionAction(
       },
       payment: {
         create: {
-          amountCents: totalCents,
+          amountCents: finalTotalCents,
           status: "REQUIRES_PAYMENT",
         },
       },
@@ -80,6 +108,20 @@ export async function createCheckoutSessionAction(
   });
 
   const origin = process.env.AUTH_URL ?? "http://localhost:3000";
+
+  let discounts: { coupon: string }[] | undefined;
+  try {
+    if (discountCents > 0) {
+      const coupon = await stripe.coupons.create({
+        duration: "once",
+        amount_off: discountCents,
+        currency: "eur",
+      });
+      discounts = [{ coupon: coupon.id }];
+    }
+  } catch {
+    return { error: "Impossible d'appliquer le code promo pour le moment" };
+  }
 
   let session;
   try {
@@ -93,6 +135,7 @@ export async function createCheckoutSessionAction(
           product_data: { name: item.product.title },
         },
       })),
+      discounts,
       metadata: { orderId: order.id },
       success_url: `${origin}/checkout/success?session_id={CHECKOUT_SESSION_ID}`,
       cancel_url: `${origin}/checkout/cancel`,

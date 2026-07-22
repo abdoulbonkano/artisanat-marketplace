@@ -36,6 +36,10 @@ export function CheckoutForm() {
         <Label htmlFor="shippingCountry">Pays</Label>
         <Input id="shippingCountry" name="shippingCountry" defaultValue="FR" required />
       </div>
+      <div className="flex flex-col gap-2">
+        <Label htmlFor="promoCode">Code promo (facultatif)</Label>
+        <Input id="promoCode" name="promoCode" placeholder="EX: BIENVENUE10" />
+      </div>
       {state?.error && <p className="text-sm text-destructive">{state.error}</p>}
       <Button type="submit" disabled={isPending}>
         {isPending ? "Redirection vers le paiement..." : "Payer maintenant"}
