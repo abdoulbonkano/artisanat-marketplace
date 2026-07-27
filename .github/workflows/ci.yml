@@ -53,6 +53,8 @@ jobs:
           --health-retries 5
     env:
       DATABASE_URL: postgresql://postgres:postgres@localhost:5432/artisanat_marketplace_ci
+      AUTH_URL: http://localhost:3000
+      AUTH_TRUST_HOST: "true"
     steps:
       - uses: actions/checkout@v4
 
