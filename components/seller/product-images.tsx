@@ -1,9 +1,9 @@
-import Image from "next/image";
 import {
   addProductImageAction,
   removeProductImageAction,
 } from "@/actions/products";
 import { Button } from "@/components/ui/button";
+import { ProductImage } from "@/components/ui/product-image";
 
 export function ProductImages({
   productId,
@@ -29,7 +29,7 @@ export function ProductImages({
             return (
               <div key={image.id} className="flex flex-col gap-2">
                 <div className="relative size-32 overflow-hidden rounded-md border">
-                  <Image
+                  <ProductImage
                     src={image.url}
                     alt=""
                     fill

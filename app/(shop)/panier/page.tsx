@@ -1,10 +1,10 @@
-import Image from "next/image";
 import Link from "next/link";
 import { ShoppingBag } from "lucide-react";
 import { removeCartItemAction, updateCartItemAction } from "@/actions/cart";
 import { Button } from "@/components/ui/button";
 import { EmptyState } from "@/components/ui/empty-state";
 import { Input } from "@/components/ui/input";
+import { ProductImage } from "@/components/ui/product-image";
 import { requireUser } from "@/lib/permissions";
 import { prisma } from "@/lib/prisma";
 
@@ -57,7 +57,7 @@ export default async function PanierPage() {
                 <div className="flex flex-1 gap-4">
                   {image && (
                     <div className="relative size-20 shrink-0 overflow-hidden rounded-md border">
-                      <Image
+                      <ProductImage
                         src={image.url}
                         alt={item.product.title}
                         fill

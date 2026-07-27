@@ -2,8 +2,8 @@
 
 import { Dialog } from "@base-ui/react/dialog";
 import { X, ZoomIn } from "lucide-react";
-import Image from "next/image";
 import { useState } from "react";
+import { ProductImage } from "@/components/ui/product-image";
 import { cn } from "@/lib/utils";
 
 export function ProductGallery({
@@ -29,7 +29,7 @@ export function ProductGallery({
           onClick={() => setOpen(true)}
           className="group/zoom relative aspect-square w-full overflow-hidden rounded-3xl bg-muted shadow-[0_4px_8px_-4px_rgba(36,28,16,0.08),0_20px_36px_-16px_rgba(36,28,16,0.2)]"
         >
-          <Image
+          <ProductImage
             src={current.url}
             alt={title}
             fill
@@ -53,7 +53,7 @@ export function ProductGallery({
                   index === selected ? "border-accent" : "border-transparent",
                 )}
               >
-                <Image
+                <ProductImage
                   src={image.url}
                   alt={`${title} - photo ${index + 1}`}
                   fill
@@ -78,7 +78,7 @@ export function ProductGallery({
               <X className="size-5" />
             </Dialog.Close>
             <div className="relative h-full w-full max-w-4xl">
-              <Image
+              <ProductImage
                 src={current.url}
                 alt={title}
                 fill

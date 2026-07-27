@@ -1,7 +1,7 @@
 import { ArrowUpRight, Star } from "lucide-react";
-import Image from "next/image";
 import Link from "next/link";
 import { WishlistButton } from "@/components/products/wishlist-button";
+import { ProductImage } from "@/components/ui/product-image";
 
 export function ProductCard({
   product,
@@ -25,7 +25,7 @@ export function ProductCard({
     <Link href={`/produits/${product.slug}`} className="group/card block">
       <div className="relative aspect-square w-full overflow-hidden rounded-3xl bg-secondary/40 ring-1 ring-foreground/8 transition-shadow duration-300 group-hover/card:shadow-[0_8px_16px_-6px_rgba(36,28,16,0.12),0_24px_36px_-16px_rgba(36,28,16,0.22)]">
         {product.images[0] && (
-          <Image
+          <ProductImage
             src={product.images[0].url}
             alt={product.title}
             fill

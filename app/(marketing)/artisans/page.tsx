@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
-import Image from "next/image";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
+import { ProductImage } from "@/components/ui/product-image";
 import { prisma } from "@/lib/prisma";
 
 export const metadata: Metadata = {
@@ -60,7 +60,7 @@ export default async function ArtisansPage() {
                   >
                     <div className="relative aspect-[4/3] w-full bg-secondary/40">
                       {image ? (
-                        <Image
+                        <ProductImage
                           src={image.url}
                           alt={shop.name}
                           fill
