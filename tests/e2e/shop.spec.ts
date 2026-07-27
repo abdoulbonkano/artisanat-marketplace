@@ -30,6 +30,10 @@ test("a logged-in buyer can add the seeded product to their cart", async ({ page
 
   await page.goto("/produits/bague-e2e-test");
   await page.getByRole("button", { name: /Ajouter au panier/i }).click();
+  // The add-to-cart form submits an async server action without a redirect;
+  // wait for the button's pending state ("Ajout...") to clear so the
+  // mutation has actually completed before navigating away.
+  await expect(page.getByRole("button", { name: "Ajouter au panier" })).toBeEnabled();
 
   await page.goto("/panier");
   await expect(page.getByText(/Bague E2E Test/i)).toBeVisible();
