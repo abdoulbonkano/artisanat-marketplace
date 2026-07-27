@@ -52,51 +52,55 @@ export default async function PanierPage() {
             return (
               <div
                 key={item.id}
-                className="flex items-center gap-4 border-b pb-4 last:border-none"
+                className="flex flex-col gap-4 border-b pb-4 last:border-none sm:flex-row sm:items-center"
               >
-                {image && (
-                  <div className="relative size-20 shrink-0 overflow-hidden rounded-md border">
-                    <Image
-                      src={image.url}
-                      alt={item.product.title}
-                      fill
-                      className="object-cover"
-                      sizes="80px"
-                    />
+                <div className="flex flex-1 gap-4">
+                  {image && (
+                    <div className="relative size-20 shrink-0 overflow-hidden rounded-md border">
+                      <Image
+                        src={image.url}
+                        alt={item.product.title}
+                        fill
+                        className="object-cover"
+                        sizes="80px"
+                      />
+                    </div>
+                  )}
+                  <div className="flex min-w-0 flex-1 flex-col gap-1">
+                    <Link
+                      href={`/produits/${item.product.slug}`}
+                      className="font-medium underline"
+                    >
+                      {item.product.title}
+                    </Link>
+                    <p className="text-sm text-muted-foreground">
+                      {(item.product.priceCents / 100).toFixed(2)} EUR piece
+                    </p>
                   </div>
-                )}
-                <div className="flex flex-1 flex-col gap-1">
-                  <Link
-                    href={`/produits/${item.product.slug}`}
-                    className="font-medium underline"
-                  >
-                    {item.product.title}
-                  </Link>
-                  <p className="text-sm text-muted-foreground">
-                    {(item.product.priceCents / 100).toFixed(2)} EUR piece
+                </div>
+                <div className="flex flex-wrap items-center gap-2 sm:shrink-0">
+                  <form action={boundUpdate} className="flex items-center gap-2">
+                    <Input
+                      type="number"
+                      name="quantity"
+                      defaultValue={item.quantity}
+                      min={0}
+                      max={item.product.stock}
+                      className="w-20"
+                    />
+                    <Button type="submit" variant="outline" size="sm">
+                      Mettre a jour
+                    </Button>
+                  </form>
+                  <form action={boundRemove}>
+                    <Button type="submit" variant="destructive" size="sm">
+                      Retirer
+                    </Button>
+                  </form>
+                  <p className="w-24 text-right font-medium">
+                    {((item.product.priceCents * item.quantity) / 100).toFixed(2)} EUR
                   </p>
                 </div>
-                <form action={boundUpdate} className="flex items-center gap-2">
-                  <Input
-                    type="number"
-                    name="quantity"
-                    defaultValue={item.quantity}
-                    min={0}
-                    max={item.product.stock}
-                    className="w-20"
-                  />
-                  <Button type="submit" variant="outline" size="sm">
-                    Mettre a jour
-                  </Button>
-                </form>
-                <form action={boundRemove}>
-                  <Button type="submit" variant="destructive" size="sm">
-                    Retirer
-                  </Button>
-                </form>
-                <p className="w-24 text-right font-medium">
-                  {((item.product.priceCents * item.quantity) / 100).toFixed(2)} EUR
-                </p>
               </div>
             );
           })}
