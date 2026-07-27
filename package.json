@@ -7,7 +7,15 @@
     "build": "prisma generate && prisma migrate deploy && next build",
     "start": "next start",
     "postinstall": "prisma generate",
-    "lint": "eslint"
+    "lint": "eslint",
+    "test": "vitest run",
+    "test:watch": "vitest",
+    "test:e2e": "playwright test",
+    "db:test:up": "docker compose up -d db-test",
+    "db:test:down": "docker compose down",
+    "db:test:migrate": "dotenv -e .env.test -- prisma migrate deploy",
+    "db:test:seed": "dotenv -e .env.test -- tsx prisma/seed-test.ts",
+    "dev:test": "dotenv -e .env.local -e .env.test -- next dev"
   },
   "dependencies": {
     "@auth/prisma-adapter": "^2.11.2",
@@ -38,17 +46,20 @@
     "zod": "^4.4.3"
   },
   "devDependencies": {
+    "@playwright/test": "^1.62.0",
     "@tailwindcss/postcss": "^4",
     "@types/bcryptjs": "^2.4.6",
     "@types/node": "^20",
     "@types/pg": "^8.20.0",
     "@types/react": "^19",
     "@types/react-dom": "^19",
+    "dotenv-cli": "^11.0.0",
     "eslint": "^9",
     "eslint-config-next": "16.2.10",
     "tailwindcss": "^4",
     "tsx": "^4.23.1",
-    "typescript": "^5"
+    "typescript": "^5",
+    "vitest": "^4.1.10"
   },
   "allowScripts": {
     "esbuild@0.28.1": true,
