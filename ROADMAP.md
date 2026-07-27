@@ -37,8 +37,10 @@ Coche `[x]` au fur et a mesure. Ajoute des notes sous un item si besoin.
 ### Mobile
 - [x] Menu mobile (hamburger) - drawer avec nav, recherche et actions de compte
 - [x] Zones cliquables : icones panier/messages remontees a 44px (cible tactile) sur mobile
-- [ ] Audit complet du site sur mobile reel (pas seulement desktop) : header, hero, formulaires, dashboard vendeur, checkout
-  - Note (2026-07-21) : verifie via emulation Playwright (viewport iPhone 13) uniquement, pas de test sur un vrai appareil physique - a refaire idealement sur un telephone reel avant de cocher definitivement.
+- [x] Audit complet du site sur mobile reel (pas seulement desktop) : header, hero, formulaires, dashboard vendeur, checkout
+  - Note (2026-07-27) : teste sur un vrai telephone Android (Xiaomi Mi 9T, Chrome) via ADB (tap/swipe/text reels, pas de l'emulation). Verifie et fonctionnels : accueil (hero, header), menu hamburger (ouverture, mode sombre, fermeture), recherche, catalogue + filtres, fiche produit + galerie photo, inscription, ajout au panier, page panier, formulaire de livraison du checkout (tabulation entre champs correcte). Arrete volontairement avant "Payer maintenant" pour ne pas declencher un vrai paiement Stripe. Dashboard vendeur non teste - necessite des identifiants vendeur reels que je n'ai pas.
+  - Fausse alerte importante rencontree puis ecartee : lors du test, les taps synthetiques ADB sur les boutons "fermer" (X) de la lightbox et du tiroir mobile semblaient ne rien faire (confirme via CDP : le clic JS `.click()` fonctionnait, mais le tap ADB non). L'utilisateur a confirme qu'avec un vrai doigt, la fermeture fonctionne normalement - c'etait donc un artefact de l'injection tactile ADB (qui simule le toucher differemment d'un contact capacitif reel), pas un bug du site.
+  - Remarque esthetique mineure relevee (non bloquante) : dans la page panier, le titre du produit s'enroule mot par mot dans une colonne etroite a cote de la miniature - pourrait etre ameliore avec un layout empile sur mobile plutot qu'une rangee image+texte.
 
 ---
 
