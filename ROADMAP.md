@@ -69,6 +69,8 @@ Coche `[x]` au fur et a mesure. Ajoute des notes sous un item si besoin.
 - [x] Page 404 personnalisee
 - [x] Dark mode fonctionnel (toggle dans le header + menu mobile, persiste en localStorage, script anti-flash au chargement)
 - [x] Animations de transition entre pages (fade+slide via `app/template.tsx`)
+- [x] Refonte editoriale de la carte produit (`components/shop/product-card.tsx`) - jugee "banale/archaique" (grille e-commerce generique, photo carree, badge prix flottant, nom de boutique en petit texte gris)
+  - Note (2026-07-27) : maquette validee avant implementation (voir echange). Photo en 4:5 (portrait) au lieu de carre, coins quasi droits au lieu du bubble tres arrondi, fin trait separant photo et texte (esprit cartel de musee), nom de la piece en Fraunces a plus grande echelle, nom de la boutique/artisan traite comme une signature (italique, couleur primaire) plutot qu'une legende grise, prix retire de la photo et deplace dans une ligne discrete avec la note. Ajoute au passage le style italique de Fraunces via `next/font` (necessaire pour un vrai italique, pas une oblique synthetique). Ce composant est partage par l'accueil, le catalogue, la page boutique et les favoris - un seul changement profite a tout le site.
 
 ### Legal / conformite
 - [x] Bandeau de consentement cookies
