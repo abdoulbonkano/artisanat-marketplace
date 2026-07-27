@@ -117,7 +117,8 @@ Coche `[x]` au fur et a mesure. Ajoute des notes sous un item si besoin.
 
 ## P3 — Plus tard / a plus grande echelle
 
-- [ ] Tests automatises (unitaires + end-to-end) - fragile sans, mais gros investissement initial
+- [x] Tests automatises (unitaires + end-to-end) - fragile sans, mais gros investissement initial
+  - Note (2026-07-23) : `npm run test` (Vitest) - 55 tests unitaires sur tous les schemas zod de `lib/validations/` + `lib/blog.ts` + `lib/utils.ts`, aucune base de donnees necessaire, tous passent. `npm run test:e2e` (Playwright) - suite complete (pages publiques + 404, inscription/connexion, catalogue/recherche/panier) qui tourne contre un Postgres local jetable (`docker compose up -d db-test`, jamais contre la prod), seede via `prisma/seed-test.ts`. Pas encore executee dans cette session : Docker Desktop n'etait pas lance sur la machine - a lancer toi-meme puis `npm run db:test:migrate && npm run db:test:seed && npm run test:e2e`.
 - [ ] Monitoring d'erreurs en production (Sentry ou equivalent)
 - [ ] Analytics (Plausible ou Google Analytics) pour suivre trafic/conversion
 - [ ] CI/CD avec verifications avant deploiement (actuellement deploiement direct sans etape de validation automatique)
