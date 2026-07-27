@@ -1,8 +1,10 @@
 import type { ComponentType } from "react";
 import { NotreDemarcheArticle } from "./notre-demarche";
 import { EntretienArticle } from "./entretien-bijoux-et-ceramiques";
+import { PortraitHamadaSoulimaneArticle } from "./portrait-hamada-soulimane";
 
 export const articleComponents: Record<string, ComponentType> = {
   "notre-demarche": NotreDemarcheArticle,
   "entretien-bijoux-et-ceramiques": EntretienArticle,
+  "portrait-hamada-soulimane": PortraitHamadaSoulimaneArticle,
 };

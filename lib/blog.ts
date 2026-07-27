@@ -26,6 +26,15 @@ export const blogPosts: BlogPost[] = [
     category: "Conseils",
     readTime: "5 min",
   },
+  {
+    slug: "portrait-hamada-soulimane",
+    title: "Portrait : Hamada Soulimane, bijoutier au musee national du Niger",
+    excerpt:
+      "Rencontre avec l'un de nos artisans partenaires, qui faconne ses bijoux au sein du musee national du Niger, a Niamey.",
+    date: "2026-07-23",
+    category: "Portraits",
+    readTime: "3 min",
+  },
 ];
 
 export function getBlogPost(slug: string): BlogPost | undefined {
