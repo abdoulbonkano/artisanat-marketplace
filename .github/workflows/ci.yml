@@ -89,3 +89,46 @@ jobs:
           name: playwright-report
           path: playwright-report/
           retention-days: 7
+
+  deploy:
+    name: Deploy to Vercel (production)
+    needs: [verify, build-and-e2e]
+    if: github.ref == 'refs/heads/master' && github.event_name == 'push'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - run: npm install --global vercel@latest
+
+      # Vercel's remote build runs `npm run build` (prisma generate + migrate
+      # deploy against the real DB + next build) using the env vars already
+      # configured in the Vercel dashboard - no secrets needed here besides
+      # the deploy token itself.
+      #
+      # Retries because of a known transient issue: `prisma migrate deploy`
+      # occasionally times out acquiring a Postgres advisory lock on this
+      # project's pooled Neon connection (P1002). It has always cleared
+      # within a couple of minutes in past manual retries; production is
+      # never affected either way since Vercel keeps serving the last
+      # successful deployment throughout.
+      - name: Deploy (retries on transient advisory-lock timeout)
+        env:
+          VERCEL_TOKEN: ${{ secrets.VERCEL_TOKEN }}
+          VERCEL_ORG_ID: ${{ vars.VERCEL_ORG_ID }}
+          VERCEL_PROJECT_ID: ${{ vars.VERCEL_PROJECT_ID }}
+        run: |
+          for attempt in 1 2 3 4 5; do
+            echo "::group::Deploy attempt $attempt/5"
+            if vercel deploy --prod --yes --token="$VERCEL_TOKEN"; then
+              echo "::endgroup::"
+              echo "Deploy succeeded on attempt $attempt."
+              exit 0
+            fi
+            echo "::endgroup::"
+            if [ "$attempt" -lt 5 ]; then
+              echo "Deploy failed, waiting 90s before retry..."
+              sleep 90
+            fi
+          done
+          echo "All 5 deploy attempts failed."
+          exit 1
