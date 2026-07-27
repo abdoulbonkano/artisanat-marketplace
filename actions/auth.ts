@@ -219,6 +219,7 @@ export async function resetPasswordAction(
 export type ResendVerificationState = { error?: string; success?: boolean } | undefined;
 
 export async function resendVerificationEmailAction(
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars -- required by useActionState's signature
   _prevState: ResendVerificationState,
 ): Promise<ResendVerificationState> {
   const sessionUser = await requireUser();

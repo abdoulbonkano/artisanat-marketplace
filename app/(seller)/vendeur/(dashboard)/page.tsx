@@ -12,7 +12,8 @@ export default async function VendeurDashboardPage() {
     include: { _count: { select: { products: true } } },
   });
 
-  const thirtyDaysAgo = new Date(Date.now() - 30 * 24 * 60 * 60 * 1000);
+  const thirtyDaysAgo = new Date();
+  thirtyDaysAgo.setDate(thirtyDaysAgo.getDate() - 30);
 
   const [ordersCount, recentItems, topProducts] = await Promise.all([
     shop ? prisma.orderItem.count({ where: { shopId: shop.id } }) : Promise.resolve(0),

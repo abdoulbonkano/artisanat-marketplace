@@ -1,31 +1,39 @@
 "use client";
 
 import Link from "next/link";
-import { useEffect, useState } from "react";
+import { useSyncExternalStore } from "react";
 import { Button } from "@/components/ui/button";
 
 const STORAGE_KEY = "cookie-notice-dismissed";
+const listeners = new Set<() => void>();
+
+function subscribe(callback: () => void) {
+  listeners.add(callback);
+  return () => listeners.delete(callback);
+}
+
+function getSnapshot() {
+  try {
+    return !localStorage.getItem(STORAGE_KEY);
+  } catch {
+    return false;
+  }
+}
+
+function getServerSnapshot() {
+  return false;
+}
 
 export function CookieBanner() {
-  const [visible, setVisible] = useState(false);
-
-  useEffect(() => {
-    try {
-      if (!localStorage.getItem(STORAGE_KEY)) {
-        setVisible(true);
-      }
-    } catch {
-      // localStorage unavailable - just skip the banner
-    }
-  }, []);
+  const visible = useSyncExternalStore(subscribe, getSnapshot, getServerSnapshot);
 
   function dismiss() {
-    setVisible(false);
     try {
       localStorage.setItem(STORAGE_KEY, "1");
     } catch {
       // ignore
     }
+    listeners.forEach((listener) => listener());
   }
 
   if (!visible) return null;
