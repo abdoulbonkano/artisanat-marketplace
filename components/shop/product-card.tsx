@@ -22,7 +22,7 @@ export function ProductCard({
   wishlisted?: boolean;
 }) {
   return (
-    <Link href={`/produits/${product.slug}`} className="group/card block">
+    <Link href={`/produits/${product.slug}`} className="group/card flex h-full flex-col">
       <div className="relative aspect-square w-full overflow-hidden rounded-[3px] bg-secondary/40">
         {product.images[0] && (
           <ProductImage
@@ -41,9 +41,9 @@ export function ProductCard({
           />
         )}
       </div>
-      <div className="mt-3 border-t border-border pt-3">
+      <div className="mt-3 flex flex-1 flex-col border-t border-border pt-3">
         <p
-          className="line-clamp-2 min-h-14 font-heading text-xl leading-snug font-medium text-balance transition-colors group-hover/card:text-accent"
+          className="line-clamp-2 font-heading text-xl leading-snug font-medium text-balance transition-colors group-hover/card:text-accent"
           style={{ fontVariationSettings: '"SOFT" 15, "WONK" 1' }}
         >
           {product.title}
@@ -56,7 +56,7 @@ export function ProductCard({
             {product.shop.name}
           </p>
         )}
-        <div className="mt-2 flex items-baseline gap-2">
+        <div className="mt-auto flex items-baseline gap-2 pt-2">
           {rating && rating.count > 0 && (
             <div className="flex items-center gap-1 text-xs text-muted-foreground">
               <Star className="size-3.5 fill-accent text-accent" strokeWidth={1.5} />
