@@ -43,7 +43,7 @@ export function ProductCard({
       </div>
       <div className="mt-3 border-t border-border pt-3">
         <p
-          className="font-heading text-xl leading-snug font-medium text-balance transition-colors group-hover/card:text-accent"
+          className="line-clamp-2 min-h-14 font-heading text-xl leading-snug font-medium text-balance transition-colors group-hover/card:text-accent"
           style={{ fontVariationSettings: '"SOFT" 15, "WONK" 1' }}
         >
           {product.title}
