@@ -142,4 +142,4 @@ Coche `[x]` au fur et a mesure. Ajoute des notes sous un item si besoin.
 
 - Les emails transactionnels et les avis sont probablement les deux items qui debloquent le plus de valeur d'un coup — a discuter en premier pour l'ordre de developpement.
 - Le webhook auto-deploy GitHub -> Vercel a deja saute une fois sans raison connue (voir session du 2026-07-21) — a surveiller, potentiellement a reconfigurer.
-- Le bug d'image cassee sur le produit "Vase en gres emaille" (boutique Fil et Terre) releve le 2026-07-20 reste non corrige.
+- Le bug d'image cassee sur le produit "Vase en gres emaille" (boutique Fil et Terre) releve le 2026-07-20 concerne une donnee de test qui ne restera pas - pas corrige a la source. En revanche (2026-07-27), le cas general a ete traite : toute image produit dont l'URL echoue au chargement affiche desormais un placeholder discret (icone) au lieu de l'icone d'image cassee du navigateur, sur les cartes produit, la galerie fiche produit, le panier, la liste des artisans et le gestionnaire de photos vendeur (`components/ui/product-image.tsx`).
