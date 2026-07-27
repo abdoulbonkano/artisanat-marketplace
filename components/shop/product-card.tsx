@@ -23,7 +23,7 @@ export function ProductCard({
 }) {
   return (
     <Link href={`/produits/${product.slug}`} className="group/card block">
-      <div className="relative aspect-[4/5] w-full overflow-hidden rounded-[3px] bg-secondary/40">
+      <div className="relative aspect-square w-full overflow-hidden rounded-[3px] bg-secondary/40">
         {product.images[0] && (
           <ProductImage
             src={product.images[0].url}
