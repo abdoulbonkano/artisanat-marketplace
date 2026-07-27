@@ -1,4 +1,5 @@
 import { DeleteAccountForm } from "@/components/account/delete-account-form";
+import { TwoFactorSettings } from "@/components/account/two-factor-settings";
 import { Badge } from "@/components/ui/badge";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { requireUser } from "@/lib/permissions";
@@ -45,6 +46,17 @@ export default async function ComptePage() {
           </div>
         </CardContent>
       </Card>
+
+      {(user.role === "SELLER" || user.role === "ADMIN") && (
+        <Card>
+          <CardHeader>
+            <CardTitle>Authentification a deux facteurs</CardTitle>
+          </CardHeader>
+          <CardContent>
+            <TwoFactorSettings enabled={user.twoFactorEnabled} />
+          </CardContent>
+        </Card>
+      )}
 
       <Card className="border-destructive/30">
         <CardHeader>

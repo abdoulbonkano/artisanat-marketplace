@@ -69,17 +69,32 @@ model User {
   createdAt      DateTime  @default(now())
   updatedAt      DateTime  @updatedAt
 
-  shop                 Shop?
-  orders               Order[]
-  cart                 Cart?
-  sentMessages         Message[]
-  conversationsAsBuyer Conversation[] @relation("BuyerConversations")
-  accounts             Account[]
-  sessions             Session[]
-  passwordResetTokens  PasswordResetToken[]
-  reviews              Review[]
-  wishlist             Wishlist[]
-  adminAuditLogs       AdminAuditLog[]
+  twoFactorEnabled Boolean @default(false)
+  twoFactorSecret  String?
+
+  shop                   Shop?
+  orders                 Order[]
+  cart                   Cart?
+  sentMessages           Message[]
+  conversationsAsBuyer   Conversation[]          @relation("BuyerConversations")
+  accounts               Account[]
+  sessions               Session[]
+  passwordResetTokens    PasswordResetToken[]
+  reviews                Review[]
+  wishlist               Wishlist[]
+  adminAuditLogs         AdminAuditLog[]
+  twoFactorRecoveryCodes TwoFactorRecoveryCode[]
+}
+
+model TwoFactorRecoveryCode {
+  id        String    @id @default(cuid())
+  userId    String
+  user      User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  codeHash  String
+  usedAt    DateTime?
+  createdAt DateTime  @default(now())
+
+  @@index([userId])
 }
 
 model Shop {

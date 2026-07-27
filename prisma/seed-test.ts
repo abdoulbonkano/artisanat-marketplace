@@ -31,7 +31,9 @@ async function main() {
 
   const seller = await prisma.user.upsert({
     where: { email: "seller-e2e@artisanat-marketplace.local" },
-    update: {},
+    // Reset 2FA state on every reseed so local re-runs of the 2FA e2e test
+    // (which enables it on this account) stay deterministic.
+    update: { twoFactorEnabled: false, twoFactorSecret: null },
     create: {
       email: "seller-e2e@artisanat-marketplace.local",
       name: "Artisan Test",
@@ -40,6 +42,7 @@ async function main() {
       emailVerified: new Date(),
     },
   });
+  await prisma.twoFactorRecoveryCode.deleteMany({ where: { userId: seller.id } });
 
   const shop = await prisma.shop.upsert({
     where: { ownerId: seller.id },

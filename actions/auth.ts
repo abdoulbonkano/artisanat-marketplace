@@ -10,6 +10,7 @@ import { requireUser } from "@/lib/permissions";
 import { prisma } from "@/lib/prisma";
 import { checkRateLimit, getClientIp } from "@/lib/rate-limit";
 import { SITE_URL } from "@/lib/site";
+import { consumeRecoveryCodeIfValid, verifyTotpCode } from "@/lib/two-factor";
 import {
   requestPasswordResetSchema,
   resetPasswordSchema,
@@ -86,10 +87,12 @@ export async function signUpAction(
   await signIn("credentials", { email, password, redirectTo: "/" });
 }
 
+export type SignInState = { error?: string; requiresTwoFactor?: boolean } | undefined;
+
 export async function signInAction(
-  _prevState: ActionState,
+  _prevState: SignInState,
   formData: FormData,
-): Promise<ActionState> {
+): Promise<SignInState> {
   const ip = await getClientIp();
   const { allowed } = await checkRateLimit(`signin:${ip}`, {
     limit: 10,
@@ -108,12 +111,30 @@ export async function signInAction(
     return { error: parsed.error.issues[0]?.message ?? "Formulaire invalide" };
   }
 
+  const { email, password } = parsed.data;
+
+  const user = await prisma.user.findUnique({ where: { email } });
+  if (!user?.hashedPassword || !(await bcrypt.compare(password, user.hashedPassword))) {
+    return { error: "Email ou mot de passe incorrect" };
+  }
+
+  if (user.twoFactorEnabled) {
+    const code = (formData.get("totpCode") as string | null)?.trim();
+    if (!code) {
+      return { requiresTwoFactor: true };
+    }
+
+    const valid =
+      (user.twoFactorSecret ? verifyTotpCode(user.twoFactorSecret, code) : false) ||
+      (await consumeRecoveryCodeIfValid(user.id, code));
+
+    if (!valid) {
+      return { requiresTwoFactor: true, error: "Code invalide" };
+    }
+  }
+
   try {
-    await signIn("credentials", {
-      email: parsed.data.email,
-      password: parsed.data.password,
-      redirectTo: "/",
-    });
+    await signIn("credentials", { email, password, redirectTo: "/" });
   } catch (error) {
     if (error instanceof AuthError) {
       return { error: "Email ou mot de passe incorrect" };
