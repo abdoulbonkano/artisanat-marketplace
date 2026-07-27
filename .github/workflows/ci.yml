@@ -7,8 +7,11 @@ on:
     branches: [master]
 
 env:
-  # Disposable value used only inside this CI run - never a real secret.
+  # Disposable values used only inside this CI run - never real secrets.
+  # `prisma generate` (npm ci's postinstall) needs DATABASE_URL to be
+  # *defined*, even in jobs that never actually connect to a database.
   AUTH_SECRET: ci-only-throwaway-secret-not-used-anywhere-real
+  DATABASE_URL: postgresql://postgres:postgres@localhost:5432/unused
 
 jobs:
   verify:
