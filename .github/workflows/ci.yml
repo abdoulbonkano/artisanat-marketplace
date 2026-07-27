@@ -1,0 +1,86 @@
+name: CI
+
+on:
+  push:
+    branches: [master]
+  pull_request:
+    branches: [master]
+
+env:
+  # Disposable value used only inside this CI run - never a real secret.
+  AUTH_SECRET: ci-only-throwaway-secret-not-used-anywhere-real
+
+jobs:
+  verify:
+    name: Lint, typecheck, unit tests
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "24"
+          cache: "npm"
+
+      - run: npm ci
+
+      - run: npm run lint
+
+      - run: npx tsc --noEmit
+
+      - run: npm run test
+
+  build-and-e2e:
+    name: Build + end-to-end tests
+    needs: verify
+    runs-on: ubuntu-latest
+    services:
+      postgres:
+        image: postgres:16-alpine
+        env:
+          POSTGRES_USER: postgres
+          POSTGRES_PASSWORD: postgres
+          POSTGRES_DB: artisanat_marketplace_ci
+        ports:
+          - 5432:5432
+        options: >-
+          --health-cmd "pg_isready -U postgres"
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+    env:
+      DATABASE_URL: postgresql://postgres:postgres@localhost:5432/artisanat_marketplace_ci
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "24"
+          cache: "npm"
+
+      - run: npm ci
+
+      # Validates the migrations apply cleanly to a fresh database, before
+      # they ever reach the real one.
+      - run: npx prisma generate
+      - run: npx prisma migrate deploy
+
+      # Compile + type-check + bundle the production build. Every route in
+      # this app is server-rendered on demand (no static generation touches
+      # the database), so this step needs no further DB access.
+      - run: npx next build
+
+      - run: npx playwright install --with-deps chromium
+
+      - run: npx tsx prisma/seed-test.ts
+
+      - run: npm run test:e2e
+        env:
+          CI: true
+
+      - uses: actions/upload-artifact@v4
+        if: failure()
+        with:
+          name: playwright-report
+          path: playwright-report/
+          retention-days: 7

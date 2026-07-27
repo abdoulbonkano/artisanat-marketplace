@@ -17,7 +17,11 @@ export default defineConfig({
     },
   ],
   webServer: {
-    command: "npm run dev:test",
+    // Locally, `dev:test` layers .env.local (real Stripe/Resend/etc. keys for
+    // dev convenience) with .env.test (DATABASE_URL override only). In CI
+    // there is no .env.local - all env vars come from the workflow itself -
+    // so we start the already-built app directly instead.
+    command: process.env.CI ? "npm run start" : "npm run dev:test",
     url: "http://localhost:3000",
     reuseExistingServer: !process.env.CI,
     timeout: 60_000,
