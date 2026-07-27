@@ -94,7 +94,8 @@ Coche `[x]` au fur et a mesure. Ajoute des notes sous un item si besoin.
 - [x] Log d'activite / audit trail des actions admin (`/admin/audit`) - couvre boutiques (approuver/suspendre), produits (depublier/supprimer), utilisateurs (promouvoir/retrograder), avis (masquer/republier), codes promo (creer/activer/desactiver), remboursements
 
 ### Contenu
-- [ ] Vrai contenu blog (actuellement page "bientot disponible")
+- [x] Vrai contenu blog (actuellement page "bientot disponible")
+  - Note (2026-07-23) : systeme de blog leger base sur des fichiers (`lib/blog.ts` + composants par article, pas de modele DB - pas necessaire pour une poignee d'articles geres a la main). Trois articles publies : "Pourquoi une marketplace sans intermediaire" (demarche/marque, s'appuie sur les faits deja confirmes de `/notre-histoire`), "Bien entretenir vos bijoux en bronze, en argent et vos ceramiques" (conseils generaux, aucune information specifique inventee), et un portrait de l'artisan Hamada Soulimane volontairement court - seuls les faits confirmes (nom, metier, lieu au musee national du Niger a Niamey) y figurent ; a completer avec parcours/technique/photos une fois disponibles.
 - [ ] Photos presentables pour les bijoux en argent (dossier en attente, evoque en session precedente)
 - [ ] Elargir le catalogue / recruter plus d'artisans partenaires
 
