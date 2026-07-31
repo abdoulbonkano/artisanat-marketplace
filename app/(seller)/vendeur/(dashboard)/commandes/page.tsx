@@ -92,7 +92,7 @@ export default async function VendeurCommandesPage() {
                         {item.titleSnapshot} x{item.quantity}
                       </span>
                       <span>
-                        {((item.priceCentsSnapshot * item.quantity) / 100).toFixed(2)} EUR
+                        {((item.priceCentsSnapshot * item.quantity) / 100).toFixed(2)} &euro;
                       </span>
                     </div>
                   ))}

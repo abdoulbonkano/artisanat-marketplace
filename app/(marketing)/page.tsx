@@ -203,7 +203,7 @@ export default async function Home() {
                   {heroProduct.shop.name}
                 </p>
                 <p className="font-heading text-lg font-medium">
-                  {(heroProduct.priceCents / 100).toFixed(2)} EUR
+                  {(heroProduct.priceCents / 100).toFixed(2)} &euro;
                 </p>
               </div>
             </div>

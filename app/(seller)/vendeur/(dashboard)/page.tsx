@@ -90,7 +90,7 @@ export default async function VendeurDashboardPage() {
             <CardTitle>Revenus (30 jours)</CardTitle>
           </CardHeader>
           <CardContent className="text-3xl font-semibold">
-            {(revenue30dCents / 100).toFixed(2)} EUR
+            {(revenue30dCents / 100).toFixed(2)} &euro;
           </CardContent>
         </Card>
         <Card>

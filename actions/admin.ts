@@ -131,6 +131,6 @@ export async function refundOrderAction(orderId: string) {
     prisma.payment.update({ where: { orderId }, data: { status: "REFUNDED" } }),
   ]);
 
-  await logAdminAction(admin.id, "order.refund", orderId, `${(order.totalCents / 100).toFixed(2)} EUR`);
+  await logAdminAction(admin.id, "order.refund", orderId, `${(order.totalCents / 100).toFixed(2)} €`);
   revalidatePath("/admin/commandes");
 }

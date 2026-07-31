@@ -170,7 +170,7 @@ export default async function ProduitDetailPage({
 
         <div className="flex flex-wrap items-center gap-3 border-t border-border pt-6">
           <span className="font-heading text-4xl font-medium tracking-tight tabular-nums text-accent">
-            {(product.priceCents / 100).toFixed(2)} EUR
+            {(product.priceCents / 100).toFixed(2)} &euro;
           </span>
           <Badge variant={product.stock > 0 ? "secondary" : "destructive"}>
             {product.stock > 0 ? `${product.stock} en stock` : "Rupture de stock"}

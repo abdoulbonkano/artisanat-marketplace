@@ -37,7 +37,7 @@ export default async function AdminPromosPage() {
                 <Badge variant="secondary">
                   {promo.type === "PERCENTAGE"
                     ? `-${promo.value}%`
-                    : `-${(promo.value / 100).toFixed(2)} EUR`}
+                    : `-${(promo.value / 100).toFixed(2)} €`}
                 </Badge>
                 <Badge variant={promo.active ? "secondary" : "destructive"}>
                   {promo.active ? "Actif" : "Desactive"}

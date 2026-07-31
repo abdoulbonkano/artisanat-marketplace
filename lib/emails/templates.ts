@@ -62,7 +62,7 @@ export function orderConfirmationEmail({
       (item) => `
         <tr>
           <td style="padding:8px 0;font-size:14px;">${item.titleSnapshot} &times; ${item.quantity}</td>
-          <td style="padding:8px 0;font-size:14px;text-align:right;">${((item.priceCentsSnapshot * item.quantity) / 100).toFixed(2)} EUR</td>
+          <td style="padding:8px 0;font-size:14px;text-align:right;">${((item.priceCentsSnapshot * item.quantity) / 100).toFixed(2)} &euro;</td>
         </tr>`,
     )
     .join("");
@@ -80,7 +80,7 @@ export function orderConfirmationEmail({
           ${rows}
         </table>
         <p style="font-size:16px;font-weight:600;border-top:1px solid #e8ddcc;padding-top:12px;">
-          Total : ${(totalCents / 100).toFixed(2)} EUR
+          Total : ${(totalCents / 100).toFixed(2)} &euro;
         </p>
         ${button("Suivre ma commande", `${SITE_URL}/commandes/${orderId}`)}
       `,
@@ -109,7 +109,7 @@ export function newSaleEmail({
         <h1 style="font-size:22px;margin:0 0 12px;">Nouvelle vente, ${shopName} !</h1>
         <p style="font-size:15px;line-height:1.6;">Un acheteur vient de commander :</p>
         <ul style="padding-left:18px;">${list}</ul>
-        <p style="font-size:16px;font-weight:600;">Montant : ${(amountCents / 100).toFixed(2)} EUR</p>
+        <p style="font-size:16px;font-weight:600;">Montant : ${(amountCents / 100).toFixed(2)} &euro;</p>
         ${button("Voir la commande", `${SITE_URL}/vendeur/commandes`)}
       `,
     ),

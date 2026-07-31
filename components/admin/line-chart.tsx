@@ -3,7 +3,7 @@
 import { useState } from "react";
 
 function formatValue(value: number, unit: "eur" | "count") {
-  if (unit === "eur") return `${value.toFixed(2)} EUR`;
+  if (unit === "eur") return `${value.toFixed(2)} €`;
   return `${value} inscription${value > 1 ? "s" : ""}`;
 }
 

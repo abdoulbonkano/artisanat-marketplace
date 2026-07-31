@@ -109,7 +109,7 @@ export default async function CommandeDetailPage({
               {item.titleSnapshot} x{item.quantity}
             </span>
             <span>
-              {((item.priceCentsSnapshot * item.quantity) / 100).toFixed(2)} EUR
+              {((item.priceCentsSnapshot * item.quantity) / 100).toFixed(2)} &euro;
             </span>
           </div>
         ))}
@@ -117,7 +117,7 @@ export default async function CommandeDetailPage({
 
       <div className="flex justify-between font-semibold">
         <span>Total</span>
-        <span>{(order.totalCents / 100).toFixed(2)} EUR</span>
+        <span>{(order.totalCents / 100).toFixed(2)} &euro;</span>
       </div>
 
       {canReview && (

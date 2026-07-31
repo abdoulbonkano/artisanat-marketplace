@@ -41,7 +41,7 @@ export default async function AdminProduitsPage() {
             <TableRow key={product.id}>
               <TableCell>{product.title}</TableCell>
               <TableCell>{product.shop.name}</TableCell>
-              <TableCell>{(product.priceCents / 100).toFixed(2)} EUR</TableCell>
+              <TableCell>{(product.priceCents / 100).toFixed(2)} &euro;</TableCell>
               <TableCell>
                 <Badge variant="secondary">{statusLabel[product.status]}</Badge>
               </TableCell>

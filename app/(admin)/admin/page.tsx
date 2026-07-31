@@ -51,7 +51,7 @@ export default async function AdminDashboardPage() {
     { label: "Commandes", value: orderCount },
     {
       label: "Chiffre d'affaires (commandes payees)",
-      value: `${((paidTotal._sum.totalCents ?? 0) / 100).toFixed(2)} EUR`,
+      value: `${((paidTotal._sum.totalCents ?? 0) / 100).toFixed(2)} €`,
     },
   ];
 

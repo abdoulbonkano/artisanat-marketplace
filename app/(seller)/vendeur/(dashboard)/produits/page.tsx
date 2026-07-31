@@ -75,7 +75,7 @@ export default async function VendeurProduitsPage() {
                     {product.title}
                   </Link>
                 </TableCell>
-                <TableCell>{(product.priceCents / 100).toFixed(2)} EUR</TableCell>
+                <TableCell>{(product.priceCents / 100).toFixed(2)} &euro;</TableCell>
                 <TableCell>{product.stock}</TableCell>
                 <TableCell>
                   <Badge variant="secondary">{statusLabel[product.status]}</Badge>

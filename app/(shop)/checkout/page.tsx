@@ -38,14 +38,14 @@ export default async function CheckoutPage() {
                 {item.product.title} x{item.quantity}
               </span>
               <span>
-                {((item.product.priceCents * item.quantity) / 100).toFixed(2)} EUR
+                {((item.product.priceCents * item.quantity) / 100).toFixed(2)} &euro;
               </span>
             </div>
           ))}
         </div>
         <div className="mt-4 flex justify-between border-t pt-4 font-semibold">
           <span>Total</span>
-          <span>{(total / 100).toFixed(2)} EUR</span>
+          <span>{(total / 100).toFixed(2)} &euro;</span>
         </div>
       </div>
     </div>

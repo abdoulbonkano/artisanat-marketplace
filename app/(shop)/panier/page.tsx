@@ -74,7 +74,7 @@ export default async function PanierPage() {
                       {item.product.title}
                     </Link>
                     <p className="text-sm text-muted-foreground">
-                      {(item.product.priceCents / 100).toFixed(2)} EUR piece
+                      {(item.product.priceCents / 100).toFixed(2)} &euro; piece
                     </p>
                   </div>
                 </div>
@@ -98,7 +98,7 @@ export default async function PanierPage() {
                     </Button>
                   </form>
                   <p className="w-24 text-right font-medium">
-                    {((item.product.priceCents * item.quantity) / 100).toFixed(2)} EUR
+                    {((item.product.priceCents * item.quantity) / 100).toFixed(2)} &euro;
                   </p>
                 </div>
               </div>
@@ -107,7 +107,7 @@ export default async function PanierPage() {
 
           <div className="flex items-center justify-between pt-4">
             <p className="text-lg font-semibold">
-              Total : {(total / 100).toFixed(2)} EUR
+              Total : {(total / 100).toFixed(2)} &euro;
             </p>
             <Button render={<Link href="/checkout" />} nativeButton={false}>
               Passer la commande

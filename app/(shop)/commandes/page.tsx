@@ -56,7 +56,7 @@ export default async function CommandesPage() {
               </div>
               <div className="flex items-center gap-4">
                 <span className="font-medium">
-                  {(order.totalCents / 100).toFixed(2)} EUR
+                  {(order.totalCents / 100).toFixed(2)} &euro;
                 </span>
                 <Badge variant="secondary">{statusLabel[order.status]}</Badge>
               </div>

@@ -71,7 +71,7 @@ export default async function AdminCommandesPage() {
                 <TableCell>{order.createdAt.toLocaleDateString("fr-FR")}</TableCell>
                 <TableCell>{order.buyer.email}</TableCell>
                 <TableCell>{order.items.length}</TableCell>
-                <TableCell>{(order.totalCents / 100).toFixed(2)} EUR</TableCell>
+                <TableCell>{(order.totalCents / 100).toFixed(2)} &euro;</TableCell>
                 <TableCell>
                   <Badge variant="secondary">{statusLabel[order.status]}</Badge>
                 </TableCell>
@@ -113,7 +113,7 @@ export default async function AdminCommandesPage() {
               <TableRow key={shopId}>
                 <TableCell>{shopNameById.get(shopId) ?? shopId}</TableCell>
                 <TableCell>{totals.quantity}</TableCell>
-                <TableCell>{(totals.amountCents / 100).toFixed(2)} EUR</TableCell>
+                <TableCell>{(totals.amountCents / 100).toFixed(2)} &euro;</TableCell>
               </TableRow>
             ))}
           </TableBody>
