@@ -12,7 +12,7 @@ export const metadata: Metadata = {
 
 export default async function ArtisansPage() {
   const shops = await prisma.shop.findMany({
-    where: { status: "ACTIVE" },
+    where: { status: "ACTIVE", products: { some: { status: "PUBLISHED" } } },
     include: {
       products: {
         where: { status: "PUBLISHED" },
