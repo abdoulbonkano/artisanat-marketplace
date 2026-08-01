@@ -1,4 +1,16 @@
 services:
+  db:
+    image: postgres:16-alpine
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: artisanat_marketplace
+    ports:
+      - "5432:5432"
+    volumes:
+      - db-data:/var/lib/postgresql/data
+
   db-test:
     image: postgres:16-alpine
     restart: unless-stopped
@@ -12,4 +24,5 @@ services:
       - db-test-data:/var/lib/postgresql/data
 
 volumes:
+  db-data:
   db-test-data:
