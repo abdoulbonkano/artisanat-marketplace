@@ -3,6 +3,7 @@
 import Link from "next/link";
 import { useActionState } from "react";
 import { resetPasswordAction } from "@/actions/auth";
+import { AuthShell } from "@/components/auth/auth-shell";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
@@ -13,8 +14,8 @@ export function ResetPasswordForm({ token }: { token?: string }) {
 
   if (!token) {
     return (
-      <div className="flex flex-1 items-center justify-center px-4 py-16">
-        <Card className="w-full max-w-sm">
+      <AuthShell>
+        <Card className="w-full">
           <CardHeader>
             <CardTitle>Lien invalide</CardTitle>
           </CardHeader>
@@ -29,13 +30,13 @@ export function ResetPasswordForm({ token }: { token?: string }) {
             </p>
           </CardContent>
         </Card>
-      </div>
+      </AuthShell>
     );
   }
 
   return (
-    <div className="flex flex-1 items-center justify-center px-4 py-16">
-      <Card className="w-full max-w-sm">
+    <AuthShell>
+      <Card className="w-full">
         <CardHeader>
           <CardTitle>Choisir un nouveau mot de passe</CardTitle>
         </CardHeader>
@@ -78,6 +79,6 @@ export function ResetPasswordForm({ token }: { token?: string }) {
           )}
         </CardContent>
       </Card>
-    </div>
+    </AuthShell>
   );
 }

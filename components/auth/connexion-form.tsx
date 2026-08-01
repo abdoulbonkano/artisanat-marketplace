@@ -3,6 +3,7 @@
 import Link from "next/link";
 import { useActionState, useState } from "react";
 import { signInAction } from "@/actions/auth";
+import { AuthShell } from "@/components/auth/auth-shell";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
@@ -16,8 +17,8 @@ export function ConnexionForm() {
   const requiresTwoFactor = state?.requiresTwoFactor ?? false;
 
   return (
-    <div className="flex flex-1 items-center justify-center px-4 py-16">
-      <Card className="w-full max-w-sm">
+    <AuthShell>
+      <Card className="w-full">
         <CardHeader>
           <CardTitle>Se connecter</CardTitle>
         </CardHeader>
@@ -93,6 +94,6 @@ export function ConnexionForm() {
           </p>
         </CardContent>
       </Card>
-    </div>
+    </AuthShell>
   );
 }

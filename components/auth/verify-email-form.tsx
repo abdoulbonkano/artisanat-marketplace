@@ -3,6 +3,7 @@
 import Link from "next/link";
 import { useActionState } from "react";
 import { confirmEmailVerificationAction } from "@/actions/auth";
+import { AuthShell } from "@/components/auth/auth-shell";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 
@@ -11,8 +12,8 @@ export function VerifyEmailForm({ token }: { token?: string }) {
 
   if (!token) {
     return (
-      <div className="flex flex-1 items-center justify-center px-4 py-16">
-        <Card className="w-full max-w-sm">
+      <AuthShell>
+        <Card className="w-full">
           <CardHeader>
             <CardTitle>Lien invalide</CardTitle>
           </CardHeader>
@@ -23,13 +24,13 @@ export function VerifyEmailForm({ token }: { token?: string }) {
             </p>
           </CardContent>
         </Card>
-      </div>
+      </AuthShell>
     );
   }
 
   return (
-    <div className="flex flex-1 items-center justify-center px-4 py-16">
-      <Card className="w-full max-w-sm">
+    <AuthShell>
+      <Card className="w-full">
         <CardHeader>
           <CardTitle>Confirmer votre email</CardTitle>
         </CardHeader>
@@ -60,6 +61,6 @@ export function VerifyEmailForm({ token }: { token?: string }) {
           )}
         </CardContent>
       </Card>
-    </div>
+    </AuthShell>
   );
 }
