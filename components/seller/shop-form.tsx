@@ -15,6 +15,8 @@ export function ShopForm({
     description: string | null;
     siret: string | null;
     phone: string | null;
+    shippingPriceCents: number | null;
+    shippingInfo: string | null;
   };
 }) {
   const [state, formAction, isPending] = useActionState(updateShopAction, undefined);
@@ -53,6 +55,30 @@ export function ShopForm({
           type="tel"
           required
           defaultValue={shop.phone ?? ""}
+        />
+      </div>
+      <div className="flex flex-col gap-2">
+        <Label htmlFor="shippingPrice">Frais de livraison (EUR)</Label>
+        <Input
+          id="shippingPrice"
+          name="shippingPrice"
+          type="number"
+          min="0"
+          step="0.01"
+          placeholder="Laisser vide si non communique"
+          defaultValue={
+            shop.shippingPriceCents !== null ? (shop.shippingPriceCents / 100).toFixed(2) : ""
+          }
+        />
+      </div>
+      <div className="flex flex-col gap-2">
+        <Label htmlFor="shippingInfo">Delai de livraison indicatif</Label>
+        <Input
+          id="shippingInfo"
+          name="shippingInfo"
+          placeholder="Ex : Expedie sous 3 a 5 jours ouvres"
+          maxLength={200}
+          defaultValue={shop.shippingInfo ?? ""}
         />
       </div>
       {state?.error && <p className="text-sm text-destructive">{state.error}</p>}

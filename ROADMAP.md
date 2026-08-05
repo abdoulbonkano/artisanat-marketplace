@@ -51,12 +51,16 @@ Coche `[x]` au fur et a mesure. Ajoute des notes sous un item si besoin.
 - [x] Historique/timeline de statut de commande visible par l'acheteur (etapes Commande passee / Paiement confirme / Expediee sur la page de commande)
 - [x] Workflow de demande de retour/remboursement (l'acheteur initie depuis la commande, le vendeur approuve/refuse ; l'approbation declenche un remboursement Stripe reel sur le montant de l'article)
 - [x] Facture/recu telechargeable (PDF) par commande (`@react-pdf/renderer`, route `/commandes/[id]/facture`)
+- [x] Frais de livraison + delai indicatif affiches sur la fiche produit
+  - Note (2026-08-05) : identifie comme le vrai point de friction avant achat lors d'un audit du site (aucune information de livraison au-dela d'un badge marketing generique identique partout). Champs `shippingPriceCents`/`shippingInfo` ajoutes sur `Shop` (livraison geree par vendeur, pas par produit - coherent avec le modele existant ou chaque artisan gere sa propre expedition), renseignables depuis `/vendeur/boutique`. Facultatifs : si non renseignes, la fiche produit garde le message generique plutot que d'afficher "0 €" ou un champ vide. Migration Prisma generee puis nettoyee a la main - l'outil de diff proposait aussi de supprimer les index `pg_trgm` (crees en SQL brut hors du schema declaratif, donc invisibles pour lui) : verifie et retire avant application pour ne pas casser la recherche tolerante aux fautes.
 
 ### Recherche / decouverte
 - [x] Tri des produits (prix croissant/decroissant, plus recent, plus populaire - populaire = quantite vendue sur commandes payees)
 - [x] Produits similaires / "vous aimerez aussi" sur la fiche produit (meme categorie, 4 produits)
 - [x] Liste de souhaits / favoris (necessite compte) - coeur sur les cartes produit + page `/favoris`
 - [x] Recherche plus tolerante aux fautes de frappe (extension `pg_trgm`, similarite sur titre/description)
+- [x] Categories vides masquees de l'accueil et du catalogue
+  - Note (2026-08-05) : les categories sans aucun produit publie (boutique active) restaient cliquables et menaient vers une page vide - meme filtre que celui deja utilise pour la boutique "a la une" (`products: { some: { status: "PUBLISHED", shop: { status: "ACTIVE" } } }`), applique aux deux requetes de categories qui ne l'avaient pas.
 
 ### Vendeur (dashboard)
 - [x] Statistiques de vente basiques (revenus sur 30j, produits les plus vendus)

@@ -36,6 +36,8 @@ export async function createShopAction(
     description: formData.get("description"),
     siret: formData.get("siret"),
     phone: formData.get("phone"),
+    shippingPrice: formData.get("shippingPrice") || undefined,
+    shippingInfo: formData.get("shippingInfo") || undefined,
   });
 
   if (!parsed.success) {
@@ -51,6 +53,11 @@ export async function createShopAction(
         description: parsed.data.description,
         siret: parsed.data.siret,
         phone: parsed.data.phone,
+        shippingPriceCents:
+          parsed.data.shippingPrice !== undefined
+            ? Math.round(parsed.data.shippingPrice * 100)
+            : null,
+        shippingInfo: parsed.data.shippingInfo,
         slug,
         status: "PENDING",
         ownerId: user.id,
@@ -75,6 +82,8 @@ export async function updateShopAction(
     description: formData.get("description"),
     siret: formData.get("siret"),
     phone: formData.get("phone"),
+    shippingPrice: formData.get("shippingPrice") || undefined,
+    shippingInfo: formData.get("shippingInfo") || undefined,
   });
 
   if (!parsed.success) {
@@ -88,6 +97,11 @@ export async function updateShopAction(
       description: parsed.data.description,
       siret: parsed.data.siret,
       phone: parsed.data.phone,
+      shippingPriceCents:
+        parsed.data.shippingPrice !== undefined
+          ? Math.round(parsed.data.shippingPrice * 100)
+          : null,
+      shippingInfo: parsed.data.shippingInfo,
     },
   });
 

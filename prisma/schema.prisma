@@ -104,6 +104,8 @@ model Shop {
   description   String?
   siret         String?
   phone         String?
+  shippingPriceCents Int?
+  shippingInfo  String?
   logoUrl       String?
   bannerUrl     String?
   status        ShopStatus     @default(PENDING)

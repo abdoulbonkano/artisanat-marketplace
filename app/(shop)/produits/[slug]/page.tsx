@@ -16,6 +16,20 @@ import { auth } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
 import { SITE_URL } from "@/lib/site";
 
+function shippingLabel(shop: { shippingPriceCents: number | null; shippingInfo: string | null }) {
+  const price =
+    shop.shippingPriceCents !== null
+      ? shop.shippingPriceCents === 0
+        ? "Livraison gratuite"
+        : `Livraison ${(shop.shippingPriceCents / 100).toFixed(2)} €`
+      : null;
+
+  if (price && shop.shippingInfo) return `${price} · ${shop.shippingInfo}`;
+  if (price) return price;
+  if (shop.shippingInfo) return shop.shippingInfo;
+  return "Livraison suivie - frais et delais communiques par le vendeur";
+}
+
 const getProduct = cache(async (slug: string) => {
   return prisma.product.findUnique({
     where: { slug },
@@ -204,7 +218,7 @@ export default async function ProduitDetailPage({
             <span className="flex size-7 items-center justify-center rounded-full bg-primary/10 text-primary">
               <Truck className="size-3.5 shrink-0" strokeWidth={1.75} />
             </span>
-            <span>Livraison suivie, France et Europe</span>
+            <span>{shippingLabel(product.shop)}</span>
           </div>
           <div className="flex items-center gap-2">
             <span className="flex size-7 items-center justify-center rounded-full bg-primary/10 text-primary">
