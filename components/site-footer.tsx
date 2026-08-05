@@ -27,6 +27,9 @@ export function SiteFooter() {
             <Link href="/blog" className="w-fit hover:text-foreground">
               Blog
             </Link>
+            <Link href="/faq" className="w-fit hover:text-foreground">
+              FAQ
+            </Link>
             <Link href="/contact" className="w-fit hover:text-foreground">
               Contact
             </Link>

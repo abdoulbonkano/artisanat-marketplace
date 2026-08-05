@@ -112,6 +112,8 @@ Coche `[x]` au fur et a mesure. Ajoute des notes sous un item si besoin.
   - Note (2026-07-23) : systeme de blog leger base sur des fichiers (`lib/blog.ts` + composants par article, pas de modele DB - pas necessaire pour une poignee d'articles geres a la main). Trois articles publies : "Pourquoi une marketplace sans intermediaire" (demarche/marque, s'appuie sur les faits deja confirmes de `/notre-histoire`), "Bien entretenir vos bijoux en bronze, en argent et vos ceramiques" (conseils generaux, aucune information specifique inventee), et un portrait de l'artisan Hamada Soulimane volontairement court - seuls les faits confirmes (nom, metier, lieu au musee national du Niger a Niamey) y figurent ; a completer avec parcours/technique/photos une fois disponibles.
 - [ ] Photos presentables pour les bijoux en argent (dossier en attente, evoque en session precedente)
 - [ ] Elargir le catalogue / recruter plus d'artisans partenaires
+- [x] Page FAQ dediee (`/faq`)
+  - Note (2026-08-05) : identifiee comme manquante lors d'un audit du site (seuls CGV + contact existaient jusque-la). 9 questions/reponses groupees en 4 categories (commander/payer, livraison/retours, vendre, compte/confidentialite), redigees uniquement a partir des faits deja confirmes ailleurs sur le site (CGV, confidentialite, mentions legales) - aucune politique inventee, dans le meme esprit que le prompt du chatbot. Donnees structurees `FAQPage` (JSON-LD) pour le SEO. Accordeon en `details`/`summary` natif, pas de JS necessaire. Lien ajoute au footer, a la page contact et au prompt du chatbot (qui peut desormais y rediriger).
 
 ### SEO / performance avance
 - [x] Donnees structurees JSON-LD (schema.org `Organization` sur tout le site, `Product` + `AggregateRating` sur la fiche produit)

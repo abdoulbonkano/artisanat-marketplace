@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import Link from "next/link";
 import { Clock, Mail, MessageCircle, ShieldCheck } from "lucide-react";
 import { ContactForm } from "@/components/marketing/contact-form";
 
@@ -39,7 +40,15 @@ export default function ContactPage() {
           </h1>
           <p className="max-w-xl text-base leading-relaxed text-muted-foreground">
             Commande, boutique, envie de proposer un partenariat artisan...
-            dites-nous en plus, on vous repond sous 24h.
+            dites-nous en plus, on vous repond sous 24h. Une question courante
+            sur la livraison, les retours ou devenir vendeur ? Notre{" "}
+            <Link
+              href="/faq"
+              className="text-foreground underline decoration-accent/40 underline-offset-4 hover:decoration-accent"
+            >
+              FAQ
+            </Link>{" "}
+            a peut-etre deja la reponse.
           </p>
         </div>
       </section>
