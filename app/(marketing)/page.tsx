@@ -122,7 +122,11 @@ function categoryIcon(name: string): LucideIcon {
 
 export default async function Home() {
   const [categories, featuredProducts, spotlightShop] = await Promise.all([
-    prisma.category.findMany({ orderBy: { name: "asc" }, take: 8 }),
+    prisma.category.findMany({
+      where: { products: { some: { status: "PUBLISHED", shop: { status: "ACTIVE" } } } },
+      orderBy: { name: "asc" },
+      take: 8,
+    }),
     prisma.product.findMany({
       where: { status: "PUBLISHED", shop: { status: "ACTIVE" } },
       include: { shop: true, images: { orderBy: { position: "asc" }, take: 1 } },

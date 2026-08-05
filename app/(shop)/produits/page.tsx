@@ -77,7 +77,10 @@ export default async function ProduitsPage({
             ? { priceCents: "desc" }
             : { createdAt: "desc" },
     }),
-    prisma.category.findMany({ orderBy: { name: "asc" } }),
+    prisma.category.findMany({
+      where: { products: { some: { status: "PUBLISHED", shop: { status: "ACTIVE" } } } },
+      orderBy: { name: "asc" },
+    }),
   ]);
 
   if (searchIds && sort === "recent") {
