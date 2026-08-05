@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { Fraunces, Geist, Geist_Mono } from "next/font/google";
 import Script from "next/script";
+import { ChatbotWidget } from "@/components/chatbot/chatbot-widget";
 import { CookieBanner } from "@/components/cookie-banner";
 import { JsonLd } from "@/components/json-ld";
 import { SITE_NAME, SITE_URL } from "@/lib/site";
@@ -81,6 +82,7 @@ export default function RootLayout({
           }}
         />
         {children}
+        <ChatbotWidget />
         <CookieBanner />
       </body>
     </html>

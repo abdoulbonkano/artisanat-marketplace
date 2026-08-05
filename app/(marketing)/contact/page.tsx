@@ -17,7 +17,7 @@ const reassurances = [
   {
     icon: MessageCircle,
     title: "Une vraie personne",
-    description: "Pas de bot, pas de centre d'appel : BONKANO SOLUTIONS.",
+    description: "Pas de centre d'appel : c'est BONKANO SOLUTIONS qui vous lit et repond.",
   },
   {
     icon: ShieldCheck,
