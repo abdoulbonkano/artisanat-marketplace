@@ -35,6 +35,7 @@ yarn-error.log*
 
 # env files (can opt-in for committing if needed)
 .env*
+!.env.example
 
 # vercel
 .vercel
@@ -48,6 +49,3 @@ next-env.d.ts
 
 # locally uploaded product images (dev-only storage; use Vercel Blob in production)
 /public/uploads/
-
-.vercel
-.env*
