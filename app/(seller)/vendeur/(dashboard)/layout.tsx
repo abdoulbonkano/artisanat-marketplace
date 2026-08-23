@@ -6,6 +6,7 @@ import { Button } from "@/components/ui/button";
 import { SiteFooter } from "@/components/site-footer";
 import { requireSeller } from "@/lib/permissions";
 import { prisma } from "@/lib/prisma";
+import { SITE_NAME } from "@/lib/site";
 
 const navItems = [
   { href: "/vendeur", label: "Tableau de bord" },
@@ -38,7 +39,7 @@ export default async function VendeurDashboardLayout({
       <header className="flex items-center justify-between gap-2 border-b px-4 py-4 md:px-6">
         <Link href="/" className="font-heading text-lg font-medium tracking-tight">
           <span className="md:hidden">Vendeur</span>
-          <span className="hidden md:inline">Marketplace Artisanat</span>
+          <span className="hidden md:inline">{SITE_NAME}</span>
         </Link>
         <div className="flex items-center gap-3 text-sm">
           <Button

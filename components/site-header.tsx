@@ -7,7 +7,6 @@ import {
   Search,
   Settings,
   ShoppingBag,
-  Sparkles,
   Store,
 } from "lucide-react";
 import { signOutAction } from "@/actions/auth";
@@ -15,10 +14,12 @@ import { auth } from "@/lib/auth";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
+import { LogoMark, Wordmark } from "@/components/logo";
 import { MainNav } from "@/components/main-nav";
 import { MobileNav } from "@/components/mobile-nav";
 import { ThemeToggle } from "@/components/theme-toggle";
 import { EmailVerificationBanner } from "@/components/auth/email-verification-banner";
+import { SITE_NAME } from "@/lib/site";
 import { prisma } from "@/lib/prisma";
 
 export async function SiteHeader() {
@@ -61,13 +62,13 @@ export async function SiteHeader() {
 
         <Link
           href="/"
-          aria-label="Marketplace Artisanat"
+          aria-label={SITE_NAME}
           className="flex shrink-0 items-center gap-2 font-heading text-xl font-medium tracking-tight"
         >
           <span className="flex size-8 items-center justify-center rounded-lg bg-primary text-primary-foreground">
-            <Sparkles className="size-4" strokeWidth={1.75} />
+            <LogoMark className="size-4" />
           </span>
-          <span className="hidden sm:inline" aria-hidden="true">Marketplace Artisanat</span>
+          <Wordmark className="hidden sm:inline" aria-hidden="true" />
         </Link>
 
         <form

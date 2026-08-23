@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { Wordmark } from "@/components/logo";
 
 export function SiteFooter() {
   return (
@@ -6,9 +7,7 @@ export function SiteFooter() {
       <div className="mx-auto flex max-w-5xl flex-col gap-8">
         <div className="flex flex-wrap items-start justify-between gap-8">
           <div className="flex flex-col gap-2">
-            <span className="font-heading text-lg font-medium">
-              Marketplace Artisanat
-            </span>
+            <Wordmark className="font-heading text-lg font-medium" />
             <p className="max-w-xs text-xs leading-relaxed text-muted-foreground">
               L&apos;artisanat, sans intermediaire. Achetez en direct aupres
               de createurs independants.

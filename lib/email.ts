@@ -4,7 +4,7 @@ const resend = process.env.RESEND_API_KEY ? new Resend(process.env.RESEND_API_KE
 
 // Sends from Resend's shared test domain until a verified custom domain is
 // configured - works immediately, no DNS setup required.
-const FROM_ADDRESS = "Marketplace Artisanat <onboarding@resend.dev>";
+const FROM_ADDRESS = "Façonné <onboarding@resend.dev>";
 
 export async function sendEmail({
   to,

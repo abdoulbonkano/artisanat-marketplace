@@ -1,0 +1,256 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Façonné — Identité de marque</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bitter:wght@400;500;600;700&family=Karla:wght@400;500;600;700&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --ink:#2B2420;
+    --ink-soft:#5A5049;
+    --linen:#EFE6D8;
+    --white:#FBF8F2;
+    --rust:#A8461F;
+    --indigo:#3C4A68;
+    --sage:#7C8B65;
+    --line: rgba(43,36,32,0.12);
+  }
+  *{box-sizing:border-box; margin:0; padding:0;}
+  body{
+    background:var(--linen);
+    color:var(--ink);
+    font-family:'Karla', sans-serif;
+    line-height:1.55;
+  }
+  .disp{font-family:'Bitter', serif;}
+  .mono{font-family:'Space Mono', monospace; letter-spacing:0.02em;}
+  section{padding:84px 8vw;}
+  @media (max-width:720px){ section{padding:52px 6vw;} }
+
+  /* ---------- HERO ---------- */
+  .hero{
+    background:var(--ink);
+    color:var(--linen);
+    padding:126px 8vw 104px;
+    display:flex; flex-direction:column; align-items:center; text-align:center;
+    position:relative; overflow:hidden;
+  }
+  .hero::before{
+    content:""; position:absolute; inset:0;
+    background:
+      radial-gradient(circle at 12% 15%, rgba(168,70,31,0.24), transparent 42%),
+      radial-gradient(circle at 90% 85%, rgba(60,74,104,0.28), transparent 45%);
+    pointer-events:none;
+  }
+  .mark{ width:118px; height:118px; margin-bottom:26px; position:relative; z-index:1; }
+  .wordmark{
+    font-family:'Bitter', serif;
+    font-size:clamp(42px,7.5vw,78px);
+    font-weight:600;
+    letter-spacing:-0.01em;
+    position:relative; z-index:1;
+  }
+  .wordmark em{ font-style:italic; font-weight:400; color:#D08355; }
+  .tagline{
+    margin-top:16px; font-size:clamp(14px,2vw,17px);
+    letter-spacing:0.09em; text-transform:uppercase; font-weight:700;
+    color:#8FA07A; position:relative; z-index:1;
+  }
+  .hero-desc{
+    max-width:520px; margin-top:22px; font-size:16.5px;
+    color:rgba(251,248,242,0.72); position:relative; z-index:1;
+  }
+  .hero-word{
+    margin-top:30px; padding:10px 22px; border-radius:6px;
+    border:1.5px solid rgba(251,248,242,0.22);
+    font-family:'Space Mono',monospace; font-size:13px;
+    color:var(--linen); position:relative; z-index:1;
+  }
+
+  .eyebrow{
+    font-family:'Space Mono', monospace;
+    font-size:12px; letter-spacing:0.1em; text-transform:uppercase;
+    color:var(--rust); margin-bottom:10px; display:block;
+  }
+  h2{
+    font-family:'Bitter', serif;
+    font-weight:600; font-size:clamp(27px,4vw,38px);
+    margin-bottom:34px; max-width:600px;
+  }
+
+  /* ---------- PALETTE ---------- */
+  .palette{ display:grid; grid-template-columns:repeat(5,1fr); border-radius:12px; overflow:hidden; box-shadow:0 12px 32px rgba(43,36,32,0.12);}
+  @media (max-width:820px){ .palette{grid-template-columns:repeat(2,1fr);} }
+  .swatch{ height:205px; display:flex; flex-direction:column; justify-content:flex-end; padding:18px; }
+  .swatch .name{ font-family:'Bitter',serif; font-size:16px; font-weight:600; }
+  .swatch .hex{ font-family:'Space Mono',monospace; font-size:11.5px; opacity:0.85; margin-top:2px;}
+  .swatch .use{ font-size:12px; opacity:0.75; margin-top:8px; line-height:1.4; }
+
+  /* ---------- TYPE ---------- */
+  .type-row{ display:flex; justify-content:space-between; align-items:baseline; border-bottom:1px solid var(--line); padding:26px 0; gap:24px; flex-wrap:wrap;}
+  .type-row .label{ font-family:'Space Mono',monospace; font-size:12px; text-transform:uppercase; letter-spacing:0.06em; color:var(--ink-soft); opacity:0.65; width:150px; flex-shrink:0;}
+  .type-sample.disp{ font-size:clamp(24px,4vw,40px); font-weight:600;}
+  .type-sample.body{ font-family:'Karla',sans-serif; font-size:18px; max-width:560px; color:var(--ink-soft);}
+  .type-sample.mono{ font-family:'Space Mono',monospace; font-size:13.5px; color:var(--ink-soft);}
+
+  /* ---------- LOGO ---------- */
+  .logo-grid{ display:grid; grid-template-columns:1fr 1fr; gap:20px; }
+  @media (max-width:720px){ .logo-grid{grid-template-columns:1fr;} }
+  .logo-card{ border-radius:12px; padding:48px; display:flex; flex-direction:column; align-items:center; gap:20px; }
+  .logo-card.on-dark{ background:var(--ink); }
+  .logo-card.on-light{ background:var(--white); border:1px solid var(--line); }
+  .logo-card svg{ width:84px; height:84px; }
+  .logo-card .cap{ font-family:'Space Mono',monospace; font-size:11px; letter-spacing:0.06em; text-transform:uppercase; }
+  .logo-card.on-dark .cap{ color:rgba(251,248,242,0.55); }
+  .logo-card.on-light .cap{ color:rgba(43,36,32,0.5); }
+
+  /* ---------- VOICE ---------- */
+  .voice-grid{ display:grid; grid-template-columns:1fr 1fr; gap:20px; }
+  @media (max-width:720px){ .voice-grid{grid-template-columns:1fr;} }
+  .voice-card{ border-radius:12px; padding:28px; background:var(--white); border:1px solid var(--line); }
+  .voice-card.do{ border-left:4px solid var(--sage); }
+  .voice-card.dont{ border-left:4px solid var(--rust); opacity:0.85; }
+  .voice-card .tag{ font-family:'Space Mono',monospace; font-size:11px; text-transform:uppercase; letter-spacing:0.06em; margin-bottom:12px; display:block;}
+  .voice-card.do .tag{ color:#5C6B49; }
+  .voice-card.dont .tag{ color:var(--rust); }
+  .voice-card p{ font-family:'Bitter',serif; font-size:19px; font-style:italic; line-height:1.45; }
+
+  /* ---------- CATEGORIES ---------- */
+  .cat-grid{ display:grid; grid-template-columns:repeat(4,1fr); gap:16px; }
+  @media (max-width:820px){ .cat-grid{grid-template-columns:repeat(2,1fr);} }
+  .cat-card{ background:var(--white); border:1px solid var(--line); border-radius:12px; padding:26px 20px; text-align:center; }
+  .cat-card .icon{ font-size:28px; margin-bottom:10px; }
+  .cat-card .label{ font-family:'Bitter',serif; font-weight:600; font-size:16px; }
+
+  footer{ background:var(--ink); color:rgba(251,248,242,0.55); text-align:center; padding:38px; font-size:13px; }
+</style>
+</head>
+<body>
+
+<section class="hero">
+  <svg class="mark" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+    <path d="M50 10 C74 10 90 28 88 52 C86 76 68 90 46 88 C24 86 10 66 14 44 C17 26 30 10 50 10 Z" fill="none" stroke="#A8461F" stroke-width="3.5"/>
+    <path d="M36 50 Q50 38 64 50 Q50 62 36 50 Z" fill="#3C4A68"/>
+    <circle cx="50" cy="50" r="3.2" fill="#EFE6D8"/>
+  </svg>
+  <div class="wordmark">Fa<em>ç</em>onné</div>
+  <div class="tagline">Artisanat · Fait main · International</div>
+  <p class="hero-desc">Une place de marché pour les objets qui portent encore la trace de la main qui les a faits.</p>
+  <div class="hero-word">chaque pièce, façonnée — jamais fabriquée en série</div>
+</section>
+
+<section id="palette">
+  <span class="eyebrow">01 — Palette</span>
+  <h2>La terre, la teinture, le fil</h2>
+  <div class="palette">
+    <div class="swatch" style="background:#2B2420; color:#EFE6D8;">
+      <div class="name">Bois brûlé</div>
+      <div class="hex">#2B2420</div>
+      <div class="use">Texte, fond sombre, structure</div>
+    </div>
+    <div class="swatch" style="background:#A8461F; color:#EFE6D8;">
+      <div class="name">Terre cuite</div>
+      <div class="hex">#A8461F</div>
+      <div class="use">Signature, accents, chaleur</div>
+    </div>
+    <div class="swatch" style="background:#3C4A68; color:#EFE6D8;">
+      <div class="name">Indigo</div>
+      <div class="hex">#3C4A68</div>
+      <div class="use">Teinture naturelle, contraste</div>
+    </div>
+    <div class="swatch" style="background:#7C8B65; color:#2B2420;">
+      <div class="name">Sauge</div>
+      <div class="hex">#7C8B65</div>
+      <div class="use">Validation, nature, discret</div>
+    </div>
+    <div class="swatch" style="background:#EFE6D8; color:#2B2420;">
+      <div class="name">Lin</div>
+      <div class="hex">#EFE6D8</div>
+      <div class="use">Fond clair, respiration</div>
+    </div>
+  </div>
+</section>
+
+<section id="type" style="background:var(--white);">
+  <span class="eyebrow">02 — Typographie</span>
+  <h2>Une empreinte, pas un moule</h2>
+  <div>
+    <div class="type-row">
+      <span class="label">Display · Bitter</span>
+      <span class="type-sample disp">Fait à la main, vendu sans détour</span>
+    </div>
+    <div class="type-row">
+      <span class="label">Body · Karla</span>
+      <span class="type-sample body">Découvrez des céramiques, bijoux et pièces textiles fabriqués par des artisans indépendants, où qu'ils soient dans le monde.</span>
+    </div>
+    <div class="type-row">
+      <span class="label">Mono · Space Mono</span>
+      <span class="type-sample mono">PIÈCE UNIQUE · FAIT MAIN · ATELIER VÉRIFIÉ</span>
+    </div>
+  </div>
+</section>
+
+<section id="logo">
+  <span class="eyebrow">03 — Signe</span>
+  <h2>Le rebord imparfait d'une poterie</h2>
+  <div class="logo-grid">
+    <div class="logo-card on-dark">
+      <svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+        <path d="M50 10 C74 10 90 28 88 52 C86 76 68 90 46 88 C24 86 10 66 14 44 C17 26 30 10 50 10 Z" fill="none" stroke="#D08355" stroke-width="3.5"/>
+        <path d="M36 50 Q50 38 64 50 Q50 62 36 50 Z" fill="#8FA0C4"/>
+        <circle cx="50" cy="50" r="3.2" fill="#EFE6D8"/>
+      </svg>
+      <span class="cap">Sur fond Bois brûlé</span>
+    </div>
+    <div class="logo-card on-light">
+      <svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+        <path d="M50 10 C74 10 90 28 88 52 C86 76 68 90 46 88 C24 86 10 66 14 44 C17 26 30 10 50 10 Z" fill="none" stroke="#A8461F" stroke-width="3.5"/>
+        <path d="M36 50 Q50 38 64 50 Q50 62 36 50 Z" fill="#3C4A68"/>
+        <circle cx="50" cy="50" r="3.2" fill="#2B2420"/>
+      </svg>
+      <span class="cap">Sur fond clair</span>
+    </div>
+  </div>
+</section>
+
+<section id="voice" style="background:var(--white);">
+  <span class="eyebrow">04 — Ton de voix</span>
+  <h2>On raconte la pièce, pas le rabais</h2>
+  <div class="voice-grid">
+    <div class="voice-card do">
+      <span class="tag">On dit</span>
+      <p>« Tourné à la main par Aïcha, dans son atelier de Bamako. »</p>
+    </div>
+    <div class="voice-card dont">
+      <span class="tag">On évite</span>
+      <p>« SOLDES ! -50% sur tout le fait main, aujourd'hui seulement ! »</p>
+    </div>
+    <div class="voice-card do">
+      <span class="tag">On dit</span>
+      <p>« Il reste 3 pièces de cette série. Chacune est légèrement différente. »</p>
+    </div>
+    <div class="voice-card dont">
+      <span class="tag">On évite</span>
+      <p>« Notre marketplace disruptive révolutionne l'artisanat mondial. »</p>
+    </div>
+  </div>
+</section>
+
+<section id="categories">
+  <span class="eyebrow">05 — Univers</span>
+  <h2>Ce que Façonné accueille</h2>
+  <div class="cat-grid">
+    <div class="cat-card"><div class="icon">🏺</div><div class="label">Céramique</div></div>
+    <div class="cat-card"><div class="icon">💍</div><div class="label">Bijoux</div></div>
+    <div class="cat-card"><div class="icon">🧵</div><div class="label">Textile</div></div>
+    <div class="cat-card"><div class="icon">📜</div><div class="label">Papeterie</div></div>
+  </div>
+</section>
+
+<footer>Façonné — planche d'identité v1 · construite avec Claude</footer>
+
+</body>
+</html>

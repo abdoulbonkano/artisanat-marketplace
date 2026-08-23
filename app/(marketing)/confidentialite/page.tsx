@@ -13,7 +13,7 @@ export default function ConfidentialitePage() {
       <section className="flex flex-col gap-2">
         <h2 className="text-lg font-medium">Qui traite vos donnees ?</h2>
         <p className="text-sm leading-relaxed text-muted-foreground">
-          BONKANO SOLUTIONS, editeur du site Marketplace Artisanat, est
+          BONKANO SOLUTIONS, editeur du site Façonné, est
           responsable du traitement des donnees personnelles collectees via le
           site. Pour toute question, ecrivez a{" "}
           <a href="mailto:bonkano.solutions@gmail.com" className="underline">

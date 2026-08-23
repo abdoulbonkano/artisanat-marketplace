@@ -8,7 +8,7 @@ export default function MentionsLegalesPage() {
       <section className="flex flex-col gap-2">
         <h2 className="text-lg font-medium">Editeur du site</h2>
         <p className="text-sm leading-relaxed text-muted-foreground">
-          Le site Marketplace Artisanat est edite par la societe BONKANO SOLUTIONS,
+          Le site Façonné est edite par la societe BONKANO SOLUTIONS,
           Societe par actions simplifiee (SASU) au capital social de 500,00 euros,
           immatriculee au Registre du Commerce et des Societes de Bordeaux sous le
           numero 930 452 644, dont le siege social est situe Apt 0001, 1 Rue Jacques

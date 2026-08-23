@@ -3,7 +3,7 @@ import { randomBytes } from "node:crypto";
 import * as OTPAuth from "otpauth";
 import { prisma } from "@/lib/prisma";
 
-const ISSUER = "Marketplace Artisanat";
+const ISSUER = "Façonné";
 
 function buildTotp(secret: string, label = "compte") {
   return new OTPAuth.TOTP({

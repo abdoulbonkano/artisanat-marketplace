@@ -12,7 +12,7 @@ export default function CgvPage() {
         <p className="text-sm leading-relaxed text-muted-foreground">
           Les presentes conditions generales de vente (CGV) regissent les ventes
           conclues entre les vendeurs artisans et les acheteurs via la plateforme
-          Marketplace Artisanat, editee par BONKANO SOLUTIONS. Chaque vente constitue
+          Façonné, editee par BONKANO SOLUTIONS. Chaque vente constitue
           un contrat direct entre le vendeur et l&apos;acheteur ; BONKANO SOLUTIONS
           intervient uniquement en tant qu&apos;intermediaire technique et
           encaisseur du paiement pour le compte des vendeurs.

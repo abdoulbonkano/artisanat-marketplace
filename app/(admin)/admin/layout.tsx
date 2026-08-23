@@ -5,6 +5,7 @@ import { Button } from "@/components/ui/button";
 import { SiteFooter } from "@/components/site-footer";
 import { requireAdmin } from "@/lib/permissions";
 import { prisma } from "@/lib/prisma";
+import { SITE_NAME } from "@/lib/site";
 
 const navItems = [
   { href: "/admin", label: "Tableau de bord" },
@@ -34,7 +35,7 @@ export default async function AdminLayout({
       <header className="flex items-center justify-between gap-2 border-b px-4 py-4 md:px-6">
         <Link href="/" className="font-semibold tracking-tight">
           <span className="md:hidden">Admin</span>
-          <span className="hidden md:inline">Marketplace Artisanat - Admin</span>
+          <span className="hidden md:inline">{SITE_NAME} - Admin</span>
         </Link>
         <div className="flex items-center gap-4 text-sm">
           <Link href="/" className="hidden hover:underline sm:inline">

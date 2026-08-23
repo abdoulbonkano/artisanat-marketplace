@@ -1,4 +1,4 @@
-# Roadmap — Marketplace Artisanat
+# Roadmap — Façonné
 
 To-do list exhaustive pour organiser le developpement. Classee par priorite :
 **P0 (critique)** = bloque la confiance ou l'usage reel du site.

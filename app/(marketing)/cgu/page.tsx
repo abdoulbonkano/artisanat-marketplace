@@ -11,7 +11,7 @@ export default function CguPage() {
         <h2 className="text-lg font-medium">1. Objet</h2>
         <p className="text-sm leading-relaxed text-muted-foreground">
           Les presentes conditions generales d&apos;utilisation (CGU) regissent
-          l&apos;acces et l&apos;utilisation du site Marketplace Artisanat, edite par
+          l&apos;acces et l&apos;utilisation du site Façonné, edite par
           BONKANO SOLUTIONS (SASU, RCS Bordeaux 930 452 644), qui met en relation des
           artisans createurs (« vendeurs ») et des particuliers (« acheteurs ») pour
           la vente d&apos;articles issus de l&apos;artisanat.
