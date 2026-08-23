@@ -32,7 +32,7 @@ describe("getOtpAuthUri", () => {
     const uri = getOtpAuthUri(secret, "amina@example.com");
     expect(uri).toMatch(/^otpauth:\/\/totp\//);
     expect(uri).toContain(encodeURIComponent("amina@example.com"));
-    expect(uri).toContain("Marketplace");
+    expect(uri).toContain(encodeURIComponent("Façonné"));
   });
 });
 
